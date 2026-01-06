@@ -831,7 +831,7 @@ const App: React.FC = () => {
                   <div className="grid grid-cols-1 gap-4">
                     <ResourceGroup title="כלי הערכה: אתר.בוט">
                       <ResourceLink
-                        href="https://chatgpt.com/g/g-69518086525c81918194fe74fc9a12aa-tr-bvt-h-rkt-mshm-vt-lshymvr"
+                        href="https://chatgpt.com/g/g-695d3567400c8191a402087b38c7b6b7-tr-bvt-h-rkt-mshm-vt-lshymvr"
                         icon={<Bot size={16} />}
                         label="אתר.בוט (GPTs)"
                         highlight={true}
@@ -957,7 +957,7 @@ const App: React.FC = () => {
             </div>
 
             {/* Example Link - NotebookLM */}
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4 rounded-xl flex items-center justify-between gap-4 group cursor-pointer hover:shadow-md transition-all shadow-sm" onClick={() => window.open('https://gemini.google.com/share/417e68ec2989', '_blank')}>
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4 rounded-xl flex items-center justify-between gap-4 group cursor-pointer hover:shadow-md transition-all shadow-sm" onClick={() => window.open('https://gemini.google.com/share/7cf5304dbf7e', '_blank')}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white rounded-lg shadow-sm text-emerald-600 group-hover:scale-110 transition-transform"><Sparkles size={18} /></div>
                 <div>
