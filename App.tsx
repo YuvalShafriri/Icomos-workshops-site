@@ -100,34 +100,49 @@ const EDUCATIONAL_PROMPT = `👤 **תפקיד:** כמומחה לתחום הער�
 
 const MARC_INSTRUCTIONS = {
   he: {
-    title: "ניתוח אוסף הערכות [MA-RC]",
-    purpose: "סיוע למשתמשים לסרוק אוסף של אתרים, נכסים או נופי תרבות עירוניים באמצעות תהליך מובנה מונחה-משתמש (User-led steps).",
-    steps: [
-      { label: "1. קריאה ואינדוקס", desc: "ניתוח הקבצים שהועלו ללא הקדמות; אינדוקס כל רשומה כ'אתר', 'נכס' או 'נוף תרבות עירוני'." },
-      { label: "2. דגלי ראיות", desc: "סימון (✓/—) עבור: קיום ערכים (CA-V), הצהרת משמעות, שלמות ואותנטיות, ומידע מתוארך." },
-      { label: "3. טבלת Snapshot", desc: "הצגת טבלה מרכזת של עד 10 שורות עם נתוני ליבה של האוסף." },
-      { label: "4. סיכום נתונים", desc: "תיאור קצר (3-5 משפטים) על דפוסים בולטים ופערי מידע בתוך האוסף." }
-    ],
-    prompts: [
-      "האם יש מה להוסיף או לתקן בתמונת המצב או בסיכום?",
-      "האם תרצה אפשרויות ניתוח (כמותי / איכותני)?",
-      "האם תרצה אפשרויות לסיווג אתרים לצרכי ניהול מורשת?"
-    ]
+    title: "ניתוח אוסף הערכות",
+    purpose: "סיוע למשתמשים לסרוק אוסף של אתרים, נכסים או נופי תרבות עירוניים באמצעות תהליך מובנה מונחה-משתמש",
+    promptContent: `פעל כמנהל מורשת ומדען נתונים. המשימה - ניתוח רוחבי של האוסף שהועלה בשלבים:
+
+1. קריאה ואינדוקס: נתח את הקבצים שהועלה ללא הקדמות. אנדקס כל רשומה כ'אתר', 'נכס' או 'נוף תרבות עירוני'.
+
+2. דגלי ראיות: סמן (✓/—) עבור כל פריט: קיום ערכים, הצהרת משמעות, שלמות ואותנטיות, ומידע מתוארך.
+
+3. טבלת תמונת מצב: הצג טבלה מרכזת של עד 10 שורות עם נתוני ליבה של האוסף.
+
+4. סיכום נתונים: תאר בקצרה (3-5 משפטים) דפוסים בולטים, ערכים ותמות מרכזיות ופערי מידע בתוך האוסף.
+
+שאלות עצירה מנדטוריות (Stop Prompts):
+• האם יש מה להוסיף או לתקן בתמונת המצב או בסיכום?
+• האם תרצה אפשרויות ניתוח (כמותי / איכותני)?
+• האם תרצה אפשרויות לסיווג אתרים לצרכי ניהול מורשת?`,
+    steps: [], // Keeping empty or removing usage downstream
+    prompts: []
   },
   en: {
     title: "Assessment Collection Analysis [MA-RC]",
     purpose: "Assist users in scanning a collection of sites, assets, or urban-cultural landscapes using structured, user-led steps.",
-    steps: [
-      { label: "1. Read & Index", desc: "Parse uploaded files without excessive preamble; index each record as Site / Asset / Urban-Cultural Landscape." },
-      { label: "2. Evidence Flags", desc: "For every item note (✓/—) for: Values (CA-V), Significance statements, Integrity/Auth, and Dated info." },
-      { label: "3. Snapshot Table", desc: "Display totals plus a summary table (max 10 rows)." },
-      { label: "4. Data Summary", desc: "3-5 sentences on evident patterns and gaps. Strictly descriptive." }
-    ],
-    prompts: [
-      "Anything to add or correct in the snapshot or summary?",
-      "Would you like analysis options?",
-      "Would you like proposed site classification options?"
-    ]
+    promptContent: `Act as a Quality Controller and Information Specialist for Heritage Collections. Mission: Perform a cross-sectional analysis of the uploaded collection according to the following steps:
+
+1. Read & Index
+   >> Parse uploaded files without excessive preamble; index each record as Site / Asset / Urban-Cultural Landscape.
+
+2. Evidence Flags
+   >> For every item note (✓/—) for: Values (CA-V), Significance statements, Integrity/Auth, and Dated info.
+
+3. Snapshot Table
+   >> Display totals plus a summary table (max 10 rows).
+
+4. Data Summary
+   >> Write 3-5 sentences on evident patterns and gaps. Strictly descriptive.
+
+---
+Mandatory Stop Prompts:
+• Anything to add or correct in the snapshot or summary?
+• Would you like analysis options?
+• Would you like proposed site classification options?`,
+    steps: [], // Keeping empty or removing usage downstream
+    prompts: []
   }
 };
 
@@ -284,7 +299,35 @@ const ResourceLink: React.FC<{
   colorScheme?: 'indigo' | 'emerald' | 'amber' | 'slate';
 }> = ({ href, onClick, icon, label, secondaryLabel, highlight, noBorder, colorScheme = 'indigo' }) => {
   const Component = href ? 'a' : 'button';
-  const accentColor = colorScheme === 'indigo' ? 'indigo' : colorScheme === 'emerald' ? 'emerald' : colorScheme === 'slate' ? 'slate' : 'amber';
+  // Tailwind can't reliably pick up dynamic class names like `bg-${color}-600`.
+  // Use explicit class maps so production builds include the right styles.
+  const schemeClasses = {
+    indigo: {
+      iconHighlight: 'bg-indigo-600 text-white shadow-indigo-200 shadow-lg',
+      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-500',
+      labelHover: 'group-hover:text-indigo-600',
+      arrowHover: 'group-hover:text-indigo-400',
+    },
+    emerald: {
+      iconHighlight: 'bg-emerald-600 text-white shadow-emerald-200 shadow-lg',
+      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-500',
+      labelHover: 'group-hover:text-emerald-600',
+      arrowHover: 'group-hover:text-emerald-400',
+    },
+    amber: {
+      iconHighlight: 'bg-amber-600 text-white shadow-amber-200 shadow-lg',
+      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-amber-50 group-hover:text-amber-500',
+      labelHover: 'group-hover:text-amber-600',
+      arrowHover: 'group-hover:text-amber-400',
+    },
+    slate: {
+      iconHighlight: 'bg-white text-slate-900 border-2 border-slate-900 shadow-sm',
+      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-slate-50 group-hover:text-slate-600',
+      labelHover: 'group-hover:text-slate-700',
+      arrowHover: 'group-hover:text-slate-500',
+    },
+  } as const;
+  const currentScheme = schemeClasses[colorScheme];
 
   return (
     <Component
@@ -296,17 +339,17 @@ const ResourceLink: React.FC<{
     >
       <div className="flex items-center gap-4 text-right">
         <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${highlight
-          ? (colorScheme === 'slate' ? 'bg-white text-slate-900 border-2 border-slate-900 shadow-sm' : `bg-${accentColor}-600 text-white shadow-${accentColor}-200 shadow-lg`)
-          : `bg-slate-100 text-slate-400 group-hover:bg-${accentColor}-50 group-hover:text-${accentColor}-500`
+          ? currentScheme.iconHighlight
+          : currentScheme.iconNormal
           }`}>
           {icon}
         </div>
         <div>
-          <h4 className={`font-bold text-sm text-slate-800 group-hover:text-${accentColor}-600 transition-colors`}>{label}</h4>
+          <h4 className={`font-bold text-sm text-slate-800 ${currentScheme.labelHover} transition-colors`}>{label}</h4>
           {secondaryLabel && <p className="text-[10px] text-slate-400 font-medium">{secondaryLabel}</p>}
         </div>
       </div>
-      <ArrowUpRight size={14} className={`text-slate-300 group-hover:text-${accentColor}-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all`} />
+      <ArrowUpRight size={14} className={`text-slate-300 ${currentScheme.arrowHover} group-hover:translate-x-1 group-hover:-translate-y-1 transition-all`} />
     </Component>
   );
 };
@@ -483,11 +526,11 @@ const App: React.FC = () => {
       <header className="bg-[#020617] text-white p-3 flex justify-between items-center shadow-xl z-50 shrink-0 border-b border-slate-800 px-6">
         <div className="flex items-center gap-4">
 
-          <div className="p-1.5 bg-indigo-600 rounded-lg shadow-inner border border-indigo-400/20"><Cpu size={20} /></div>
-          <h1 className="font-black text-xl tracking-tight leading-none text-indigo-100">אתר.בוט - אתר הסדנאות</h1>
+          <div className="p-1.5 bg-indigo-600 rounded-lg shadow-inner border border-indigo-400/20"><Cpu size={24} /></div>
+          <h1 className="font-black text-2xl tracking-tight leading-none text-indigo-100">אתר.בוט - אתר הסדנאות</h1>
         </div>
         <div className="flex items-center gap-2" dir="ltr">
-          <h3 className="text-slate-200 font-bold text-lg">InSites</h3>
+          <h3 className="text-slate-200 font-bold text-2xl">InSites</h3>
           <div className="w-1 h-4 bg-slate-800 rounded-full"></div>
         </div>
       </header>
@@ -535,7 +578,7 @@ const App: React.FC = () => {
           </div>
           <div dir="ltr" className="flex-1 overflow-y-auto custom-scrollbar-right">
             <div dir="rtl" className="p-4 pt-1 text-right flex flex-col h-full">
-              <div className="space-y-1 relative flex-1">
+              <div className="space-y-1 relative">
                 <SectionDivider label="תהליך הערכה (בגישת CBSA)" colorClass="text-slate-500" />
                 {CORE_AGENTS.map((agent) => {
                   const theme = getAgentTheme(agent.id, agent.color, selectedAgentId === agent.id);
@@ -559,7 +602,7 @@ const App: React.FC = () => {
 
               </div>
 
-              <div className="pt-4 pb-4 px-4 mt-auto">
+              <div className="pt-2 px-4 mt-10">
                 <button
                   onClick={() => { setShowResearchAids(true); setSelectedAgentId(null); }}
                   className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all duration-300 group ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-200' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md'}`}
@@ -620,7 +663,7 @@ const App: React.FC = () => {
             </>
           ) : showResearchAids ? (
             <div className="flex-1 flex flex-col bg-white overflow-y-auto custom-scrollbar animate-in fade-in duration-300 pb-20">
-              <div className="p-6 md:p-10 max-w-5xl mx-auto w-full space-y-12">
+              <div className="p-6 md:p-10 max-w-5xl mx-auto w-full space-y-6">
                 <div className="flex justify-between items-end">
                   <div className="space-y-2">
                     <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none">הרחבות ושאילתות משלימות</h2>
@@ -869,24 +912,18 @@ const App: React.FC = () => {
 
 
       {/* [MA-RC] Inventory Instructions Modal */}
-      <Modal isOpen={isInventoryModalOpen} onClose={() => setIsInventoryModalOpen(false)} title="ניתוח אוסף הערכות" maxWidth="max-w-4xl">
-        <div className="flex flex-col gap-8">
-          <div className="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-600 text-white rounded-xl shadow-lg"><Library size={20} /></div>
-              <h3 className="text-xl font-black text-slate-900">{MARC_INSTRUCTIONS[inventoryModalLang].title}</h3>
-            </div>
-            <div className="flex bg-white rounded-lg p-0.5 border border-slate-200 shadow-sm">
-              <button
-                onClick={() => setInventoryModalLang('he')}
-                className={`px-3 py-1 text-[10px] font-bold rounded-md transition-all ${inventoryModalLang === 'he' ? 'bg-emerald-600 text-white' : 'text-slate-500 hover:text-emerald-600'}`}
-              >עברית</button>
-              <button
-                onClick={() => setInventoryModalLang('en')}
-                className={`px-3 py-1 text-[10px] font-bold rounded-md transition-all ${inventoryModalLang === 'en' ? 'bg-emerald-600 text-white' : 'text-slate-500 hover:text-emerald-600'}`}
-              >English</button>
-            </div>
+      <Modal
+        isOpen={isInventoryModalOpen}
+        onClose={() => setIsInventoryModalOpen(false)}
+        title={
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 bg-emerald-600 text-white rounded-lg shadow-sm"><Library size={18} /></div>
+            <span className="text-lg font-black text-slate-900">{MARC_INSTRUCTIONS[inventoryModalLang].title}</span>
           </div>
+        }
+        maxWidth="max-w-4xl"
+      >
+        <div className="flex flex-col gap-4 pt-2">
 
           <div className={`space-y-6 ${inventoryModalLang === 'en' ? 'text-left' : 'text-right'}`} dir={inventoryModalLang === 'en' ? 'ltr' : 'rtl'}>
             <p className="text-sm font-bold text-slate-600 border-r-4 border-emerald-500 pr-4 italic leading-relaxed">
@@ -894,25 +931,38 @@ const App: React.FC = () => {
             </p>
 
             {/* Vertical List Steps */}
-            <div className="space-y-3">
-              {MARC_INSTRUCTIONS[inventoryModalLang].steps.map((step, i) => (
-                <div key={i} className="flex gap-4 p-4 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-transparent hover:border-slate-200 transition-all group items-start">
-                  <div className="w-6 h-6 shrink-0 rounded-full bg-emerald-100 text-emerald-700 font-black text-xs flex items-center justify-center mt-0.5 group-hover:bg-emerald-600 group-hover:text-white transition-all">{i + 1}</div>
-                  <div>
-                    <h4 className="font-bold text-slate-800 text-sm mb-1">{step.label}</h4>
-                    <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>
+            {/* Black Format Prompt Display */}
+            <div className="relative group/code rtl">
+              <div className="bg-slate-950 rounded-2xl border border-slate-800 p-0 overflow-hidden shadow-xl">
+                <div className="p-2 flex items-center justify-between opacity-80">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/20"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20"></div>
                   </div>
+
                 </div>
-              ))}
+                <pre className="px-6 pb-8 pt-0 font-mono text-sm md:text-base text-emerald-50 whitespace-pre-wrap leading-relaxed text-right overflow-y-auto max-h-[50vh] custom-scrollbar selection:bg-emerald-500/30">
+                  {MARC_INSTRUCTIONS[inventoryModalLang].promptContent}
+                </pre>
+              </div>
+              <button
+                onClick={() => navigator.clipboard.writeText(MARC_INSTRUCTIONS[inventoryModalLang].promptContent || '')}
+                className="absolute bottom-4 left-4 bg-white/10 hover:bg-emerald-600 text-white/70 hover:text-white backdrop-blur-sm border border-white/10 p-2 rounded-lg transition-all active:scale-95 group/btn flex items-center gap-2 font-bold text-[10px]"
+                title="העתק ללוח"
+              >
+                <Copy size={14} className="group-hover/btn:scale-110 transition-transform" />
+                <span>העתק פרומפט</span>
+              </button>
             </div>
 
             {/* Example Link - NotebookLM */}
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4 rounded-xl flex items-center justify-between gap-4 group cursor-pointer hover:shadow-md transition-all shadow-sm" onClick={() => window.open('https://gemini.google.com/share/4b831fc71c6e', '_blank')}>
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4 rounded-xl flex items-center justify-between gap-4 group cursor-pointer hover:shadow-md transition-all shadow-sm" onClick={() => window.open('https://gemini.google.com/share/417e68ec2989', '_blank')}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white rounded-lg shadow-sm text-emerald-600 group-hover:scale-110 transition-transform"><Sparkles size={18} /></div>
                 <div>
                   <h4 className="font-bold text-slate-900 text-sm group-hover:text-emerald-700 transition-colors">דוגמה לניתוח אוסף</h4>
-                  <p className="text-[10px] text-slate-500 font-medium">הדגמה של ביצוע באתר.בוט גמיני המחובר ל-NotebookLM</p>
+                  <p className="text-[10px] text-slate-500 font-medium">הדגמה של ביצוע באתר.בוט גמיני המחובר לאוסף הערכות הנכסים מהסדנאות ב-NotebookLM</p>
                 </div>
               </div>
               <div className="bg-white px-3 py-1.5 rounded-lg text-[10px] font-bold text-emerald-600 border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-2">
@@ -920,20 +970,6 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-slate-900 text-indigo-100 p-6 rounded-2xl shadow-xl space-y-4">
-              <div className="flex items-center gap-3 border-b border-white/10 pb-2">
-                <MessageSquare size={16} className="text-indigo-400" />
-                <h4 className="text-[10px] font-black uppercase tracking-widest">שאלות עצירה מנדטוריות (Stop Prompts)</h4>
-              </div>
-              <ul className="space-y-2">
-                {MARC_INSTRUCTIONS[inventoryModalLang].prompts.map((p, i) => (
-                  <li key={i} className="flex gap-3 text-xs leading-relaxed group">
-                    <span className="text-indigo-500 opacity-50">•</span>
-                    <span className="group-hover:text-white transition-colors cursor-default">{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
 
             <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl flex items-center gap-4">
               <div className="p-2 bg-white text-emerald-600 rounded-lg shadow-sm"><Info size={16} /></div>
