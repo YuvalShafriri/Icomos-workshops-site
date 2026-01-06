@@ -31,3 +31,7 @@ dist-ssr
 
 #keys
 .env
+.env.production
+.env.local
+.env.*.local
+!.env.example
