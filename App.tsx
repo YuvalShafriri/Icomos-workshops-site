@@ -52,8 +52,11 @@ import {
   FileCode,
   TerminalSquare,
   MessageCircle,
-  Table,
-  Smile
+  Smile,
+  Share2,
+  Fingerprint,
+  Drama,
+  Footprints
 } from 'lucide-react';
 import { CORE_AGENTS, DEMO_DATA, ZAIRA_TEXT, GRAPH_PROMPT, DIALOGUE_PRINCIPLES, PROMPT_ADVISOR_SYSTEM, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES } from './constants';
 import { callGemini } from './services/geminiService';
@@ -131,18 +134,22 @@ const MARC_INSTRUCTIONS = {
 const RESEARCH_QUERIES = [
   {
     title: "נרטיבים חלופיים",
-    description: "בחינת האתר דרך עיניים של קבוצות זהות שונות ובעלי עניין (Stakeholders).",
+    description: "בחינת האתר דרך עיניים של בעלי עניין שונים.",
     icon: <Users size={16} />,
-    prompt: `תחת מתודולוגיית CBSA, פעל כחוקר מורשת רב-נרטיבי. 
-משימה: נתח את האתר מנקודת מבט של 3 קבוצות זהות שונות (למשל: תושבים מקומיים, מתכננים, חוקרי היסטוריה). 
-עבור כל קבוצה: 
-1. מהם הערכים המרכזיים שהם עשויים לייחס לאתר? 
-2. היכן קיימים מתחים בין הפרשנויות? 
-3. כיצד האתר משמש כגשר או כחסם בין הנרטיבים הללו?`
+    prompt: `פעל כחוקר מורשת בגישת 'ניהול מבוסס-ערכים' (Values-Based Management) ומתודולוגיית CBSA, המקדמת **רב-קוליות** (Polyvocality) בתהליכי שימור.
+
+המשימה: נתח את האתר דרך 'עדשות' של 3 קבוצות זהות או בעלי עניין שונים ומובהקים (למשל: תושבים ותיקים, יזם פיתוח, דמות היסטורית, או סופר שיצירתו מהדהדת את המקום).
+
+עבור כל קבוצה, נתח:
+1. שיקוף ערכי: מהם ערכי המורשת המרכזיים שקבוצה זו מייחסת לאתר? (למשל: ערך חברתי, סמלי, כלכלי, או זהותי).
+2. מוקדי מתח: היכן הפרשנות שלהם מתנגשת עם נרטיבים של קבוצות אחרות?
+3. תפקיד המרחב: כיצד האתר הפיזי משמש כ**גשר** (מחבר בין הזהויות) או כ**חסם** (מנציח את הקונפליקט)?
+
+סיכום: הצג תובנה אינטגרטיבית על הפוטנציאל להכלה (Inclusion) של הנרטיבים השונים באתר.`
   },
   {
     title: "סנטימנט קהילתי",
-    description: "חילוץ ערכים חברתיים וקשרים רגשיים מתוך טקסטים קהילתיים (ראיונות, פוסטים).",
+    description: "ניתוח סנטימנט וערכי קהילה.",
     icon: <MessageCircle size={16} />,
     prompt: `פעל כנתח סנטימנט וערכים קהילתיים. 
 משימה: מתוך הטקסט המצורף, חלץ את "מפת הערכים החברתיים". 
@@ -153,18 +160,27 @@ const RESEARCH_QUERIES = [
   {
     title: "המסרה וחינוך",
     description: "הצעות לפעילויות ותכנים באתר המבוססים על ערכי המורשת שזוהו.",
-    icon: <GraduationCap size={16} />,
-    prompt: `פעל כיועץ תוכן והמסרה לאתרי מורשת. 
-משימה: בהתבסס על הצהרת המשמעות שגיבשנו, הצע 3 רעיונות לפעילויות חינוכיות או קהילתיות באתר. 
-דרישות: 
-1. כל פעילות חייבת להדגים ערך מורשת אחד ספציפי שזוהה בשלבים הקודמים. 
-2. השתמש בטכנולוגיות נגישות (QR, AR) או בשיטות המסרה מסורתיות. 
-3. הגדר: קהל יעד, מטרה פדגוגית, והחוויה הרגשית המצופה.`
+    icon: <Footprints size={16} />,
+    prompt: `פעל כצוות של מתכנן בכיר להמסרת מורשת (Heritage Interpretation) ומפתח פעילויות למידה בהתמחות למידה בשטח. 
+המשימה: גיבוש 3 קונספטים לפעילות חווייתית-חינוכית באתר, המנכיחים את 'הצהרת המשמעות' ואת מאפייני האתר שזיהינו.
+
+תהליך העבודה:
+1. איסוף נתונים (שלב מקדים): לפני הצגת הרעיונות, שאל אותי לגבי המאפיינים הפיזיים של האתר שיש לקחת בחשבון, מצב השימור הנוכחי ואילוצים ניהוליים/אחרים שיש לקחת בחשבון. המתן לתשובתי.
+2. פיתוח ההצעות: על בסיס תשובתי, פתח 3 הצעות המשלבות למידה פעילה (Learning by Doing) וממשק פיזי-דיגיטלי (Phygital) המותאם לאופי האתר או רעיון יצירתי אחר לא מוגבל.
+
+מבנה כל הצעה:
+• הערך המוביל: איזה ערך/ים מורשת ספציפי/ם (מתוך הניתוח הקודם) הפעילות 'מפעילה'?
+• פרופיל החוויה: קהל היעד, המטרה הפדגוגית והרגש המרכזי שיוצרת הפעילות.
+• תיאור הפעילות: מה המבקר עושה בפועל? (חיבור בין המרחב הפיזי לתוכן).
+• היבטים תכנוניים: דרישות פיזיות/תשתיות נדרשות באתר למימוש הפעילות.
+• היתכנות: הערכת משאבים נדרשת (תקציב/תפעול).
+
+תשתדל שהתגובות שלך יהיו קצרות באופן אופטימלי.`
   },
   {
     title: "ניתוח סמיוטי",
     description: "פענוח סמלים, קודים תרבותיים ומטאפורות בנכס המורשת.",
-    icon: <History size={16} />,
+    icon: <Fingerprint size={16} />,
     prompt: `פעל כמומחה לסמיוטיקה תרבותית. 
 משימה: בצע "קריאה סמיוטית" של האתר. 
 זהה 3 אלמנטים (פיזיים או מופשטים) המתפקדים כ"סימנים" תרבותיים. 
@@ -174,10 +190,15 @@ const RESEARCH_QUERIES = [
 3. כיצד הקוד התרבותי הזה השתנה לאורך זמן (דיאכרוניה)?`
   },
   {
-    title: "ליצן החצר",
-    description: "אתגור הנחות יסוד (והמובן מאליו) באמצעות שאלות פרובוקטיביות, אבסורד ושבירת מוסכמות (Devil's Advocate).",
-    icon: <Smile size={16} />,
-    prompt: `פעל כ"ליצן החצר" ברוח מתודולוגיית CBSA.
+    title: "ליצן החצר / מקהלה יוונית",
+    description: "קולות רפלקטיביים לבחינת התהליך: ליצן החצר המערער והמקהלה המפרשת.",
+    icon: <Drama size={16} />,
+    subQueries: [
+      {
+        title: "ליצן החצר",
+        description: "אתגור הנחות יסוד באמצעות שאלות פרובוקטיביות.",
+        icon: <Smile size={16} />,
+        prompt: `פעל כ"ליצן החצר" ברוח מתודולוגיית CBSA.
 תפקידך: לאתגר את הניתוח מבפנים בקול חתרני–משחקי, ולחשוף סתירות, ביטחון־יתר והנחות נסתרות — מבלי להוסיף עובדות.
 פעל כך:
 1. ערער על ניסוחים בטוחים מדי ("האומנם?").
@@ -187,12 +208,12 @@ const RESEARCH_QUERIES = [
 מה לא לעשות: אל תוסיף מידע או הקשרים, אל תציע ניתוח חלופי, ואל תדבר בשפה סמכותית.
 טון: חד, שובב, לא רשמי אך אינטליגנטי. מותר להגזים מעט כדי לחשוף אמת.
 סיום: סיים באמירה או שאלה שמערערת את הוודאות הקיימת.`
-  },
-  {
-    title: "מקהלה יוונית",
-    description: "קול ליווי פרשני-ציבורי המאיר בחירות, הנחות ומתחים ערכיים בניסוח, מבלי להוסיף עובדות.",
-    icon: <Users size={16} />,
-    prompt: `פעל כ"קול המקהלה היוונית" ברוח מתודולוגיית CBSA.
+      },
+      {
+        title: "מקהלה יוונית",
+        description: "ליווי פרשני-ציבורי המאיר בחירות ומתחים ערכיים.",
+        icon: <Users size={16} />,
+        prompt: `פעל כ"קול המקהלה היוונית" ברוח מתודולוגיית CBSA.
 תפקידך: ללוות את הפלט הקיים בקול פרשני–ציבורי מודע, מבלי להוסיף מידע חדש ומבלי להכריע.
 פעל כך:
 1. הצבע על מעברים מתיאור למשמעות.
@@ -202,6 +223,8 @@ const RESEARCH_QUERIES = [
 מה לא לעשות: אל תוסיף ראיות, הקשרים או פרשנות חדשה. אל תציע ניסוח חלופי מלא, ואל תקבע מה נכון או שגוי.
 טון: זהיר, ציבורי, מודע לעצמו. השתמש בניסוחים מסייגים (“כך זה עשוי להישמע”, “יש כאן בחירה”).
 סיום: סיים תמיד בשאלת עצירה פתוחה שמחזירה את האחריות למשתמש.`
+      }
+    ]
   }
 ];
 
@@ -288,7 +311,7 @@ const ResourceLink: React.FC<{
   );
 };
 
-const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode; maxWidth?: string }> = ({ isOpen, onClose, title, children, maxWidth = "max-w-3xl" }) => {
+const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: React.ReactNode; children: React.ReactNode; maxWidth?: string }> = ({ isOpen, onClose, title, children, maxWidth = "max-w-3xl" }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[100] flex items-center justify-center p-2 animate-in fade-in duration-300">
@@ -615,28 +638,13 @@ const App: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* Visual Analysis Card */}
-                    <div
-                      onClick={() => setIsDemoModalOpen(true)}
-                      className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
-                    >
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Eye size={18} /></div>
-                        <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
-                      </div>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">סוכן (נסיוני) לניתוח והערכת ערכים מתוך תמונות ומפות.</p>
-                      <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
-                        <Sparkles size={12} /> הפעל כלי
-                      </div>
-                    </div>
-
-                    {/* Knowledge Graph Card */}
+                    {/* Knowledge Graph Card (FIRST) */}
                     <div
                       onClick={() => setIsGraphInputModalOpen(true)}
                       className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Zap size={18} /></div>
+                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Share2 size={18} /></div>
                         <h4 className="font-bold text-slate-800 text-sm">גרף ידע</h4>
                       </div>
                       <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">מיפוי חזותי של ישויות וקשרים סמנטיים מתוך הטקסט.</p>
@@ -645,18 +653,33 @@ const App: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Inventory Card */}
+                    {/* Visual Analysis Card (SECOND) */}
+                    <div
+                      onClick={() => setIsDemoModalOpen(true)}
+                      className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Eye size={18} /></div>
+                        <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
+                      </div>
+                      <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">סוכן (נסיוני) לניתוח תכונות הקשרים ערכים מתוך תמונות.</p>
+                      <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
+                        <Sparkles size={12} /> דוגמה לניתוח
+                      </div>
+                    </div>
+
+                    {/* Inventory Card (THIRD) */}
                     <div
                       onClick={() => setIsInventoryModalOpen(true)}
                       className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Library size={18} /></div>
+                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><PieChart size={18} /></div>
                         <h4 className="font-bold text-slate-800 text-sm">ניתוח אוסף</h4>
                       </div>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">פרוטוקול [MA-RC] לניתוח רוחבי של ביקי סקר ואינוונטר.</p>
+                      <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">פרוטוקול לניתוח רוחבי של אוסף הערכות (למשל מסקר)</p>
                       <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
-                        <Table size={12} /> צפה בהנחיות
+                        <FileText size={12} /> צפה בהנחיות
                       </div>
                     </div>
 
@@ -870,16 +893,31 @@ const App: React.FC = () => {
               {MARC_INSTRUCTIONS[inventoryModalLang].purpose}
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Vertical List Steps */}
+            <div className="space-y-3">
               {MARC_INSTRUCTIONS[inventoryModalLang].steps.map((step, i) => (
-                <div key={i} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs group-hover:bg-emerald-600 group-hover:text-white transition-all">{i + 1}</div>
-                    <h4 className="font-black text-slate-900 text-sm">{step.label}</h4>
+                <div key={i} className="flex gap-4 p-4 bg-slate-50/50 hover:bg-slate-50 rounded-xl border border-transparent hover:border-slate-200 transition-all group items-start">
+                  <div className="w-6 h-6 shrink-0 rounded-full bg-emerald-100 text-emerald-700 font-black text-xs flex items-center justify-center mt-0.5 group-hover:bg-emerald-600 group-hover:text-white transition-all">{i + 1}</div>
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-sm mb-1">{step.label}</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed font-medium">{step.desc}</p>
                 </div>
               ))}
+            </div>
+
+            {/* Example Link - NotebookLM */}
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4 rounded-xl flex items-center justify-between gap-4 group cursor-pointer hover:shadow-md transition-all shadow-sm" onClick={() => window.open('https://gemini.google.com/share/4b831fc71c6e', '_blank')}>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white rounded-lg shadow-sm text-emerald-600 group-hover:scale-110 transition-transform"><Sparkles size={18} /></div>
+                <div>
+                  <h4 className="font-bold text-slate-900 text-sm group-hover:text-emerald-700 transition-colors">דוגמה לניתוח אוסף</h4>
+                  <p className="text-[10px] text-slate-500 font-medium">הדגמה של ביצוע באתר.בוט גמיני המחובר ל-NotebookLM</p>
+                </div>
+              </div>
+              <div className="bg-white px-3 py-1.5 rounded-lg text-[10px] font-bold text-emerald-600 border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center gap-2">
+                צפה <ExternalLink size={10} />
+              </div>
             </div>
 
             <div className="bg-slate-900 text-indigo-100 p-6 rounded-2xl shadow-xl space-y-4">
@@ -1078,52 +1116,50 @@ const App: React.FC = () => {
         </div>
       </Modal>
 
-      <Modal isOpen={isDemoModalOpen} onClose={() => setIsDemoModalOpen(false)} title="𓂀 ניתוח אתר.בוט: המצאת הכתב וה-AI" maxWidth="max-w-7xl">
+      <Modal isOpen={isDemoModalOpen} onClose={() => setIsDemoModalOpen(false)} title={<div className="flex items-center gap-2"><Eye size={20} className="text-indigo-600" /> <span className="mr-1">ניתוח חזותי באתר.בוט: של תמונת המצאת הכתב וה-AI</span></div>} maxWidth="max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start h-full">
           <div className="lg:col-span-5 space-y-6 order-1 lg:order-2 shrink-0">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white ring-1 ring-slate-200 bg-slate-50 flex items-center justify-center">
               <img src="https://alephplace.com/atar.bot/tamuz.jpg" alt="Detailed Visual Analysis Case" className="max-w-full max-h-[55vh] object-contain" />
             </div>
-            <div className="bg-indigo-600 p-6 rounded-2xl shadow-xl border-b-4 border-indigo-800">
-              <Quote size={28} className="text-indigo-400/40 mb-3" />
-              <p className="italic text-white text-base md:text-xl leading-relaxed font-bold">"סם לִשְׁכֵּחָה הוא זה, לא לִרְפוּאָה לַזִּכָּרוֹן. לא חָכְמָה אֶלָּא דְּמוּת-חָכְמָה יִרְכְּשׁו..."</p>
-              <div className="mt-4 pt-4 border-t border-white/20 flex justify-between items-center text-xs text-indigo-100 font-bold">
+            <div className="bg-indigo-600 p-4 rounded-2xl shadow-xl border-b-4 border-indigo-800">
+              <Quote size={20} className="text-indigo-400/40 mb-2" />
+              <p className="italic text-white text-sm md:text-base leading-relaxed font-bold">"סם לִשְׁכֵּחָה הוא זה, לא לִרְפוּאָה לַזִּכָּרוֹן. לא חָכְמָה אֶלָּא דְּמוּת-חָכְמָה יִרְכְּשׁו..."</p>
+              <div className="mt-3 pt-3 border-t border-white/20 flex justify-between items-center text-[10px] text-indigo-100 font-bold">
                 <span>מתוך: המלך תמוז לאל תוֹת | פיידרוס | אפלטון</span>
-                <div className="px-2 py-0.5 bg-white/20 rounded uppercase tracking-widest text-[9px]">AI Visual Decoding</div>
+                <div className="px-2 py-0.5 bg-white/20 rounded uppercase tracking-widest text-[8px]">AI Visual Decoding</div>
               </div>
             </div>
           </div>
           <div className="lg:col-span-7 space-y-6 order-2 lg:order-1 flex flex-col h-full text-right">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm"><CheckCircle2 size={12} /> ניתוח סוכן חזותי [CA-IMG]</div>
-              <h3 className="text-3xl font-black text-slate-900 leading-tight">פענוח תרבותי של "שכחה דיגיטלית"</h3>
-              <p className="text-base text-slate-600 leading-relaxed font-medium border-r-4 border-indigo-500 pr-4">להלן תוצאות הניתוח המבני שביצע אתר.בוט על הדימוי החזותי, תוך שימוש במתודולוגיית CBSA לזיהוי ערכים והקשרים.</p>
+              <p className="text-sm text-slate-600 leading-relaxed font-medium border-r-4 border-indigo-500 pr-4">להלן תוצאות הניתוח המבני שביצע אתר.בוט על הדימוי החזותי, תוך שימוש במתודולוגיית CBSA לזיהוי ערכים והקשרים.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-                <div className="flex items-center gap-3 text-indigo-600 font-black text-sm border-b border-slate-50 pb-2"><Gem size={18} /> <span>1. ערכי מורשת שזוהו</span></div>
-                <div className="space-y-3 text-xs leading-relaxed text-slate-700">
+            <div className="flex flex-col gap-3">
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm space-y-2">
+                <div className="flex items-center gap-3 text-indigo-600 font-black text-sm border-b border-slate-50 pb-2"><Gem size={16} /> <span>1. ערכי מורשת שזוהו</span></div>
+                <div className="space-y-2 text-sm leading-relaxed text-slate-700">
                   <p><b>ערך סמלי:</b> האיור מייצג את המתח המתמיד בין טכנולוגיה לזיכרון אנושי.</p>
                   <p><b>ערך חינוכי:</b> התמונה מנגישה דיון פילוסופי עמוק דרך הקשר מודרני של בינה מלאכותית.</p>
                 </div>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-                <div className="flex items-center gap-3 text-emerald-600 font-black text-sm border-b border-slate-50 pb-2"><Layers size={18} /> <span>2. הערכת מצב חזותית</span></div>
-                <div className="space-y-3 text-xs leading-relaxed text-slate-700">
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm space-y-2">
+                <div className="flex items-center gap-3 text-emerald-600 font-black text-sm border-b border-slate-50 pb-2"><Layers size={16} /> <span>2. הערכת מצב חזותית</span></div>
+                <div className="space-y-2 text-sm leading-relaxed text-slate-700">
                   <p><b>שכבות נראות:</b> שילוב של איקונוגרפיה מצרית עם דמות פילוסוף יווני קלאסי.</p>
                   <p><b>ניגודיות:</b> המגילה המוחשית מול מסך ה-ChatGPT מייצגת את השינוי במרקם הידע.</p>
                 </div>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-                <div className="flex items-center gap-3 text-amber-600 font-black text-sm border-b border-slate-50 pb-2"><History size={18} /> <span>3. רמזי הקשר</span></div>
-                <div className="space-y-3 text-xs leading-relaxed text-slate-700">
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm space-y-2">
+                <div className="flex items-center gap-3 text-amber-600 font-black text-sm border-b border-slate-50 pb-2"><History size={16} /> <span>3. רמזי הקשר</span></div>
+                <div className="space-y-2 text-sm leading-relaxed text-slate-700">
                   <p><b>הקשר תמאטי:</b> הדיאלוג עוסק ב"שכחה" (Forgetfulness) כנושא מרכזי.</p>
                   <p><b>מורשת בלתי מוחשית:</b> העברת ידע, מסורת שבעל-פה מול תיעוד חיצוני.</p>
                 </div>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-                <div className="flex items-center gap-3 text-rose-600 font-black text-sm border-b border-slate-50 pb-2"><Search size={18} /> <span>4. השוואות ופערי מידע</span></div>
-                <div className="space-y-3 text-xs leading-relaxed text-slate-700">
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm space-y-2">
+                <div className="flex items-center gap-3 text-rose-600 font-black text-sm border-b border-slate-50 pb-2"><Search size={16} /> <span>4. השוואות ופערי מידע</span></div>
+                <div className="space-y-2 text-sm leading-relaxed text-slate-700">
                   <p><b>השוואה:</b> התמונה מעגנת את ה-AI בתוך רצף היסטורי ארוך של חרדה טכנולוגית.</p>
                   <p className="italic text-slate-500">⚠️ <b>פערי מידע:</b> המקור המדויק אינו מופיע בדימוי (נוצר ב-AI).</p>
                 </div>
@@ -1187,41 +1223,80 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <Terminal size={12} /> פרומפט להעתקה
-                  </h4>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-slate-400 font-bold bg-slate-50 px-2 py-0.5 rounded border border-slate-100"> CBSA Methodology</span>
-                  </div>
-                </div>
-                <div className="relative group/code">
-                  <div className="bg-slate-950 rounded-2xl border border-slate-800 p-0 overflow-hidden shadow-xl">
-                    <div className="bg-slate-900/50 p-3 border-b border-white/5 flex items-center justify-between">
-                      <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/20"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20"></div>
-                      </div>
-                      <span className="text-[9px] font-mono text-slate-600">research_query.prompt</span>
+              {/* Standard Single Query Logic */}
+              {!(selectedQuery as any).subQueries && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                      <Terminal size={12} /> פרומפט להעתקה
+                    </h4>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] text-slate-400 font-bold bg-slate-50 px-2 py-0.5 rounded border border-slate-100"> CBSA Methodology</span>
                     </div>
-                    <pre className="p-6 font-mono text-sm text-indigo-100/90 whitespace-pre-wrap leading-relaxed text-right overflow-y-auto max-h-[40vh] custom-scrollbar selection:bg-indigo-500/30">
-                      {selectedQuery.prompt}
-                    </pre>
                   </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(selectedQuery.prompt);
-                    }}
-                    className="absolute top-4 left-4 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 p-2 rounded-lg shadow-sm transition-all active:scale-95 group/btn flex items-center gap-2 font-bold text-[10px]"
-                    title="העתק ללוח"
-                  >
-                    <Copy size={14} className="group-hover/btn:scale-110 transition-transform" />
-                    <span>העתק</span>
-                  </button>
+                  <div className="relative group/code">
+                    <div className="bg-slate-950 rounded-2xl border border-slate-800 p-0 overflow-hidden shadow-xl">
+                      <div className="bg-slate-900/50 p-3 border-b border-white/5 flex items-center justify-between">
+                        <div className="flex gap-1.5">
+                          <div className="w-2.5 h-2.5 rounded-full bg-red-500/20"></div>
+                          <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20"></div>
+                          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20"></div>
+                        </div>
+                        <span className="text-[9px] font-mono text-slate-600">research_query.prompt</span>
+                      </div>
+                      <pre className="p-6 font-mono text-sm text-indigo-100/90 whitespace-pre-wrap leading-relaxed text-right overflow-y-auto max-h-[40vh] custom-scrollbar selection:bg-indigo-500/30">
+                        {selectedQuery.prompt}
+                      </pre>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(selectedQuery.prompt!);
+                      }}
+                      className="absolute top-4 left-4 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 p-2 rounded-lg shadow-sm transition-all active:scale-95 group/btn flex items-center gap-2 font-bold text-[10px]"
+                      title="העתק ללוח"
+                    >
+                      <Copy size={14} className="group-hover/btn:scale-110 transition-transform" />
+                      <span>העתק</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Sub-Queries Logic (Reflective Voices) */}
+              {(selectedQuery as any).subQueries && (
+                <div className="space-y-8">
+                  {(selectedQuery as any).subQueries.map((sub: any, idx: number) => (
+                    <div key={idx} className="space-y-3">
+                      <div className="flex items-center gap-3 border-b border-slate-100 pb-2">
+                        <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">{sub.icon}</div>
+                        <div>
+                          <h4 className="font-bold text-slate-900 text-sm">{sub.title}</h4>
+                          <p className="text-[11px] text-slate-500">{sub.description}</p>
+                        </div>
+                      </div>
+
+                      <div className="relative group/code">
+                        <div className="bg-slate-950 rounded-xl border border-slate-800 p-0 overflow-hidden shadow-sm">
+                          <div className="bg-slate-900/50 p-2.5 border-b border-white/5 flex items-center justify-between">
+                            <span className="text-[9px] font-mono text-slate-600 flex items-center gap-2"><Terminal size={10} /> prompt</span>
+                          </div>
+                          <pre className="p-4 font-mono text-xs md:text-sm text-indigo-100/90 whitespace-pre-wrap leading-relaxed text-right overflow-y-auto max-h-[200px] custom-scrollbar selection:bg-indigo-500/30">
+                            {sub.prompt}
+                          </pre>
+                        </div>
+                        <button
+                          onClick={() => navigator.clipboard.writeText(sub.prompt)}
+                          className="absolute top-3 left-3 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 p-1.5 rounded-md shadow-sm transition-all active:scale-95 group/btn flex items-center gap-1.5 font-bold text-[10px]"
+                          title="העתק ללוח"
+                        >
+                          <Copy size={12} className="group-hover/btn:scale-110 transition-transform" />
+                          <span>העתק</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/60 flex items-center gap-3">
                 <Info size={14} className="text-slate-400" />
