@@ -58,7 +58,7 @@ import {
   Drama,
   Footprints
 } from 'lucide-react';
-import { CORE_AGENTS, DEMO_DATA, ZAIRA_TEXT, GRAPH_PROMPT, DIALOGUE_PRINCIPLES, PROMPT_ADVISOR_SYSTEM, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES } from './constants';
+import { CORE_AGENTS, DEMO_DATA, ZAIRA_TEXT, GRAPH_PROMPT, DIALOGUE_PRINCIPLES, PROMPT_ADVISOR_SYSTEM, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES, STEP_DETAILS } from './constants';
 import { callGemini } from './services/geminiService';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
@@ -513,6 +513,60 @@ const App: React.FC = () => {
   const [inventoryModalLang, setInventoryModalLang] = useState<'he' | 'en'>('he');
   const [selectedQuery, setSelectedQuery] = useState<typeof RESEARCH_QUERIES[0] | null>(null);
 
+  // Deep linking - hash routes mapping
+  const hashRoutes: Record<string, () => void> = {
+    'graph': () => setIsGraphModalOpen(true),
+    'graph-create': () => setIsGraphInputModalOpen(true),
+    'visual': () => setIsDemoModalOpen(true),
+    'prompts': () => setIsPromptModalOpen(true),
+    'principles': () => setIsPrinciplesModalOpen(true),
+    'inventory': () => setIsInventoryModalOpen(true),
+    'tools': () => { setShowResearchAids(true); setSelectedAgentId(null); },
+    'welcome': () => setShowWelcome(true),
+    'step-0': () => { setSelectedAgentId(0); setShowResearchAids(false); },
+    'step-1': () => { setSelectedAgentId(1); setShowResearchAids(false); },
+    'step-2': () => { setSelectedAgentId(2); setShowResearchAids(false); },
+    'step-3': () => { setSelectedAgentId(3); setShowResearchAids(false); },
+    'step-4': () => { setSelectedAgentId(4); setShowResearchAids(false); },
+    'step-5': () => { setSelectedAgentId(5); setShowResearchAids(false); },
+    'step-6': () => { setSelectedAgentId(6); setShowResearchAids(false); },
+  };
+
+  // Navigate to hash route
+  const navigateTo = useCallback((hash: string) => {
+    window.location.hash = hash;
+  }, []);
+
+  // Close all modals and clear hash
+  const closeAllModals = useCallback(() => {
+    setIsGraphModalOpen(false);
+    setIsGraphInputModalOpen(false);
+    setIsDemoModalOpen(false);
+    setIsPromptModalOpen(false);
+    setIsPrinciplesModalOpen(false);
+    setIsInventoryModalOpen(false);
+  }, []);
+
+  // Handle hash change
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1); // Remove #
+      if (hash && hashRoutes[hash]) {
+        closeAllModals();
+        hashRoutes[hash]();
+      } else if (!hash) {
+        closeAllModals();
+      }
+    };
+
+    // Handle initial hash on mount
+    handleHashChange();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   // Knowledge Graph states
   const [graphData, setGraphData] = useState<any | null>(null);
   const [isGraphLoading, setIsGraphLoading] = useState(false);
@@ -521,6 +575,7 @@ const App: React.FC = () => {
   const networkRef = useRef<Network | null>(null);
 
   const currentAgent = selectedAgentId !== null ? CORE_AGENTS.find(a => a.id === selectedAgentId) : null;
+  const selectedStepDetails = selectedAgentId !== null ? STEP_DETAILS[selectedAgentId] : undefined;
   const isResizing = useRef<boolean>(false);
 
   const startResizing = useCallback((e: React.MouseEvent) => {
@@ -572,6 +627,7 @@ const App: React.FC = () => {
   };
 
   const generateKnowledgeGraph = async () => {
+    window.location.hash = 'graph';
     setIsGraphModalOpen(true);
     setIsGraphLoading(true);
     setSelectedNodeDetails(null);
@@ -667,7 +723,7 @@ const App: React.FC = () => {
       <div className="md:hidden flex overflow-x-auto p-2 gap-2 bg-slate-50/95 backdrop-blur border-b border-slate-200 shrink-0 sticky top-0 z-40 hide-scrollbar" dir="rtl">
         {/* Mobile Extensions Button */}
         <button
-          onClick={() => { setShowResearchAids(true); setSelectedAgentId(null); }}
+          onClick={() => { setShowResearchAids(true); setSelectedAgentId(null); handleCloseWelcome(); }}
           className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-white border-slate-200 text-indigo-600'}`}
         >
           <Zap size={14} className={showResearchAids ? 'text-white' : 'text-indigo-500'} />
@@ -682,7 +738,7 @@ const App: React.FC = () => {
           return (
             <button
               key={agent.id}
-              onClick={() => { setSelectedAgentId(agent.id); setShowResearchAids(false); }}
+              onClick={() => { setSelectedAgentId(agent.id); setShowResearchAids(false); handleCloseWelcome(); }}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 ${mobileTheme.pill}`}
             >
               <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${mobileTheme.badge}`}>
@@ -710,7 +766,7 @@ const App: React.FC = () => {
                   const theme = getAgentTheme(agent.id, agent.color, selectedAgentId === agent.id);
                   return (
                     <React.Fragment key={agent.id}>
-                      <div onClick={() => { setSelectedAgentId(agent.id); setShowResearchAids(false); }} className={`relative flex items-center justify-between p-2.5 rounded-xl border-2 cursor-pointer transition-all duration-300 ${theme.card}`}>
+                      <div onClick={() => { setSelectedAgentId(agent.id); setShowResearchAids(false); handleCloseWelcome(); }} className={`relative flex items-center justify-between p-2.5 rounded-xl border-2 cursor-pointer transition-all duration-300 ${theme.card}`}>
                         <div className="flex items-center gap-3">
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-sm duration-500 ${theme.icon}`}>
                             {React.cloneElement(agent.icon as React.ReactElement<{ size?: number }>, { size: 16 })}
@@ -731,7 +787,7 @@ const App: React.FC = () => {
 
               <div className="pt-2 px-3 mt-4">
                 <button
-                  onClick={() => { setShowResearchAids(true); setSelectedAgentId(null); }}
+                  onClick={() => { setShowResearchAids(true); setSelectedAgentId(null); handleCloseWelcome(); }}
                   className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all duration-300 group ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-200' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md'}`}
                 >
                   <div className="flex items-center gap-3">
@@ -851,26 +907,120 @@ const App: React.FC = () => {
                   <X size={20} />
                 </button>
               </div>
-              <div className="flex-1 flex flex-col bg-[#0d1117] text-slate-300 font-mono text-xs overflow-hidden" dir="ltr">
-                <div className="p-3 bg-[#161b22] border-b border-slate-800 flex justify-between items-center shadow-lg">
-                  <span className="text-[10px] uppercase font-black tracking-widest text-slate-500 flex items-center gap-3">
-                    <Code size={16} className="text-indigo-500" /> System Prompt Preview
-                  </span>
-                  <div className="flex bg-[#0d1117] rounded-lg p-0.5 border border-slate-800" dir="ltr">
-                    <button
-                      onClick={() => setPromptLang('he')}
-                      className={`px-3 py-1 text-[10px] font-bold rounded-md transition-all ${promptLang === 'he' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-300'}`}
-                    >עברית</button>
-                    <button
-                      onClick={() => setPromptLang('en')}
-                      className={`px-3 py-1 text-[10px] font-bold rounded-md transition-all ${promptLang === 'en' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-300'}`}
-                    >English</button>
+              <div className="flex-1 flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar" dir="rtl">
+                <div className="p-6 md:p-8 max-w-3xl mx-auto w-full space-y-6">
+                  {/* Why Important & Cognitive Link - Side by Side */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Lightbulb size={16} className="text-amber-600" />
+                        <h3 className="font-bold text-amber-800 text-sm">למה שלב זה חשוב?</h3>
+                      </div>
+                      <p className="text-amber-900/80 text-sm leading-relaxed">
+                        {selectedStepDetails?.whyImportant}
+                      </p>
+                    </div>
+                    <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Layers size={16} className="text-indigo-600" />
+                        <h3 className="font-bold text-indigo-800 text-sm">קשר לשלבים קודמים</h3>
+                      </div>
+                      <p className="text-indigo-900/80 text-sm leading-relaxed">
+                        {selectedStepDetails?.cognitiveLink}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex-1 p-6 md:p-10 overflow-auto text-left custom-scrollbar scroll-smooth">
-                  <pre className={`whitespace-pre-wrap leading-relaxed transition-all duration-300 text-sm ${promptLang === 'he' ? 'text-right font-sans text-blue-50/90' : 'text-left font-mono text-blue-100/70'}`} dir={promptLang === 'he' ? 'rtl' : 'ltr'}>
-                    {selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ""}
-                  </pre>
+
+                  {/* What Happens */}
+                  <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center gap-2 mb-3">
+                      <ListChecks size={16} className="text-emerald-600" />
+                      <h3 className="font-bold text-slate-800 text-sm">מה קורה בשלב זה?</h3>
+                    </div>
+                    <ul className="space-y-2">
+                      {(selectedStepDetails?.whatHappens ?? []).map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                          <span className="text-emerald-500 mt-0.5">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Extensions for Step 5 */}
+                  {selectedAgentId === 5 && STEP_DETAILS[5]?.extensions && (
+                    <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <Sparkles size={16} className="text-purple-600" />
+                          <h3 className="font-bold text-purple-800 text-sm">מסלולי העמקה אופציונליים</h3>
+                        </div>
+                        <button
+                          onClick={() => navigateTo('tools')}
+                          className="flex items-center gap-1.5 px-2 py-1 text-purple-600 hover:text-purple-800 hover:bg-purple-100 rounded-lg transition-all text-[11px] font-semibold"
+                        >
+                          <span>כל הכלים</span>
+                          <ExternalLink size={11} />
+                        </button>
+                      </div>
+                      {/* First row - 3 items */}
+                      <div className="grid grid-cols-3 gap-2 mb-2">
+                        {STEP_DETAILS[5].extensions.slice(0, 3).map((ext, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => navigateTo(ext.url)}
+                            className="flex flex-col items-center p-2 bg-white border border-purple-100 rounded-lg hover:border-purple-300 transition-all group text-center"
+                          >
+                            <span className="font-semibold text-purple-800 text-xs">{ext.name}</span>
+                            <span className="text-purple-500/70 text-[10px] leading-tight">{ext.description}</span>
+                          </button>
+                        ))}
+                      </div>
+                      {/* Second row - 2 items */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {STEP_DETAILS[5].extensions.slice(3, 5).map((ext, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => navigateTo(ext.url)}
+                            className="flex flex-col items-center p-2 bg-white border border-purple-100 rounded-lg hover:border-purple-300 transition-all group text-center"
+                          >
+                            <span className="font-semibold text-purple-800 text-xs">{ext.name}</span>
+                            <span className="text-purple-500/70 text-[10px] leading-tight">{ext.description}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Prompt Section - Collapsible */}
+                  <details className="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden group">
+                    <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-slate-200/50 transition-all">
+                      <div className="flex items-center gap-2">
+                        <Code size={16} className="text-slate-500" />
+                        <h3 className="font-bold text-slate-700 text-sm">ההנחיות לבוט (פרומפט)</h3>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex bg-white rounded-lg p-0.5 border border-slate-200" dir="ltr">
+                          <button
+                            onClick={(e) => { e.preventDefault(); setPromptLang('he'); }}
+                            className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'he' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                          >עברית</button>
+                          <button
+                            onClick={(e) => { e.preventDefault(); setPromptLang('en'); }}
+                            className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'en' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                          >English</button>
+                        </div>
+                        <ChevronLeft size={16} className="text-slate-400 group-open:-rotate-90 transition-transform" />
+                      </div>
+                    </summary>
+                    <div className="p-4 pt-0 border-t border-slate-200 bg-white">
+                      <div className="bg-slate-900 rounded-lg p-4 mt-3">
+                        <pre className={`whitespace-pre-wrap leading-relaxed text-xs ${promptLang === 'he' ? 'text-right font-sans text-blue-50/90' : 'text-left font-mono text-blue-100/70'}`} dir={promptLang === 'he' ? 'rtl' : 'ltr'}>
+                          {selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ""}
+                        </pre>
+                      </div>
+                    </div>
+                  </details>
                 </div>
               </div>
             </>
@@ -903,7 +1053,7 @@ const App: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Knowledge Graph Card (FIRST) */}
                     <div
-                      onClick={() => setIsGraphInputModalOpen(true)}
+                      onClick={() => navigateTo('graph-create')}
                       className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
                     >
                       <div className="flex items-center gap-3 mb-3">
@@ -918,7 +1068,7 @@ const App: React.FC = () => {
 
                     {/* Visual Analysis Card (SECOND) */}
                     <div
-                      onClick={() => setIsDemoModalOpen(true)}
+                      onClick={() => navigateTo('visual')}
                       className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
                     >
                       <div className="flex items-center gap-3 mb-3">
@@ -933,7 +1083,7 @@ const App: React.FC = () => {
 
                     {/* Inventory Card (THIRD) */}
                     <div
-                      onClick={() => setIsInventoryModalOpen(true)}
+                      onClick={() => navigateTo('inventory')}
                       className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
                     >
                       <div className="flex items-center gap-3 mb-3">
@@ -1134,7 +1284,7 @@ const App: React.FC = () => {
       {/* [MA-RC] Inventory Instructions Modal */}
       <Modal
         isOpen={isInventoryModalOpen}
-        onClose={() => setIsInventoryModalOpen(false)}
+        onClose={() => { setIsInventoryModalOpen(false); window.location.hash = ''; }}
         title={
           <div className="flex items-center gap-3">
             <div className="p-1.5 bg-emerald-600 text-white rounded-lg shadow-sm"><Library size={18} /></div>
@@ -1204,7 +1354,7 @@ const App: React.FC = () => {
         </div>
       </Modal>
 
-      <Modal isOpen={isPromptModalOpen} onClose={() => setIsPromptModalOpen(false)} title="סדנת דיאלוג ופרומפטים חכמים" maxWidth="max-w-7xl">
+      <Modal isOpen={isPromptModalOpen} onClose={() => { setIsPromptModalOpen(false); window.location.hash = ''; }} title="סדנת דיאלוג ופרומפטים חכמים" maxWidth="max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full max-h-[85vh]">
           <div className="flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-2">
             <div className="space-y-4">
@@ -1323,7 +1473,7 @@ const App: React.FC = () => {
         </div>
       </Modal>
 
-      <Modal isOpen={isPrinciplesModalOpen} onClose={() => setIsPrinciplesModalOpen(false)} title="אז כיצד לעשות הערכה תרבותית בעידן שלנו?" maxWidth="max-w-6xl">
+      <Modal isOpen={isPrinciplesModalOpen} onClose={() => { setIsPrinciplesModalOpen(false); window.location.hash = ''; }} title="אז כיצד לעשות הערכה תרבותית בעידן שלנו?" maxWidth="max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 md:items-start text-right" dir="rtl">
           <div className="md:col-span-2 order-1 md:order-2">
             <h3 className="text-2xl font-bold text-slate-800 mb-4 md:-mt-2.5">אז כיצד לעשות הערכה תרבותית בעידן שלנו?</h3>
@@ -1372,7 +1522,7 @@ const App: React.FC = () => {
         </div>
       </Modal>
 
-      <Modal isOpen={isDemoModalOpen} onClose={() => setIsDemoModalOpen(false)} title={<div className="flex items-center gap-2"><Eye size={20} className="text-indigo-600" /> <span className="mr-1">ניתוח חזותי באתר.בוט: של תמונת המצאת הכתב וה-AI</span></div>} maxWidth="max-w-7xl">
+      <Modal isOpen={isDemoModalOpen} onClose={() => { setIsDemoModalOpen(false); window.location.hash = ''; }} title={<div className="flex items-center gap-2"><Eye size={20} className="text-indigo-600" /> <span className="mr-1">ניתוח חזותי באתר.בוט: של תמונת המצאת הכתב וה-AI</span></div>} maxWidth="max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start h-full">
           <div className="lg:col-span-5 space-y-6 order-1 lg:order-2 shrink-0">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white ring-1 ring-slate-200 bg-slate-50 flex items-center justify-center">
@@ -1430,14 +1580,14 @@ const App: React.FC = () => {
           <div
             className="fixed inset-0 bg-slate-900/35 backdrop-blur-sm z-[100] flex flex-col items-center justify-center p-2 animate-in fade-in duration-300"
             onMouseDown={(e) => {
-              if (e.target === e.currentTarget) setIsGraphModalOpen(false);
+              if (e.target === e.currentTarget) { setIsGraphModalOpen(false); window.location.hash = ''; }
             }}
           >
             <div className="bg-white w-full max-w-7xl h-full md:h-[95vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative border border-slate-800/20">
               <div className="p-3 md:p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <div className="flex items-center gap-3"><Zap size={20} className="text-emerald-600" /><h2 className="text-lg font-black text-slate-900 leading-tight">גרף ידע אינטראקטיבי</h2></div>
                 <button
-                  onClick={() => setIsGraphModalOpen(false)}
+                  onClick={() => { setIsGraphModalOpen(false); window.location.hash = ''; }}
                   className="px-2.5 py-2 hover:bg-slate-100 rounded-xl text-slate-500 transition-all flex items-center gap-2 border border-transparent hover:border-slate-200"
                   aria-label="סגור"
                 >
@@ -1580,7 +1730,7 @@ const App: React.FC = () => {
       }
 
       {/* NEW: Knowledge Graph Input Modal */}
-      <Modal isOpen={isGraphInputModalOpen} onClose={() => setIsGraphInputModalOpen(false)} title="יצירת גרף ידע (Knowledge Graph)" maxWidth="max-w-2xl">
+      <Modal isOpen={isGraphInputModalOpen} onClose={() => { setIsGraphInputModalOpen(false); window.location.hash = ''; }} title="יצירת גרף ידע (Knowledge Graph)" maxWidth="max-w-2xl">
         <div className="space-y-6">
           <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl">
             <p className="text-xs text-emerald-800 font-medium leading-relaxed">
