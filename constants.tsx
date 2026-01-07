@@ -366,10 +366,11 @@ export const STEP_DETAILS: Record<number, {
     promptSummary: "כתוב הצהרת משמעות שמשלבת את כל השלבים הקודמים לנרטיב אחד קוהרנטי.",
     extensions: [
       { name: "גרף ידע", url: "graph-create", description: "מיפוי ישויות וקשרים" },
-      { name: "קריאה סמיוטית", url: "tools", description: "סמלים וקודים תרבותיים" },
-      { name: "נרטיבים חלופיים", url: "tools", description: "פרשנויות ונקודות מבט" },
-      { name: "רעיונות חינוכיים", url: "tools", description: "הנגשה ותוכן קהילתי" },
-      { name: "ערכי קהילה", url: "tools", description: "סנטימנט ומחזיקי עניין" }
+      { name: "קריאה סמיוטית", url: "q-semiotics", description: "סמלים וקודים תרבותיים" },
+      { name: "נרטיבים חלופיים", url: "q-narratives", description: "פרשנויות ונקודות מבט" },
+      { name: "רעיונות חינוכיים", url: "q-education", description: "הנגשה ותוכן קהילתי" },
+      { name: "ערכי קהילה", url: "q-sentiment", description: "סנטימנט ומחזיקי עניין" },
+      { name: "ליצן החצר", url: "q-jester", description: "אתגור הנחות יסוד" }
     ]
   },
   6: {
