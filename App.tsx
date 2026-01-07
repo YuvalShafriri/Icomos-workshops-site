@@ -274,11 +274,91 @@ const getNodeColor = (type: string) => {
   }
 };
 
+type AgentColor = 'slate' | 'blue' | 'amber' | 'emerald' | 'indigo' | 'purple' | 'rose';
+
+const AGENT_STYLE: Record<AgentColor, { selectedCard: string; selectedIcon: string; unselectedIcon: string; chip: string; mobileSelected: string; mobileBadgeSelected: string; }> = {
+  slate: {
+    selectedCard: 'bg-white border-slate-300 ring-1 ring-slate-200 shadow-md z-10',
+    selectedIcon: 'bg-slate-900 text-white shadow-slate-200',
+    unselectedIcon: 'bg-slate-50 text-slate-700 border-slate-200',
+    chip: 'bg-slate-100 text-slate-700',
+    mobileSelected: 'bg-slate-50 border-slate-300 ring-1 ring-slate-200 text-slate-800',
+    mobileBadgeSelected: 'bg-slate-900 text-white',
+  },
+  blue: {
+    selectedCard: 'bg-white border-blue-200 ring-1 ring-blue-200 shadow-md z-10',
+    selectedIcon: 'bg-blue-600 text-white shadow-blue-200',
+    unselectedIcon: 'bg-blue-50 text-blue-700 border-blue-100',
+    chip: 'bg-blue-100 text-blue-700',
+    mobileSelected: 'bg-blue-50 border-blue-200 ring-1 ring-blue-200 text-blue-800',
+    mobileBadgeSelected: 'bg-blue-600 text-white',
+  },
+  amber: {
+    selectedCard: 'bg-white border-amber-200 ring-1 ring-amber-200 shadow-md z-10',
+    selectedIcon: 'bg-amber-600 text-white shadow-amber-200',
+    unselectedIcon: 'bg-amber-50 text-amber-700 border-amber-100',
+    chip: 'bg-amber-100 text-amber-800',
+    mobileSelected: 'bg-amber-50 border-amber-200 ring-1 ring-amber-200 text-amber-900',
+    mobileBadgeSelected: 'bg-amber-600 text-white',
+  },
+  emerald: {
+    selectedCard: 'bg-white border-emerald-200 ring-1 ring-emerald-200 shadow-md z-10',
+    selectedIcon: 'bg-emerald-600 text-white shadow-emerald-200',
+    unselectedIcon: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+    chip: 'bg-emerald-100 text-emerald-700',
+    mobileSelected: 'bg-emerald-50 border-emerald-200 ring-1 ring-emerald-200 text-emerald-800',
+    mobileBadgeSelected: 'bg-emerald-600 text-white',
+  },
+  indigo: {
+    selectedCard: 'bg-white border-indigo-200 ring-1 ring-indigo-200 shadow-md z-10',
+    selectedIcon: 'bg-indigo-600 text-white shadow-indigo-200',
+    unselectedIcon: 'bg-indigo-50 text-indigo-700 border-indigo-100',
+    chip: 'bg-indigo-100 text-indigo-700',
+    mobileSelected: 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200 text-indigo-800',
+    mobileBadgeSelected: 'bg-indigo-600 text-white',
+  },
+  purple: {
+    selectedCard: 'bg-white border-purple-200 ring-1 ring-purple-200 shadow-md z-10',
+    selectedIcon: 'bg-purple-600 text-white shadow-purple-200',
+    unselectedIcon: 'bg-purple-50 text-purple-700 border-purple-100',
+    chip: 'bg-purple-100 text-purple-700',
+    mobileSelected: 'bg-purple-50 border-purple-200 ring-1 ring-purple-200 text-purple-800',
+    mobileBadgeSelected: 'bg-purple-600 text-white',
+  },
+  rose: {
+    selectedCard: 'bg-white border-rose-200 ring-1 ring-rose-200 shadow-md z-10',
+    selectedIcon: 'bg-rose-600 text-white shadow-rose-200',
+    unselectedIcon: 'bg-rose-50 text-rose-700 border-rose-100',
+    chip: 'bg-rose-100 text-rose-700',
+    mobileSelected: 'bg-rose-50 border-rose-200 ring-1 ring-rose-200 text-rose-800',
+    mobileBadgeSelected: 'bg-rose-600 text-white',
+  },
+};
+
+const getAgentColorStyle = (colorName: string) => {
+  const normalized = (colorName || '').toLowerCase() as AgentColor;
+  return AGENT_STYLE[normalized] ?? AGENT_STYLE.slate;
+};
+
 const getAgentTheme = (agentId: number, colorName: string, isSelected: boolean) => {
+  const style = getAgentColorStyle(colorName);
   if (isSelected) {
-    return { card: `bg-white shadow-lg border-${colorName}-600 ring-4 ring-${colorName}-500/10 scale-[1.02] z-10`, icon: `bg-${colorName}-600 text-white shadow-${colorName}-200` };
+    return { card: style.selectedCard, icon: style.selectedIcon };
   }
-  return { card: `bg-white hover:shadow-md border-slate-200`, icon: `bg-${colorName}-50 text-${colorName}-600 border-${colorName}-100` };
+  return { card: 'bg-white hover:shadow-md border-slate-200', icon: style.unselectedIcon };
+};
+
+const getMobileStageTheme = (colorName: string, isSelected: boolean) => {
+  const style = getAgentColorStyle(colorName);
+  return {
+    pill: isSelected ? style.mobileSelected : 'bg-white border-slate-200 text-slate-600',
+    badge: isSelected ? style.mobileBadgeSelected : 'bg-slate-100 text-slate-500',
+  };
+};
+
+const getAgentChipTheme = (colorName: string) => {
+  const style = getAgentColorStyle(colorName);
+  return style.chip;
 };
 
 const ResourceGroup: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
@@ -355,13 +435,34 @@ const ResourceLink: React.FC<{
 };
 
 const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: React.ReactNode; children: React.ReactNode; maxWidth?: string }> = ({ isOpen, onClose, title, children, maxWidth = "max-w-3xl" }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[100] flex items-center justify-center p-2 animate-in fade-in duration-300">
+    <div
+      className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-[100] flex items-center justify-center p-2 animate-in fade-in duration-300"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div className={`bg-white w-full ${maxWidth} max-h-[98vh] rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-slate-200 animate-in zoom-in-95 duration-300`}>
         <div className="p-3 md:p-4 border-b border-slate-100 flex justify-between items-center shrink-0 bg-slate-50/50">
           <h2 className="text-base md:text-lg font-black text-slate-900 tracking-tight">{title}</h2>
-          <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-all"><X size={18} /></button>
+          <button
+            onClick={onClose}
+            className="px-2.5 py-2 hover:bg-slate-100 rounded-xl text-slate-500 transition-all flex items-center gap-2 border border-transparent hover:border-slate-200"
+            aria-label="סגור"
+          >
+            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">סגור</span>
+            <X size={18} />
+          </button>
         </div>
         <div className="flex-1 overflow-y-auto p-3 md:p-4 custom-scrollbar">{children}</div>
       </div>
@@ -384,6 +485,15 @@ const App: React.FC = () => {
   const [isResizingState, setIsResizingState] = useState<boolean>(false);
   const [promptLang, setPromptLang] = useState<'he' | 'en'>('he');
 
+  // Welcome/About overlay state
+  const [showWelcome, setShowWelcome] = useState<boolean>(() => {
+    return !localStorage.getItem('atar-bot-welcomed');
+  });
+
+  const handleCloseWelcome = () => {
+    localStorage.setItem('atar-bot-welcomed', 'true');
+    setShowWelcome(false);
+  };
 
   // Dialogue Advisor states
   const [consultationInput, setConsultationInput] = useState<string>("");
@@ -480,6 +590,17 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!showWelcome && !isGraphModalOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (isGraphModalOpen) setIsGraphModalOpen(false);
+      if (showWelcome) handleCloseWelcome();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [showWelcome, isGraphModalOpen]);
+
+  useEffect(() => {
     if (graphData && graphContainerRef.current) {
       const nodes = new DataSet(graphData.nodes.map((n: any) => ({
         ...n,
@@ -528,6 +649,13 @@ const App: React.FC = () => {
 
           <div className="p-1.5 bg-indigo-600 rounded-lg shadow-inner border border-indigo-400/20"><Cpu size={24} /></div>
           <h1 className="font-black text-2xl tracking-tight leading-none text-indigo-100">אתר.בוט - אתר הסדנאות</h1>
+          <button
+            onClick={() => setShowWelcome(true)}
+            className=" flex items-center gap-1.5 px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition-all text-slate-300 hover:text-white"
+          >
+            <Info size={14} />
+            <span className="text-s font-bold">אודות</span>
+          </button>
         </div>
         <div className="flex items-center gap-2" dir="ltr">
           <h3 className="text-slate-200 font-bold text-2xl">InSites</h3>
@@ -549,19 +677,15 @@ const App: React.FC = () => {
         {CORE_AGENTS.map((agent) => {
           const isSelected = selectedAgentId === agent.id;
           const cleanName = agent.name.replace(/^שלב \d+ - /, '');
-          const colorClass = agent.color; // e.g. 'emerald', 'violet'
-          // Dynamic classes for selection state
-          const activeClass = isSelected
-            ? `bg-${colorClass}-50 border-${colorClass}-500 ring-1 ring-${colorClass}-500 text-${colorClass}-700`
-            : `bg-white border-slate-200 text-slate-600`;
+          const mobileTheme = getMobileStageTheme(agent.color, isSelected);
 
           return (
             <button
               key={agent.id}
               onClick={() => { setSelectedAgentId(agent.id); setShowResearchAids(false); }}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 ${activeClass}`}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 ${mobileTheme.pill}`}
             >
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${isSelected ? `bg-${colorClass}-500 text-white` : 'bg-slate-100 text-slate-500'}`}>
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${mobileTheme.badge}`}>
                 {agent.id}
               </div>
               <span className="text-xs font-bold">{cleanName}</span>
@@ -579,7 +703,9 @@ const App: React.FC = () => {
           <div dir="ltr" className="flex-1 overflow-y-auto custom-scrollbar-right">
             <div dir="rtl" className="p-4 pt-1 text-right flex flex-col h-full">
               <div className="space-y-1 relative">
-                <SectionDivider label="תהליך הערכה (בגישת CBSA)" colorClass="text-slate-500" />
+                <div className="py-3 mb-2">
+                  <h3 className="text-s font-black uppercase tracking-widest text-slate-500 text-center">תהליך הערכה - בשלבים (בגישת <span className="text-[9px]">CBSA</span>)</h3>
+                </div>
                 {CORE_AGENTS.map((agent) => {
                   const theme = getAgentTheme(agent.id, agent.color, selectedAgentId === agent.id);
                   return (
@@ -596,13 +722,14 @@ const App: React.FC = () => {
                         </div>
                       </div>
                       {(agent.id === 0 || agent.id === 5) && <div className="py-2 px-4"><div className="h-px bg-slate-200 w-full opacity-50"></div></div>}
+                      {agent.id === 6 && <div className="py-3 px-4 mt-1"><div className="h-px bg-slate-300 w-full"></div></div>}
                     </React.Fragment>
                   );
                 })}
 
               </div>
 
-              <div className="pt-2 px-4 mt-10">
+              <div className="pt-2 px-3 mt-4">
                 <button
                   onClick={() => { setShowResearchAids(true); setSelectedAgentId(null); }}
                   className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all duration-300 group ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-200' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md'}`}
@@ -623,11 +750,97 @@ const App: React.FC = () => {
         </aside>
 
         <main className="flex-1 flex flex-col bg-white shadow-inner relative transition-all overflow-hidden">
+          {/* Welcome/About Overlay */}
+          {showWelcome && (
+            <div
+              className="absolute inset-0 z-40 bg-slate-900/35 backdrop-blur-sm flex items-center justify-center p-4"
+              onClick={handleCloseWelcome}
+            >
+              <div
+                className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 md:p-8 text-right animate-in fade-in zoom-in-95 duration-300 relative"
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                dir="rtl"
+              >
+                <button
+                  onClick={handleCloseWelcome}
+                  className="absolute top-3 left-3 px-2.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-all flex items-center gap-2"
+                  aria-label="סגור"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">סגור</span>
+                  <X size={18} />
+                </button>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-indigo-600 text-white rounded-xl shadow-md">
+                    <Cpu size={24} />
+                  </div>
+                  <div>
+                    <h2 className="font-black text-xl text-slate-900">ברוכים הבאים לאתר הסדנאות של אתר.בוט</h2>
+                    <p className="text-xs text-slate-400 font-medium">סוכן AI נסיוני לתמיכה בהערכת משמעות תרבותית של מורשת </p>
+                  </div>
+                </div>
+
+                <div className="text-sm text-slate-600 leading-relaxed mb-6 space-y-3">
+                  <p>
+                    אתר.בוט הוא כלי AI נסיוני להערכת משמעות תרבותית של אתרי מורשת בגישת <span className="text-xs">CBSA</span> (Context Based Significance Assessment).
+                  </p>
+                  <p>
+                    המערכת מפותחת לצרכי מחקר על ידי ד"ר יעל אלף ויובל שפרירי, ותשולב במעבדת InSites - מעבדת מחקר חדשה בפקולטה לארכיטקטורה בטכניון.
+                  </p>
+                  <p>
+                    המעבדה מוקדשת לחקר היבטי הערכה של נכסי מורשת, לצורך קבלת החלטות על שילובם בתכנון והבנת מקומם בתרבות, חברה וקהילה.
+                  </p>
+                </div>
+
+                <div className="space-y-3 mb-6">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">מה יש באתר?</h3>
+
+                  <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="p-1.5 bg-emerald-100 text-emerald-600 rounded-lg shrink-0">
+                      <CheckCircle2 size={16} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-slate-800">מסגרת השלבים</h4>
+                      <p className="text-xs text-slate-500">תהליך הערכה מובנה ב-6 שלבים (בצד ימין)</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="p-1.5 bg-indigo-100 text-indigo-600 rounded-lg shrink-0">
+                      <Zap size={16} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-slate-800">הרחבות לתהליך</h4>
+                      <p className="text-xs text-slate-500">גרף ידע, ניתוח חזותי, ניתוח אוסף והצעות לשאילתות הרחבה להדבקה בבוט</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="p-1.5 bg-amber-100 text-amber-600 rounded-lg shrink-0">
+                      <BookOpen size={16} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-slate-800">משאבים</h4>
+                      <p className="text-xs text-slate-500">קישורים לבוט, קוד המקור בגיטהאב, דוגמאות "קצת אחרת" והשראה</p>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleCloseWelcome}
+                  className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+                >
+                  <span>בואו נתחיל</span>
+                  <ArrowRight size={18} className="rotate-180" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {selectedAgentId !== null && currentAgent ? (
             <>
               <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
                 <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-xl bg-${currentAgent.color}-100 text-${currentAgent.color}-700 shadow-md border border-white`}>{React.cloneElement(currentAgent.icon as React.ReactElement<{ size?: number }>, { size: 20 })}</div>
+                  <div className={`p-2 rounded-xl ${getAgentChipTheme(currentAgent.color)} shadow-md border border-white`}>{React.cloneElement(currentAgent.icon as React.ReactElement<{ size?: number }>, { size: 20 })}</div>
                   <div>
                     <h2 className="font-black text-lg leading-tight text-slate-900 tracking-tight">{currentAgent.name}</h2>
                     <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{currentAgent.role}</p>
@@ -669,7 +882,14 @@ const App: React.FC = () => {
                     <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none">הרחבות ושאילתות משלימות</h2>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">ארגז כלים משלים להעמקה מחקרית</p>
                   </div>
-                  <button onClick={() => setShowResearchAids(false)} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-all border border-slate-100"><X size={18} /></button>
+                  <button
+                    onClick={() => setShowResearchAids(false)}
+                    className="px-3 py-2 hover:bg-slate-100 rounded-xl text-slate-600 transition-all border border-slate-200 flex items-center gap-2"
+                    aria-label="חזרה לשלבים"
+                  >
+                    <span className="text-[11px] font-black">חזרה לשלבים</span>
+                    <X size={18} className="text-slate-400" />
+                  </button>
                 </div>
 
 
@@ -838,7 +1058,7 @@ const App: React.FC = () => {
                         colorScheme="emerald"
                       />
                       <ResourceLink
-                        href="https://gemini.google.com/gem/1X7Tlt7_VSt_2zvluSHn0N9aw1kBgrdB?usp=sharing"
+                        href="https://gemini.google.com/gem/5b822b7e1771?usp=sharing"
                         icon={<Sparkles size={16} />}
                         label="אתר.בוט (Gemini)"
                         highlight={true}
@@ -850,7 +1070,7 @@ const App: React.FC = () => {
                         noBorder
                         highlight={true}
                         colorScheme="amber" />
-                      <ResourceLink href="https://github.com/YuvalShafriri/atar.bot-Icomos.Israel/blob/main/gemini.md"
+                      <ResourceLink href="https://github.com/YuvalShafriri/atar.bot-Icomos.Israel/blob/main/Bot-Brain-he.md"
                         icon={<Github size={16} />}
                         label="המוח של אתר.בוט"
                         secondaryLabel="מאגר קוד המקור והנחיות המערכת"
@@ -1207,18 +1427,33 @@ const App: React.FC = () => {
 
       {
         isGraphModalOpen && (
-          <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-[100] flex flex-col items-center justify-center p-2 animate-in fade-in duration-300">
+          <div
+            className="fixed inset-0 bg-slate-900/35 backdrop-blur-sm z-[100] flex flex-col items-center justify-center p-2 animate-in fade-in duration-300"
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setIsGraphModalOpen(false);
+            }}
+          >
             <div className="bg-white w-full max-w-7xl h-full md:h-[95vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative border border-slate-800/20">
               <div className="p-3 md:p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <div className="flex items-center gap-3"><Zap size={20} className="text-emerald-600" /><h2 className="text-lg font-black text-slate-900 leading-tight">גרף ידע אינטראקטיבי</h2></div>
-                <button onClick={() => setIsGraphModalOpen(false)} className="p-2 hover:bg-red-50 hover:text-red-500 rounded-xl text-slate-400 transition-all"><X size={20} /></button>
+                <button
+                  onClick={() => setIsGraphModalOpen(false)}
+                  className="px-2.5 py-2 hover:bg-slate-100 rounded-xl text-slate-500 transition-all flex items-center gap-2 border border-transparent hover:border-slate-200"
+                  aria-label="סגור"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">סגור</span>
+                  <X size={20} />
+                </button>
               </div>
               <div className="flex-1 relative flex overflow-hidden">
                 <div className={`w-full md:w-80 border-l border-slate-100 bg-slate-50/90 backdrop-blur-md transition-all absolute left-0 h-full z-20 overflow-y-auto ${selectedNodeDetails ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 shadow-none'}`}>
                   {selectedNodeDetails && (
                     <div className="p-5 space-y-4 text-right">
                       <div className="space-y-2">
-                        <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${getNodeColor(selectedNodeDetails.type).background} bg-opacity-20 text-slate-700`}>
+                        <span
+                          className="inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider text-slate-700"
+                          style={{ backgroundColor: `${getNodeColor(selectedNodeDetails.type).background}33` }}
+                        >
                           {TYPE_HE[selectedNodeDetails.type] || selectedNodeDetails.type}
                         </span>
                         <h3 className="text-xl font-black text-slate-900 leading-tight">{selectedNodeDetails.name || selectedNodeDetails.label}</h3>
