@@ -275,13 +275,13 @@ export const PROMPT_TRANSLATIONS: Record<number, string> = {
 };
 
 export const CORE_AGENTS: AgentConfig[] = [
-  { id: 0, name: "שלב 0 - בדיקת מידע מקדימה", role: "בדיקת פערי המידע שהועלה", color: "slate", icon: <ShieldCheck size={20} /> },
-  { id: 1, name: "שלב 1 - תיאור והקשרים", role: "תיאור, ציר זמן וניתוח הקשרים", color: "blue", icon: <Network size={20} /> },
-  { id: 2, name: "שלב 2 - ניתוח הערכים", role: "זיהוי משמעות וערכי מורשת", color: "amber", icon: <Gem size={20} /> },
-  { id: 3, name: "שלב 3 - מבחן האותנטיות והשלמות", role: "אותנטיות ומצב פיזי", color: "emerald", icon: <Puzzle size={20} /> },
-  { id: 4, name: "שלב 4 - השוואה לנכסים אחרים", role: "קריטריוני השוואה ביחס לנכסים אחרים", color: "indigo", icon: <Scale size={20} /> },
-  { id: 5, name: "שלב 5 - סינתזה והצהרת משמעות", role: "גיבוש הצהרת משמעות", color: "purple", icon: <Scroll size={20} /> },
-  { id: 6, name: "שלב 6 - בקרת איכות התהליך ", role: "ביקורת לוגית וסיכום פערים", color: "rose", icon: <SearchCheck size={20} /> }
+  { id: 0, name: "0 - בדיקת מידע מקדימה", role: "בדיקת פערי המידע שהועלה", color: "slate", icon: <ShieldCheck size={20} /> },
+  { id: 1, name: "1 - תיאור והקשרים", role: "תיאור, ציר זמן וניתוח הקשרים", color: "blue", icon: <Network size={20} /> },
+  { id: 2, name: "2 - ניתוח הערכים", role: "זיהוי משמעות וערכי מורשת", color: "amber", icon: <Gem size={20} /> },
+  { id: 3, name: "3 - מבחן האותנטיות והשלמות", role: "אותנטיות ומצב פיזי", color: "emerald", icon: <Puzzle size={20} /> },
+  { id: 4, name: "4 - השוואה לנכסים אחרים", role: "קריטריוני השוואה ביחס לנכסים אחרים", color: "indigo", icon: <Scale size={20} /> },
+  { id: 5, name: "5 - סינתזה והצהרת משמעות", role: "גיבוש הצהרת משמעות", color: "purple", icon: <Scroll size={20} /> },
+  { id: 6, name: "6 - בקרת איכות התהליך ", role: "ביקורת לוגית וסיכום פערים", color: "rose", icon: <SearchCheck size={20} /> }
 ];
 
 export const SUPPORT_AGENTS: SupportAgent[] = [
