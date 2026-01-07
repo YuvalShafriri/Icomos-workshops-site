@@ -148,6 +148,7 @@ Mandatory Stop Prompts:
 
 const RESEARCH_QUERIES = [
   {
+    route: 'q-narratives',
     title: "נרטיבים חלופיים",
     description: "בחינת האתר דרך עיניים של בעלי עניין שונים.",
     icon: <Users size={16} />,
@@ -163,6 +164,7 @@ const RESEARCH_QUERIES = [
 סיכום: הצג תובנה אינטגרטיבית על הפוטנציאל להכלה (Inclusion) של הנרטיבים השונים באתר.`
   },
   {
+    route: 'q-sentiment',
     title: "סנטימנט קהילתי",
     description: "ניתוח סנטימנט וערכי קהילה.",
     icon: <MessageCircle size={16} />,
@@ -173,6 +175,7 @@ const RESEARCH_QUERIES = [
 סיכום: מהו ה"רוח של המקום" (Genius Loci) כפי שהקהילה תופסת אותו?`
   },
   {
+    route: 'q-education',
     title: "המסרה וחינוך",
     description: "הצעות לפעילויות ותכנים באתר המבוססים על ערכי המורשת שזוהו.",
     icon: <Footprints size={16} />,
@@ -193,6 +196,7 @@ const RESEARCH_QUERIES = [
 תשתדל שהתגובות שלך יהיו קצרות באופן אופטימלי.`
   },
   {
+    route: 'q-semiotics',
     title: "ניתוח סמיוטי",
     description: "פענוח סמלים, קודים תרבותיים ומטאפורות בנכס המורשת.",
     icon: <Fingerprint size={16} />,
@@ -205,11 +209,13 @@ const RESEARCH_QUERIES = [
 3. כיצד הקוד התרבותי הזה השתנה לאורך זמן (דיאכרוניה)?`
   },
   {
+    route: 'q-jester-chorus',
     title: "ליצן החצר / מקהלה יוונית",
     description: "קולות רפלקטיביים לבחינת התהליך: ליצן החצר המערער והמקהלה המפרשת.",
     icon: <Drama size={16} />,
     subQueries: [
       {
+        route: 'q-jester',
         title: "ליצן החצר",
         description: "אתגור הנחות יסוד באמצעות שאלות פרובוקטיביות.",
         icon: <Smile size={16} />,
@@ -225,6 +231,7 @@ const RESEARCH_QUERIES = [
 סיום: סיים באמירה או שאלה שמערערת את הוודאות הקיימת.`
       },
       {
+        route: 'q-chorus',
         title: "מקהלה יוונית",
         description: "ליווי פרשני-ציבורי המאיר בחירות ומתחים ערכיים.",
         icon: <Users size={16} />,
@@ -242,6 +249,10 @@ const RESEARCH_QUERIES = [
     ]
   }
 ];
+
+type ResearchQuery = (typeof RESEARCH_QUERIES)[number];
+type ResearchSubQuery = NonNullable<ResearchQuery['subQueries']>[number];
+type ResearchQuerySelection = ResearchQuery | ResearchSubQuery;
 
 const getNodeColor = (type: string) => {
   switch (type) {
@@ -495,6 +506,12 @@ const App: React.FC = () => {
     setShowWelcome(false);
   };
 
+  const handleCloseWelcomeAndClearHash = () => {
+    localStorage.setItem('atar-bot-welcomed', 'true');
+    setShowWelcome(false);
+    window.location.hash = '';
+  };
+
   // Dialogue Advisor states
   const [consultationInput, setConsultationInput] = useState<string>("");
   const [consultationResult, setConsultationResult] = useState<string | null>(null);
@@ -511,7 +528,37 @@ const App: React.FC = () => {
   const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
   const [isGraphInputModalOpen, setIsGraphInputModalOpen] = useState(false);
   const [inventoryModalLang, setInventoryModalLang] = useState<'he' | 'en'>('he');
-  const [selectedQuery, setSelectedQuery] = useState<typeof RESEARCH_QUERIES[0] | null>(null);
+  const [selectedQuery, setSelectedQuery] = useState<ResearchQuerySelection | null>(null);
+
+  const openResearchTools = useCallback(() => {
+    setShowResearchAids(true);
+    setSelectedAgentId(null);
+    setSelectedQuery(null);
+  }, []);
+
+  const openResearchQueryByRoute = useCallback((route: string) => {
+    const main = RESEARCH_QUERIES.find((q: any) => q.route === route);
+    if (main) {
+      openResearchTools();
+      setSelectedQuery(main);
+      return;
+    }
+
+    for (const q of RESEARCH_QUERIES as any[]) {
+      const subs = q.subQueries;
+      if (Array.isArray(subs)) {
+        const sub = subs.find((s: any) => s.route === route);
+        if (sub) {
+          openResearchTools();
+          setSelectedQuery(sub);
+          return;
+        }
+      }
+    }
+
+    // Fallback: open tools if route not found
+    openResearchTools();
+  }, [openResearchTools]);
 
   // Deep linking - hash routes mapping
   const hashRoutes: Record<string, () => void> = {
@@ -521,8 +568,15 @@ const App: React.FC = () => {
     'prompts': () => setIsPromptModalOpen(true),
     'principles': () => setIsPrinciplesModalOpen(true),
     'inventory': () => setIsInventoryModalOpen(true),
-    'tools': () => { setShowResearchAids(true); setSelectedAgentId(null); },
+    'tools': () => openResearchTools(),
     'welcome': () => setShowWelcome(true),
+    'q-narratives': () => openResearchQueryByRoute('q-narratives'),
+    'q-sentiment': () => openResearchQueryByRoute('q-sentiment'),
+    'q-education': () => openResearchQueryByRoute('q-education'),
+    'q-semiotics': () => openResearchQueryByRoute('q-semiotics'),
+    'q-jester-chorus': () => openResearchQueryByRoute('q-jester-chorus'),
+    'q-jester': () => openResearchQueryByRoute('q-jester'),
+    'q-chorus': () => openResearchQueryByRoute('q-chorus'),
     'step-0': () => { setSelectedAgentId(0); setShowResearchAids(false); },
     'step-1': () => { setSelectedAgentId(1); setShowResearchAids(false); },
     'step-2': () => { setSelectedAgentId(2); setShowResearchAids(false); },
@@ -706,7 +760,7 @@ const App: React.FC = () => {
           <div className="p-1.5 bg-indigo-600 rounded-lg shadow-inner border border-indigo-400/20"><Cpu size={24} /></div>
           <h1 className="font-black text-2xl tracking-tight leading-none text-indigo-100">אתר.בוט - אתר הסדנאות</h1>
           <button
-            onClick={() => setShowWelcome(true)}
+            onClick={() => navigateTo('welcome')}
             className=" flex items-center gap-1.5 px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition-all text-slate-300 hover:text-white"
           >
             <Info size={14} />
@@ -723,7 +777,7 @@ const App: React.FC = () => {
       <div className="md:hidden flex overflow-x-auto p-2 gap-2 bg-slate-50/95 backdrop-blur border-b border-slate-200 shrink-0 sticky top-0 z-40 hide-scrollbar" dir="rtl">
         {/* Mobile Extensions Button */}
         <button
-          onClick={() => { setShowResearchAids(true); setSelectedAgentId(null); handleCloseWelcome(); }}
+          onClick={() => { navigateTo('tools'); handleCloseWelcome(); }}
           className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-white border-slate-200 text-indigo-600'}`}
         >
           <Zap size={14} className={showResearchAids ? 'text-white' : 'text-indigo-500'} />
@@ -738,7 +792,7 @@ const App: React.FC = () => {
           return (
             <button
               key={agent.id}
-              onClick={() => { setSelectedAgentId(agent.id); setShowResearchAids(false); handleCloseWelcome(); }}
+              onClick={() => { navigateTo(`step-${agent.id}`); handleCloseWelcome(); }}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 ${mobileTheme.pill}`}
             >
               <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${mobileTheme.badge}`}>
@@ -766,7 +820,7 @@ const App: React.FC = () => {
                   const theme = getAgentTheme(agent.id, agent.color, selectedAgentId === agent.id);
                   return (
                     <React.Fragment key={agent.id}>
-                      <div onClick={() => { setSelectedAgentId(agent.id); setShowResearchAids(false); handleCloseWelcome(); }} className={`relative flex items-center justify-between p-2.5 rounded-xl border-2 cursor-pointer transition-all duration-300 ${theme.card}`}>
+                      <div onClick={() => { navigateTo(`step-${agent.id}`); handleCloseWelcome(); }} className={`relative flex items-center justify-between p-2.5 rounded-xl border-2 cursor-pointer transition-all duration-300 ${theme.card}`}>
                         <div className="flex items-center gap-3">
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-sm duration-500 ${theme.icon}`}>
                             {React.cloneElement(agent.icon as React.ReactElement<{ size?: number }>, { size: 16 })}
@@ -787,7 +841,7 @@ const App: React.FC = () => {
 
               <div className="pt-2 px-3 mt-4">
                 <button
-                  onClick={() => { setShowResearchAids(true); setSelectedAgentId(null); handleCloseWelcome(); }}
+                  onClick={() => { navigateTo('tools'); handleCloseWelcome(); }}
                   className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all duration-300 group ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-200' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md'}`}
                 >
                   <div className="flex items-center gap-3">
@@ -810,7 +864,7 @@ const App: React.FC = () => {
           {showWelcome && (
             <div
               className="absolute inset-0 z-40 bg-slate-900/35 backdrop-blur-sm flex items-center justify-center p-4"
-              onClick={handleCloseWelcome}
+              onClick={handleCloseWelcomeAndClearHash}
             >
               <div
                 className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 md:p-8 text-right animate-in fade-in zoom-in-95 duration-300 relative"
@@ -818,7 +872,7 @@ const App: React.FC = () => {
                 dir="rtl"
               >
                 <button
-                  onClick={handleCloseWelcome}
+                  onClick={handleCloseWelcomeAndClearHash}
                   className="absolute top-3 left-3 px-2.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-all flex items-center gap-2"
                   aria-label="סגור"
                 >
@@ -882,7 +936,7 @@ const App: React.FC = () => {
                 </div>
 
                 <button
-                  onClick={handleCloseWelcome}
+                  onClick={handleCloseWelcomeAndClearHash}
                   className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
                 >
                   <span>בואו נתחיל</span>
@@ -902,7 +956,7 @@ const App: React.FC = () => {
                     <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{currentAgent.role}</p>
                   </div>
                 </div>
-                <button onClick={() => setSelectedAgentId(null)} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-all group flex items-center gap-2">
+                <button onClick={() => { setSelectedAgentId(null); window.location.hash = ''; }} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-all group flex items-center gap-2">
                   <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline group-hover:text-slate-600 transition-colors">סגור תצוגה</span>
                   <X size={20} />
                 </button>
@@ -976,9 +1030,9 @@ const App: React.FC = () => {
                           </button>
                         ))}
                       </div>
-                      {/* Second row - 2 items */}
-                      <div className="grid grid-cols-2 gap-2">
-                        {STEP_DETAILS[5].extensions.slice(3, 5).map((ext, idx) => (
+                      {/* Second row */}
+                      <div className="grid grid-cols-3 gap-2">
+                        {STEP_DETAILS[5].extensions.slice(3).map((ext, idx) => (
                           <button
                             key={idx}
                             onClick={() => navigateTo(ext.url)}
@@ -1033,7 +1087,7 @@ const App: React.FC = () => {
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">ארגז כלים משלים להעמקה מחקרית</p>
                   </div>
                   <button
-                    onClick={() => setShowResearchAids(false)}
+                    onClick={() => { setShowResearchAids(false); window.location.hash = ''; }}
                     className="px-3 py-2 hover:bg-slate-100 rounded-xl text-slate-600 transition-all border border-slate-200 flex items-center gap-2"
                     aria-label="חזרה לשלבים"
                   >
@@ -1100,7 +1154,7 @@ const App: React.FC = () => {
                     {RESEARCH_QUERIES.map((q, idx) => (
                       <div
                         key={idx}
-                        onClick={() => setSelectedQuery(q)}
+                        onClick={() => navigateTo(q.route)}
                         className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-indigo-200 transition-all flex flex-col group h-full relative cursor-pointer hover:shadow-md"
                       >
                         <div className="flex items-center justify-between mb-3">
@@ -1629,7 +1683,7 @@ const App: React.FC = () => {
         selectedQuery && (
           <Modal
             isOpen={!!selectedQuery}
-            onClose={() => setSelectedQuery(null)}
+            onClose={() => { setSelectedQuery(null); window.location.hash = ''; }}
             title={selectedQuery.title}
             maxWidth="max-w-3xl"
           >
@@ -1645,7 +1699,7 @@ const App: React.FC = () => {
               </div>
 
               {/* Standard Single Query Logic */}
-              {!(selectedQuery as any).subQueries && (
+              {(!('subQueries' in selectedQuery) || !Array.isArray((selectedQuery as any).subQueries)) && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                     <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
@@ -1684,9 +1738,9 @@ const App: React.FC = () => {
               )}
 
               {/* Sub-Queries Logic (Reflective Voices) */}
-              {(selectedQuery as any).subQueries && (
+              {('subQueries' in selectedQuery) && Array.isArray((selectedQuery as any).subQueries) && (
                 <div className="space-y-8">
-                  {(selectedQuery as any).subQueries.map((sub: any, idx: number) => (
+                  {((selectedQuery as any).subQueries as any[]).map((sub: any, idx: number) => (
                     <div key={idx} className="space-y-3">
                       <div className="flex items-center gap-3 border-b border-slate-100 pb-2">
                         <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">{sub.icon}</div>
@@ -1694,6 +1748,15 @@ const App: React.FC = () => {
                           <h4 className="font-bold text-slate-900 text-sm">{sub.title}</h4>
                           <p className="text-[11px] text-slate-500">{sub.description}</p>
                         </div>
+                        {sub.route && (
+                          <button
+                            onClick={() => navigateTo(sub.route)}
+                            className="ml-auto text-[10px] font-bold text-indigo-600 hover:text-indigo-800 bg-white border border-indigo-100 hover:border-indigo-200 px-2 py-1 rounded-lg transition-all"
+                            title="קישור ישיר"
+                          >
+                            קישור
+                          </button>
+                        )}
                       </div>
 
                       <div className="relative group/code">
