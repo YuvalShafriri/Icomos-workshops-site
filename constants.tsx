@@ -374,7 +374,7 @@ export const STEP_DETAILS: Record<number, {
       { name: "גרף ידע", url: "graph-create", description: "מיפוי ישויות וקשרים" },
       { name: "קריאה סמיוטית", url: "q-semiotics", description: "סמלים וקודים תרבותיים" },
       { name: "נרטיבים חלופיים", url: "q-narratives", description: "פרשנויות ונקודות מבט" },
-      { name: "רעיונות חינוכיים", url: "q-education", description: "הנגשה ותוכן קהילתי" },
+      { name: "רעיונות לתכנון פעילויות באתר", url: "q-education", description: "חינוך וקהילה" },
       { name: "ערכי קהילה", url: "q-sentiment", description: "סנטימנט ומחזיקי עניין" },
       { name: "ליצן החצר", url: "q-jester", description: "אתגור הנחות יסוד" }
     ]

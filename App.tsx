@@ -665,7 +665,7 @@ const App: React.FC = () => {
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 bg-indigo-600 text-white rounded-lg shadow-md"><TerminalSquare size={20} /></div>
                     <div>
-                      <h3 className="font-black text-lg text-slate-900">בונה פנייה מותאמת (Dialogue Advisor)</h3>
+                      <h3 className="font-black text-lg text-slate-900">יועץ לבניית הנחיות</h3>
                       <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">שלב הכנה: הגדרת תפקיד ומתודולוגיה</p>
                     </div>
                   </div>
@@ -676,7 +676,7 @@ const App: React.FC = () => {
                     <div className="relative">
                       <textarea
                         className="w-full h-32 p-4 bg-white rounded-2xl border border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none shadow-inner"
-                        placeholder="למשל: 'אני רוצה להבין את הקשר בין המכונות לערך הטכנולוגי'..."
+                        placeholder=""
                         value={consultationInput}
                         onChange={(e) => setConsultationInput(e.target.value)}
                       ></textarea>
