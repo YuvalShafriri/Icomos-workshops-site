@@ -58,6 +58,7 @@ import {
   Drama,
   Footprints
 } from 'lucide-react';
+import MarkdownRenderer from './components/MarkdownRenderer';
 import { CORE_AGENTS, DEMO_DATA, ZAIRA_TEXT, GRAPH_PROMPT, DIALOGUE_PRINCIPLES, PROMPT_ADVISOR_SYSTEM, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES, STEP_DETAILS } from './constants';
 import { callGemini } from './services/geminiService';
 import { Network } from 'vis-network';
@@ -895,10 +896,10 @@ const App: React.FC = () => {
                   </p>
                   <p>
                     המערכת מפותחת לצרכי מחקר על ידי ד"ר יעל אלף ויובל שפרירי, ותשולב במעבדת InSites - מעבדת מחקר חדשה בפקולטה לארכיטקטורה בטכניון.
-                  </p>
-                  <p>
+                
+                    <br/>
                     המעבדה מוקדשת לחקר היבטי הערכה של נכסי מורשת, לצורך קבלת החלטות על שילובם בתכנון והבנת מקומם בתרבות, חברה וקהילה.
-                  </p>
+                 </p>
                 </div>
 
                 <div className="space-y-3 mb-6">
@@ -1068,11 +1069,13 @@ const App: React.FC = () => {
                       </div>
                     </summary>
                     <div className="p-4 pt-0 border-t border-slate-200 bg-white">
-                      <div className="bg-slate-900 rounded-lg p-4 mt-3">
-                        <pre className={`whitespace-pre-wrap leading-relaxed text-xs ${promptLang === 'he' ? 'text-right font-sans text-blue-50/90' : 'text-left font-mono text-blue-100/70'}`} dir={promptLang === 'he' ? 'rtl' : 'ltr'}>
-                          {selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ""}
-                        </pre>
-                      </div>
+                        <div className="bg-slate-950 rounded-lg p-4 mt-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
+                          <MarkdownRenderer
+                            text={selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ''}
+                            dir={promptLang === 'he' ? 'rtl' : 'ltr'}
+                            theme="dark"
+                          />
+                        </div>
                     </div>
                   </details>
                 </div>
@@ -1225,9 +1228,9 @@ const App: React.FC = () => {
                                   <Copy size={14} /> העתק פנייה
                                 </button>
                               </div>
-                              <pre className="p-6 text-sm md:text-base text-indigo-50 font-mono whitespace-pre-wrap leading-relaxed selection:bg-indigo-500/30 overflow-y-auto custom-scrollbar text-right max-h-[500px]">
-                                {cleanPrompt}
-                              </pre>
+                              <div className="p-6 overflow-y-auto custom-scrollbar max-h-[500px]">
+                                <MarkdownRenderer text={cleanPrompt} dir="rtl" theme="dark" />
+                              </div>
                             </div>
 
                             {explanationText && (
@@ -1366,9 +1369,13 @@ const App: React.FC = () => {
                   </div>
 
                 </div>
-                <pre className="px-6 pb-8 pt-0 font-mono text-sm md:text-base text-emerald-50 whitespace-pre-wrap leading-relaxed text-right overflow-y-auto max-h-[50vh] custom-scrollbar selection:bg-emerald-500/30">
-                  {MARC_INSTRUCTIONS[inventoryModalLang].promptContent}
-                </pre>
+                <div className="px-6 pb-8 pt-6 overflow-y-auto max-h-[50vh] custom-scrollbar">
+                  <MarkdownRenderer
+                    text={MARC_INSTRUCTIONS[inventoryModalLang].promptContent}
+                    dir={inventoryModalLang === 'en' ? 'ltr' : 'rtl'}
+                    theme="dark"
+                  />
+                </div>
               </div>
               <button
                 onClick={() => navigator.clipboard.writeText(MARC_INSTRUCTIONS[inventoryModalLang].promptContent || '')}
@@ -1421,8 +1428,8 @@ const App: React.FC = () => {
                   <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-500/30"></div><div className="w-2.5 h-2.5 rounded-full bg-amber-500/30"></div><div className="w-2.5 h-2.5 rounded-full bg-emerald-500/30"></div></div>
                   <span className="text-[9px] font-mono text-slate-500 tracking-wider">workshop_sample_prompt.txt</span>
                 </div>
-                <div className="p-5 text-indigo-100 rounded-xl font-mono text-[11px] whitespace-pre-wrap select-all max-h-[50vh] overflow-auto custom-scrollbar leading-relaxed scroll-smooth text-right" dir="rtl">
-                  {EDUCATIONAL_PROMPT}
+                <div className="p-5 max-h-[50vh] overflow-auto custom-scrollbar" dir="rtl">
+                  <MarkdownRenderer text={EDUCATIONAL_PROMPT} dir="rtl" theme="dark" />
                 </div>
                 <div className="p-2.5 bg-slate-900/50 flex items-center justify-center gap-3">
                   <button onClick={() => { navigator.clipboard.writeText(EDUCATIONAL_PROMPT); }} className="flex items-center gap-2 text-[9px] font-black text-slate-400 hover:text-indigo-400 transition-colors uppercase tracking-widest group/copy active:scale-95">
@@ -1497,9 +1504,9 @@ const App: React.FC = () => {
                         <Copy size={12} /> העתק פנייה
                       </button>
                     </div>
-                    <pre className="p-4 text-xs md:text-sm text-indigo-50 font-mono whitespace-pre-wrap leading-relaxed selection:bg-indigo-500/30 max-h-60 overflow-y-auto custom-scrollbar text-right">
-                      {cleanPrompt}
-                    </pre>
+                    <div className="p-4 max-h-60 overflow-y-auto custom-scrollbar">
+                      <MarkdownRenderer text={cleanPrompt} dir="rtl" theme="dark" />
+                    </div>
                   </div>
 
                   {/* Explanation Section */}
@@ -1719,9 +1726,9 @@ const App: React.FC = () => {
                         </div>
                         <span className="text-[9px] font-mono text-slate-600">research_query.prompt</span>
                       </div>
-                      <pre className="p-6 font-mono text-sm text-indigo-100/90 whitespace-pre-wrap leading-relaxed text-right overflow-y-auto max-h-[40vh] custom-scrollbar selection:bg-indigo-500/30">
-                        {selectedQuery.prompt}
-                      </pre>
+                      <div className="p-6 overflow-y-auto max-h-[40vh] custom-scrollbar">
+                        <MarkdownRenderer text={selectedQuery.prompt || ''} dir="auto" theme="dark" />
+                      </div>
                     </div>
                     <button
                       onClick={() => {
@@ -1764,9 +1771,9 @@ const App: React.FC = () => {
                           <div className="bg-slate-900/50 p-2.5 border-b border-white/5 flex items-center justify-between">
                             <span className="text-[9px] font-mono text-slate-600 flex items-center gap-2"><Terminal size={10} /> prompt</span>
                           </div>
-                          <pre className="p-4 font-mono text-xs md:text-sm text-indigo-100/90 whitespace-pre-wrap leading-relaxed text-right overflow-y-auto max-h-[200px] custom-scrollbar selection:bg-indigo-500/30">
-                            {sub.prompt}
-                          </pre>
+                          <div className="p-4 overflow-y-auto max-h-[200px] custom-scrollbar">
+                            <MarkdownRenderer text={sub.prompt || ''} dir="auto" theme="dark" />
+                          </div>
                         </div>
                         <button
                           onClick={() => navigator.clipboard.writeText(sub.prompt)}
