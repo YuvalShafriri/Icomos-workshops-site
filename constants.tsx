@@ -12,7 +12,13 @@ import {
   Zap,
   MessageSquare,
   BookOpen,
-  Library
+  Library,
+  Users,
+  MessageCircle,
+  Footprints,
+  Fingerprint,
+  Drama,
+  Smile
 } from 'lucide-react';
 import { AgentConfig, SupportAgent } from './types';
 
@@ -383,5 +389,232 @@ export const STEP_DETAILS: Record<number, {
     ],
     cognitiveLink: "בודק: האם הסינתזה משלב 5 נתמכת? האם היינו קפדניים לאורך כל השלבים? האם צריך לחזור?",
     promptSummary: "בצע ביקורת על התהליך, זהה נקודות חוזק וחולשה, והצע צעדים הבאים."
+  }
+};
+
+// Node type translations for Knowledge Graph
+export const TYPE_HE: Record<string, string> = {
+  // Physical
+  site: 'אתר מורשת',
+  place: 'מקום',
+  structure: 'מבנה',
+  architectural_element: 'אלמנט אדריכלי',
+  natural_phenomenon: 'תופעת טבע',
+  // Social
+  person: 'אישיות',
+  social_group: 'קבוצה חברתית',
+  religion: 'דת/אמונה',
+  // Time/Event
+  period: 'תקופה',
+  event: 'אירוע',
+  historical_period: 'תקופה היסטורית',
+  collective_memory: 'זיכרון קולקטיבי',
+  // Abstract
+  value: 'ערך',
+  cultural_value: 'ערך תרבותי',
+  narrative: 'נרטיב',
+  tradition: 'מסורת',
+  artwork: 'יצירת אמנות',
+  // Fallback
+  physical: 'פיזי',
+  default: 'כללי'
+};
+
+// Educational prompt for AI explanation
+export const EDUCATIONAL_PROMPT = `👤 **תפקיד:** כמומחה לתחום הערכה תרבותית וגם לבינה מלאכותית יוצרת (Gen AI).
+🎯 **מטרה:** להסביר למשתתפי הסדנה מהו מודל שפה גדול (LLM) ואיך הוא שונה מחשיבה אנושית בהערכת מורשת.
+📝 **משימות:**
+1. הסבר איך מודל שפה מנסה להבין "משמעות" של נכס מורשת (למשל 'מגדל מים') דרך סטטיסטיקה וניבוי מילים, לעומת הדרך שבה חוקר אנושי מפרש אותו כצומת של זיכרונות, זהות והקשרים פיזיים.
+2. השתמש במושג "אפקט ההקשר" (Context Effect) כדי להראות איך הבינה המלאכותית יכולה לעזור לחלץ הקשרים אבל רק האדם יכול להעניק להם ערך תרבותי.
+🌀 **תוספת רפלקטיבית:** אילו 3 שאלות אתה מציע שאשאל את עצמי בכל פעם שאני מקבל ממך (הבוט) ניתוח ערכים, כדי לוודא שלא איבדתי את "הקול המקצועי" שלי?`;
+
+// MA-RC Instructions for collection analysis
+export const MARC_INSTRUCTIONS = {
+  he: {
+    title: "ניתוח אוסף הערכות",
+    purpose: "סיוע למשתמשים לסרוק אוסף של אתרים, נכסים או נופי תרבות עירוניים באמצעות תהליך מובנה מונחה-משתמש",
+    promptContent: `פעל כמנהל מורשת ומדען נתונים. המשימה - ניתוח רוחבי של האוסף שהועלה בשלבים:
+
+1. קריאה ואינדוקס: נתח את הקבצים שהועלה ללא הקדמות. אנדקס כל רשומה כ'אתר', 'נכס' או 'נוף תרבות עירוני'.
+
+2. דגלי ראיות: סמן (✓/—) עבור כל פריט: קיום ערכים, הצהרת משמעות, שלמות ואותנטיות, ומידע מתוארך.
+
+3. טבלת תמונת מצב: הצג טבלה מרכזת של עד 10 שורות עם נתוני ליבה של האוסף.
+
+4. סיכום נתונים: תאר בקצרה (3-5 משפטים) דפוסים בולטים, ערכים ותמות מרכזיות ופערי מידע בתוך האוסף.
+
+שאלות עצירה מנדטוריות (Stop Prompts):
+• האם יש מה להוסיף או לתקן בתמונת המצב או בסיכום?
+• האם תרצה אפשרויות ניתוח (כמותי / איכותני)?
+• האם תרצה אפשרויות לסיווג אתרים לצרכי ניהול מורשת?`,
+    steps: [],
+    prompts: []
+  },
+  en: {
+    title: "Assessment Collection Analysis [MA-RC]",
+    purpose: "Assist users in scanning a collection of sites, assets, or urban-cultural landscapes using structured, user-led steps.",
+    promptContent: `Act as a Quality Controller and Information Specialist for Heritage Collections. Mission: Perform a cross-sectional analysis of the uploaded collection according to the following steps:
+
+1. Read & Index
+   >> Parse uploaded files without excessive preamble; index each record as Site / Asset / Urban-Cultural Landscape.
+
+2. Evidence Flags
+   >> For every item note (✓/—) for: Values (CA-V), Significance statements, Integrity/Auth, and Dated info.
+
+3. Snapshot Table
+   >> Display totals plus a summary table (max 10 rows).
+
+4. Data Summary
+   >> Write 3-5 sentences on evident patterns and gaps. Strictly descriptive.
+
+---
+Mandatory Stop Prompts:
+• Anything to add or correct in the snapshot or summary?
+• Would you like analysis options?
+• Would you like proposed site classification options?`,
+    steps: [],
+    prompts: []
+  }
+};
+
+// Research queries for extensions
+export const RESEARCH_QUERIES = [
+  {
+    route: 'q-narratives',
+    title: "נרטיבים חלופיים",
+    description: "בחינת האתר דרך עיניים של בעלי עניין שונים.",
+    icon: <Users size={16} />,
+    prompt: `פעל כחוקר מורשת בגישת 'ניהול מבוסס-ערכים' (Values-Based Management) ומתודולוגיית CBSA, המקדמת **רב-קוליות** (Polyvocality) בתהליכי שימור.
+
+המשימה: נתח את האתר דרך 'עדשות' של 3 קבוצות זהות או בעלי עניין שונים ומובהקים (למשל: תושבים ותיקים, יזם פיתוח, דמות היסטורית, או סופר שיצירתו מהדהדת את המקום).
+
+עבור כל קבוצה, נתח:
+1. שיקוף ערכי: מהם ערכי המורשת המרכזיים שקבוצה זו מייחסת לאתר? (למשל: ערך חברתי, סמלי, כלכלי, או זהותי).
+2. מוקדי מתח: היכן הפרשנות שלהם מתנגשת עם נרטיבים של קבוצות אחרות?
+3. תפקיד המרחב: כיצד האתר הפיזי משמש כ**גשר** (מחבר בין הזהויות) או כ**חסם** (מנציח את הקונפליקט)?
+
+סיכום: הצג תובנה אינטגרטיבית על הפוטנציאל להכלה (Inclusion) של הנרטיבים השונים באתר.`
+  },
+  {
+    route: 'q-sentiment',
+    title: "סנטימנט קהילתי",
+    description: "ניתוח סנטימנט וערכי קהילה.",
+    icon: <MessageCircle size={16} />,
+    prompt: `פעל כנתח סנטימנט וערכים קהילתיים.
+משימה: מתוך הטקסט המצורף, חלץ את "מפת הערכים החברתיים".
+חפש מילות מפתח רגשיות, זיכרונות משותפים, ותיאורי שימוש יומיומיים.
+הצג בטבלה: [מובאה מהטקסט] | [ערך חברתי שזהה] | [עוצמת הקשר הרגשי].
+סיכום: מהו ה"רוח של המקום" (Genius Loci) כפי שהקהילה תופסת אותו?`
+  },
+  {
+    route: 'q-education',
+    title: "המסרה וחינוך",
+    description: "הצעות לפעילויות ותכנים באתר המבוססים על ערכי המורשת שזוהו.",
+    icon: <Footprints size={16} />,
+    prompt: `פעל כצוות של מתכנן בכיר להמסרת מורשת (Heritage Interpretation) ומפתח פעילויות למידה בהתמחות למידה בשטח.
+המשימה: גיבוש 3 קונספטים לפעילות חווייתית-חינוכית באתר, המנכיחים את 'הצהרת המשמעות' ואת מאפייני האתר שזיהינו.
+
+תהליך העבודה:
+1. איסוף נתונים (שלב מקדים): לפני הצגת הרעיונות, שאל אותי לגבי המאפיינים הפיזיים של האתר שיש לקחת בחשבון, מצב השימור הנוכחי ואילוצים ניהוליים/אחרים שיש לקחת בחשבון. המתן לתשובתי.
+2. פיתוח ההצעות: על בסיס תשובתי, פתח 3 הצעות המשלבות למידה פעילה (Learning by Doing) וממשק פיזי-דיגיטלי (Phygital) המותאם לאופי האתר או רעיון יצירתי אחר לא מוגבל.
+
+מבנה כל הצעה:
+• הערך המוביל: איזה ערך/ים מורשת ספציפי/ם (מתוך הניתוח הקודם) הפעילות 'מפעילה'?
+• פרופיל החוויה: קהל היעד, המטרה הפדגוגית והרגש המרכזי שיוצרת הפעילות.
+• תיאור הפעילות: מה המבקר עושה בפועל? (חיבור בין המרחב הפיזי לתוכן).
+• היבטים תכנוניים: דרישות פיזיות/תשתיות נדרשות באתר למימוש הפעילות.
+• היתכנות: הערכת משאבים נדרשת (תקציב/תפעול).
+
+תשתדל שהתגובות שלך יהיו קצרות באופן אופטימלי.`
+  },
+  {
+    route: 'q-semiotics',
+    title: "ניתוח סמיוטי",
+    description: "פענוח סמלים, קודים תרבותיים ומטאפורות בנכס המורשת.",
+    icon: <Fingerprint size={16} />,
+    prompt: `פעל כמומחה לסמיוטיקה תרבותית.
+משימה: בצע "קריאה סמיוטית" של האתר.
+זהה 3 אלמנטים (פיזיים או מופשטים) המתפקדים כ"סימנים" תרבותיים.
+עבור כל סימן:
+1. מהו המסמן (האלמנט הפיזי)?
+2. מהו המסומל (המשמעות התרבותית/המטאפורה)?
+3. כיצד הקוד התרבותי הזה השתנה לאורך זמן (דיאכרוניה)?`
+  },
+  {
+    route: 'q-jester-chorus',
+    title: "ליצן החצר / מקהלה יוונית",
+    description: "קולות רפלקטיביים לבחינת התהליך: ליצן החצר המערער והמקהלה המפרשת.",
+    icon: <Drama size={16} />,
+    subQueries: [
+      {
+        route: 'q-jester',
+        title: "ליצן החצר",
+        description: "אתגור הנחות יסוד באמצעות שאלות פרובוקטיביות.",
+        icon: <Smile size={16} />,
+        prompt: `פעל כ"ליצן החצר" ברוח מתודולוגיית CBSA.
+תפקידך: לאתגר את הניתוח מבפנים בקול חתרני–משחקי, ולחשוף סתירות, ביטחון־יתר והנחות נסתרות — מבלי להוסיף עובדות.
+פעל כך:
+1. ערער על ניסוחים בטוחים מדי ("האומנם?").
+2. הצבע על סתירות פנימיות או אבסורדים שהניתוח מנסה להחליק.
+3. חשוף הנחות סמויות שלא נאמרו במפורש.
+4. השתמש בהיפוך, אירוניה ושאלה חדה.
+מה לא לעשות: אל תוסיף מידע או הקשרים, אל תציע ניתוח חלופי, ואל תדבר בשפה סמכותית.
+טון: חד, שובב, לא רשמי אך אינטליגנטי. מותר להגזים מעט כדי לחשוף אמת.
+סיום: סיים באמירה או שאלה שמערערת את הוודאות הקיימת.`
+      },
+      {
+        route: 'q-chorus',
+        title: "מקהלה יוונית",
+        description: "ליווי פרשני-ציבורי המאיר בחירות ומתחים ערכיים.",
+        icon: <Users size={16} />,
+        prompt: `פעל כ"קול המקהלה היוונית" ברוח מתודולוגיית CBSA.
+תפקידך: ללוות את הפלט הקיים בקול פרשני–ציבורי מודע, מבלי להוסיף מידע חדש ומבלי להכריע.
+פעל כך:
+1. הצבע על מעברים מתיאור למשמעות.
+2. האר בחירות ניסוח שקטות והנחות מובלעות.
+3. סמן מתחים ערכיים או מוקדי רגישות.
+4. התייחס למשמעות של אופן הניסוח, לא לנכונות העובדות.
+מה לא לעשות: אל תוסיף ראיות, הקשרים או פרשנות חדשה. אל תציע ניסוח חלופי מלא, ואל תקבע מה נכון או שגוי.
+טון: זהיר, ציבורי, מודע לעצמו. השתמש בניסוחים מסייגים ("כך זה עשוי להישמע", "יש כאן בחירה").
+סיום: סיים תמיד בשאלת עצירה פתוחה שמחזירה את האחריות למשתמש.`
+      }
+    ]
+  }
+];
+
+// Types for research queries
+export type ResearchQuery = (typeof RESEARCH_QUERIES)[number];
+export type ResearchSubQuery = NonNullable<ResearchQuery['subQueries']>[number];
+export type ResearchQuerySelection = ResearchQuery | ResearchSubQuery;
+
+// Node color mapping for Knowledge Graph visualization
+export const getNodeColor = (type: string) => {
+  switch (type) {
+    // Physical/Spatial - Green/Stone/Teal
+    case 'site': return { background: '#10b981', border: '#047857', highlight: '#34d399' };
+    case 'place': return { background: '#10b981', border: '#047857', highlight: '#34d399' };
+    case 'structure': return { background: '#64748b', border: '#334155', highlight: '#94a3b8' };
+    case 'architectural_element': return { background: '#78716c', border: '#44403c', highlight: '#a8a29e' };
+    case 'natural_phenomenon': return { background: '#059669', border: '#064e3b', highlight: '#34d399' };
+
+    // Human/Social - Violet/Pink/Purple
+    case 'person': return { background: '#8b5cf6', border: '#5b21b6', highlight: '#a78bfa' };
+    case 'social_group': return { background: '#ec4899', border: '#be185d', highlight: '#f472b6' };
+    case 'religion': return { background: '#a855f7', border: '#7e22ce', highlight: '#c084fc' };
+
+    // Temporal/Events - Orange/Blue/Cyan
+    case 'period': return { background: '#f59e0b', border: '#b45309', highlight: '#fbbf24' };
+    case 'event': return { background: '#f59e0b', border: '#b45309', highlight: '#fbbf24' };
+    case 'historical_period': return { background: '#3b82f6', border: '#1e3a8a', highlight: '#60a5fa' };
+    case 'collective_memory': return { background: '#06b6d4', border: '#0e7490', highlight: '#67e8f9' };
+
+    // Cultural/Abstract - Amber/Rose/Fuchsia
+    case 'value': return { background: '#f59e0b', border: '#b45309', highlight: '#fbbf24' };
+    case 'cultural_value': return { background: '#d97706', border: '#b45309', highlight: '#f59e0b' };
+    case 'narrative': return { background: '#f43f5e', border: '#be123c', highlight: '#fb7185' };
+    case 'tradition': return { background: '#14b8a6', border: '#0f766e', highlight: '#5eead4' };
+    case 'artwork': return { background: '#d946ef', border: '#a21caf', highlight: '#e879f9' };
+
+    default: return { background: '#94a3b8', border: '#475569', highlight: '#cbd5e1' };
   }
 };
