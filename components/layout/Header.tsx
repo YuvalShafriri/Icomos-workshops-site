@@ -17,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
         </h1>
         <button
           onClick={onAboutClick}
+          title="מה יש באתר?"
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl border border-indigo-400/30 transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99]"
         >
           <Info size={16} />
