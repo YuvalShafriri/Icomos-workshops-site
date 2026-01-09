@@ -45,7 +45,6 @@ import {
 } from 'lucide-react';
 import MarkdownRenderer from './components/MarkdownRenderer';
 import { Modal, ResourceLink, ResourceGroup, SectionDivider } from './components/common';
-import Transition from './components/common/Transition';
 import { Header, Sidebar, MobileNav } from './components/layout';
 import { WelcomeOverlay } from './components/views';
 import { PrinciplesModal, DemoModal, InventoryModal, PromptAdvisorModal, GraphInputModal, ResearchQueryModal, GraphModal } from './components/modals';
@@ -434,8 +433,7 @@ const App: React.FC = () => {
           {/* Welcome/About Overlay */}
           {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} />}
 
-          <Transition show={selectedAgentId !== null} duration={250} className="flex-1">
-            {selectedAgentId !== null && currentAgent && (
+          {selectedAgentId !== null && currentAgent ? (
             <>
               <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
                 <div className="flex items-center gap-4">
@@ -550,11 +548,7 @@ const App: React.FC = () => {
                 </div>
               </div>
             </>
-            )}
-          </Transition>
-
-          <Transition show={showResearchAids} duration={250} className="flex-1">
-            {showResearchAids && (
+          ) : showResearchAids ? (
             <div className="flex-1 flex flex-col bg-white overflow-y-auto custom-scrollbar animate-in fade-in duration-300 pb-20">
               <div className="p-6 md:p-10 max-w-5xl mx-auto w-full space-y-6">
                 <div className="flex justify-between items-end">
@@ -723,11 +717,7 @@ const App: React.FC = () => {
                 </section>
               </div>
             </div>
-            )}
-          </Transition>
-
-          <Transition show={!showResearchAids && selectedAgentId === null} duration={250} className="flex-1">
-            {(!showResearchAids && selectedAgentId === null) && (
+          ) : (
             <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 animate-in fade-in duration-300 custom-scrollbar">
               <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
                 <div className="text-right pt-2 md:pt-3"><h3 className="text-xl font-black text-slate-500 mb-0.5 leading-tight">משאבים לסדנת איקומוס אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
@@ -809,8 +799,7 @@ const App: React.FC = () => {
                 </div>
               </div>
             </div>
-            )}
-          </Transition>
+          )}
         </main>
       </div>
 

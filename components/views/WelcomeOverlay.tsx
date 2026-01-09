@@ -1,5 +1,6 @@
 import React from 'react';
-import { X, Cpu, CheckCircle2, Zap, BookOpen, ArrowRight } from 'lucide-react';
+import { Cpu, CheckCircle2, Zap, BookOpen } from 'lucide-react';
+import { Modal } from '../common';
 
 export interface WelcomeOverlayProps {
   onClose: () => void;
@@ -7,46 +8,43 @@ export interface WelcomeOverlayProps {
 
 export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
   return (
-    <div
-      className="absolute inset-0 z-40 bg-slate-900/35 backdrop-blur-sm flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 md:p-8 text-right animate-in fade-in zoom-in-95 duration-300 relative"
-        onClick={(e: React.MouseEvent) => e.stopPropagation()}
-        dir="rtl"
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-3 left-3 px-2.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-all flex items-center gap-2"
-          aria-label="סגור"
-        >
-          <span className="text-[12px] font-black uppercase tracking-widest hidden sm:inline">סגור</span>
-          <X size={18} />
-        </button>
-
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-indigo-600 text-white rounded-xl shadow-md">
-            <Cpu size={24} />
+    <Modal
+      isOpen
+      onClose={onClose}
+      maxWidth="max-w-2xl"
+      title={
+        <div className="flex items-center gap-2 md:gap-3 min-w-0">
+          <div className="p-1.5 md:p-2 bg-indigo-600 text-white rounded-xl shadow-md shrink-0">
+            <Cpu size={16} className="md:hidden" />
+            <Cpu size={22} className="hidden md:block" />
           </div>
-          <div>
-            <h2 className="font-black text-xl text-slate-500"> מרכז המשאבים של סדנאות אתר.בוט</h2>
-            <p className="text-[13px] text-slate-400 font-medium">סוכן AI לתמיכה בהערכת משמעות תרבותית של מורשת</p>
+          <div className="min-w-0">
+            <div className="font-black text-sm sm:text-base md:text-lg leading-tight truncate">
+              מרכז המשאבים של סדנאות אתר.בוט
+            </div>
+            <div className="text-[11px] md:text-[13px] text-slate-400 font-medium truncate">
+              סוכן AI לתמיכה בהערכת משמעות תרבותית של מורשת
+            </div>
           </div>
         </div>
-
+      }
+    >
+      <div className="text-right" dir="rtl">
         <div className="text-sm text-slate-600 leading-relaxed mb-6 space-y-3">
           <p>
-            אתר.בוט הוא כלי AI ניסויי להערכת משמעות תרבותית של אתרי מורשת בגישת <span className="text-s">CBSA <br/>(Context Based Significance Assessment)</span>.
+            אתר.בוט הוא כלי AI ניסויי להערכת משמעות תרבותית של אתרי מורשת בגישת{' '}
+            <span className="text-s">
+              CBSA <br />(Context Based Significance Assessment)
+            </span>.
           </p>
           <p>
-            המערכת מפותחת לצרכי מחקר על ידי ד"ר יעל אלף ויובל שפרירי, ותשולב במעבדת <b>InSites</b> - מעבדת מחקר חדשה בפקולטה לארכיטקטורה בטכניון.
-           
+            המערכת מפותחת לצרכי מחקר על ידי ד"ר יעל אלף ויובל שפרירי, ותשולב במעבדת <b>InSites</b> - מעבדת מחקר חדשה
+            בפקולטה לארכיטקטורה בטכניון.
             המעבדה תעסוק בחקר היבטי הערכה של נכסי מורשת, לצורך קבלת החלטות על שילובם בתכנון והבנת מקומם בתרבות, חברה וקהילה.
           </p>
         </div>
 
-        <div className="space-y-3 mb-6">
+        <div className="space-y-3">
           <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">מה יש באתר?</h3>
 
           <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
@@ -55,7 +53,9 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
             </div>
             <div>
               <h4 className="font-bold text-sm text-slate-800">מסגרת שלבי ההערכה</h4>
-              <p className="text-[12px] text-slate-500">תהליך ההערכה המובנה שקיים באתר.בוט (בצד ימין) - בלחיצה על כל שלב אפשר לראות את הרציונל ותמצית ההנחיות שלו  </p>
+              <p className="text-[12px] text-slate-500">
+                תהליך ההערכה המובנה שקיים באתר.בוט (בצד ימין) - בלחיצה על כל שלב אפשר לראות את הרציונל ותמצית ההנחיות שלו
+              </p>
             </div>
           </div>
 
@@ -79,16 +79,8 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
             </div>
           </div>
         </div>
-
-        {/* <button
-          onClick={onClose}
-          className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
-        >
-          <span>בואו נתחיל</span>
-          <ArrowRight size={18} className="rotate-180" />
-        </button> */}
       </div>
-    </div>
+    </Modal>
   );
 };
 
