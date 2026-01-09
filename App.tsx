@@ -720,7 +720,7 @@ const App: React.FC = () => {
           ) : (
             <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 animate-in fade-in duration-300 custom-scrollbar">
               <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
-                <div className="text-right pt-2 md:pt-3"><h2 className="text-xl font-black text-slate-900 mb-0.5 leading-tight">משאבים לסדנת איקומוס אתר.בוט</h2><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
+                <div className="text-right pt-2 md:pt-3"><h3 className="text-xl font-black text-slate-500 mb-0.5 leading-tight">משאבים לסדנת איקומוס אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 gap-4">
                     <ResourceGroup title="כלי הערכה: אתר.בוט">

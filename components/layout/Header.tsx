@@ -54,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
             className="flex items-center gap-2 px-4 py-2 rounded-xl border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn"
           >
             <Info size={16} />
-            <span className="text-sm font-black">אודות</span>
+            <span className="text-m">מה יש באתר?</span>
           </button>
 
           
