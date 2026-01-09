@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Cpu, Info } from 'lucide-react';
 
 export interface HeaderProps {
@@ -6,19 +6,13 @@ export interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
-  const [brand, setBrand] = useState<string>(() => {
+  const [brand] = useState<string>(() => {
     try {
       return localStorage.getItem('siteBrandColor') || '#4F46E5';
     } catch {
       return '#4F46E5';
     }
   });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('siteBrandColor', brand);
-    } catch {}
-  }, [brand]);
 
   const lightenHex = (hex: string, percent: number) => {
     const h = hex.replace('#', '');
@@ -39,33 +33,51 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
   };
 
   return (
-    <header style={headerStyle} className="bg-[#020617] text-white p-2 flex justify-between items-center shadow-xl z-50 shrink-0 border-b border-slate-800 px-6">
-      <div className="flex items-center gap-4">
-        <div className="p-1.5 rounded-lg shadow-inner cpu-box" style={{ boxShadow: 'inset 0 0 6px rgba(0,0,0,0.25)' }}>
-          <Cpu size={24} />
-        </div>
-        <h1 className="font-black text-lg tracking-tight leading-none text-indigo-100">
-          אתר.בוט - אתר הסדנאות
-        </h1>
-        <div className="flex items-center gap-2 ">
+    <header
+      style={headerStyle}
+      className="bg-[#020617] text-white shadow-xl z-50 shrink-0 border-b border-slate-800 px-3 py-2 md:px-6"
+    >
+      <div className="w-full flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0 flex items-center gap-3">
+          <div
+            className="p-1.5 md:p-2 rounded-lg shadow-inner cpu-box"
+            style={{ boxShadow: 'inset 0 0 6px rgba(0,0,0,0.25)' }}
+          >
+            <Cpu size={22} />
+          </div>
+
+          <h1 className="min-w-0 font-black tracking-tight leading-none text-indigo-100 text-base md:text-lg truncate">
+            סדנת אתר.בוט
+          </h1>
+
           <button
             onClick={onAboutClick}
             title="מה יש באתר?"
-            className="flex items-center gap-2 px-2 py-1.2 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn"
-            style={{ height: 32 }}
+            aria-label="מה יש באתר?"
+            className="flex items-center justify-center w-9 h-9 md:w-9 md:h-8 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn"
           >
-            <Info size={16} />
-            <span className="text-m">מה יש באתר?</span>
+            <Info size={18} />
           </button>
-
-          
         </div>
-      </div>
-      <div className="flex items-center gap-3" dir="ltr">
-        {/* Technion logo: place Technion_Logo.png (horizontal) in the project's public/ folder */}
-        <img src="/Technion_Logo.png" alt="Technion" className="h-6 md:h-7 lg:h-8 object-contain inline-block mr-3" />
-        <h3 className="pt-2 text-slate-200 font-bold text-[1.5rem]">InSites Lab</h3>
-        <div className="w-1 h-4 bg-slate-800 rounded-full"></div>
+
+        <div className="flex items-center gap-2 md:gap-3" dir="ltr">
+          {/* Mobile Technion logo (public/technion-small.png) */}
+          <img
+            src="/technion-small.png"
+            alt="Technion"
+            className="h-7 object-contain inline-block md:hidden"
+          />
+
+          {/* Desktop Technion logo (public/Technion_Logo.png) */}
+          <img
+            src="/Technion_Logo.png"
+            alt="Technion"
+            className="h-6 md:h-7 lg:h-8 object-contain hidden md:inline-block mr-1"
+          />
+
+          <h3 className="text-slate-200 font-bold text-lg md:text-[1.5rem] leading-none">InSites Lab</h3>
+          <div className="w-1 h-4 bg-slate-800 rounded-full"></div>
+        </div>
       </div>
       <style>{`
         .brand-btn{ background: var(--brand); border: 1px solid rgba(255,255,255,0.06); }
