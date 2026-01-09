@@ -38,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
       className="bg-[#020617] text-white shadow-xl z-50 shrink-0 border-b border-slate-800 px-3 py-2 md:px-6"
     >
       <div className="w-full flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           <div
             className="p-1.5 md:p-2 rounded-lg shadow-inner cpu-box"
             style={{ boxShadow: 'inset 0 0 6px rgba(0,0,0,0.25)' }}
@@ -49,33 +49,34 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
           <h1 className="min-w-0 flex-1 font-black tracking-tight leading-none text-indigo-100 text-base md:text-lg truncate">
             סדנת אתר.בוט
           </h1>
-
-          <button
-            onClick={onAboutClick}
-            title="מה יש באתר?"
-            aria-label="מה יש באתר?"
-            className="cursor-pointer flex items-center justify-center w-9 h-9 md:w-10 md:h-9 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn md:ring-1 md:ring-white/20 md:shadow-md md:hover:shadow-lg md:hover:ring-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-          > 
-            <Info className="w-[18px] h-[18px] md:w-5 md:h-5" strokeWidth={2.5} />
-          </button>
         </div>
 
         <div className="flex items-center gap-2 md:gap-3 shrink-0 whitespace-nowrap" dir="ltr">
           {/* Mobile Technion logo (public/technion-small.png) */}
           <img
-            src="/technion-small.png"
+            src="technion-small.png"
             alt="Technion"
             className="h-6 object-contain inline-block md:hidden"
           />
 
           {/* Desktop Technion logo (public/Technion_Logo.png) */}
           <img
-            src="/Technion_Logo.png"
+            src="Technion_Logo.png"
             alt="Technion"
             className="h-6 md:h-7 lg:h-8 object-contain hidden md:inline-block mr-1"
           />
 
           <h3 className="text-slate-200 font-bold text-lg md:text-[1.5rem] leading-none">InSites Lab</h3>
+
+          <button
+            onClick={onAboutClick}
+            title="מה יש באתר?"
+            aria-label="מה יש באתר?"
+            className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn md:ring-1 md:ring-white/20 md:shadow-md md:hover:shadow-lg md:hover:ring-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+          >
+            <Info className="w-[18px] h-[18px] md:w-6 md:h-6" strokeWidth={1.8} />
+          </button>
+
           <div className="w-1 h-4 bg-slate-800 rounded-full"></div>
         </div>
       </div>
