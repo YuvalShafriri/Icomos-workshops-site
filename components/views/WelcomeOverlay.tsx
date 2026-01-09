@@ -21,7 +21,7 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
           className="absolute top-3 left-3 px-2.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-all flex items-center gap-2"
           aria-label="סגור"
         >
-          <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">סגור</span>
+          <span className="text-[12px] font-black uppercase tracking-widest hidden sm:inline">סגור</span>
           <X size={18} />
         </button>
 
@@ -37,12 +37,12 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
 
         <div className="text-sm text-slate-600 leading-relaxed mb-6 space-y-3">
           <p>
-            אתר.בוט הוא כלי AI נסיוני להערכת משמעות תרבותית של אתרי מורשת בגישת <span className="text-xs">CBSA</span> (Context Based Significance Assessment).
+            אתר.בוט הוא כלי AI נסיוני להערכת משמעות תרבותית של אתרי מורשת בגישת <span className="text-s">CBSA <br/>(Context Based Significance Assessment)</span>.
           </p>
           <p>
-            המערכת מפותחת לצרכי מחקר על ידי ד"ר יעל אלף ויובל שפרירי, ותשולב במעבדת InSites - מעבדת מחקר חדשה בפקולטה לארכיטקטורה בטכניון.
-            <br />
-            המעבדה מוקדשת לחקר היבטי הערכה של נכסי מורשת, לצורך קבלת החלטות על שילובם בתכנון והבנת מקומם בתרבות, חברה וקהילה.
+            המערכת מפותחת לצרכי מחקר על ידי ד"ר יעל אלף ויובל שפרירי, ותשולב במעבדת <b>InSites</b> - מעבדת מחקר חדשה בפקולטה לארכיטקטורה בטכניון.
+           
+            המעבדה תעסוק בחקר היבטי הערכה של נכסי מורשת, לצורך קבלת החלטות על שילובם בתכנון והבנת מקומם בתרבות, חברה וקהילה.
           </p>
         </div>
 
@@ -55,7 +55,7 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
             </div>
             <div>
               <h4 className="font-bold text-sm text-slate-800">מסגרת השלבים</h4>
-              <p className="text-xs text-slate-500">תהליך הערכה מובנה ב-6 שלבים (בצד ימין)</p>
+              <p className="text-[12px] text-slate-500">תהליך ההערכה המובנה שקיים באתר.בוט (בצד ימין) - בלחיצה על כל שלב אפשר לראות את הרציונל ותמצית ההנחיות שלו  </p>
             </div>
           </div>
 
@@ -80,13 +80,13 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
           </div>
         </div>
 
-        <button
+        {/* <button
           onClick={onClose}
           className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
         >
           <span>בואו נתחיל</span>
           <ArrowRight size={18} className="rotate-180" />
-        </button>
+        </button> */}
       </div>
     </div>
   );

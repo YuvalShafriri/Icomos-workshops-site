@@ -1,7 +1,16 @@
 @import "tailwindcss";
 
+/* Base font size - ensures consistency across all browsers and devices */
+html {
+    font-size: 16px; /* Standard base - all rem values will be relative to this */
+    -webkit-text-size-adjust: 100%; /* Prevent iOS font scaling */
+    text-size-adjust: 100%;
+}
+
 body {
     font-family: 'Assistant', sans-serif;
+    font-size: 1rem; /* 16px */
+    line-height: 1.5;
 }
 
 ::-webkit-scrollbar {

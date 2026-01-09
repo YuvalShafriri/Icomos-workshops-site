@@ -42,9 +42,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div dir="ltr" className="flex-1 overflow-y-auto custom-scrollbar-right">
         <div dir="rtl" className="p-4 pt-1 text-right flex flex-col h-full">
           <div className="space-y-1 relative">
-            <div className="py-3 mb-2">
-              <h3 className="text-s font-black uppercase tracking-widest text-slate-500 text-center">
-                תהליך הערכה - בשלבים (בגישת <span className="text-[9px]">CBSA</span>)
+            <div className="py-2 mb-0">
+              <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 text-center">
+                תהליך הערכה  בשלבים (בגישת <span className="text-[12px]">CBSA</span>)
               </h3>
             </div>
 
@@ -54,23 +54,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <React.Fragment key={agent.id}>
                   <div
                     onClick={() => onAgentSelect(agent.id)}
-                    className={`relative flex items-center justify-between p-2.5 rounded-xl border-2 cursor-pointer transition-all duration-300 ${theme.card}`}
+                    className={`relative flex items-center justify-between p-2 rounded-xl border-2 cursor-pointer transition-all duration-300 ${theme.card}`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-sm duration-500 ${theme.icon}`}>
+                      <div className={`w-8 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm duration-500 ${theme.icon}`}>
                         {React.cloneElement(agent.icon as React.ReactElement<{ size?: number }>, { size: 16 })}
                       </div>
                       <div>
                         <h3 className={`font-bold text-[13px] leading-tight ${selectedAgentId === agent.id ? 'text-slate-900' : 'text-slate-600'}`}>
                           {agent.name}
                         </h3>
-                        <p className="text-[8px] text-slate-400 font-bold uppercase tracking-wide">{agent.role}</p>
+                        <p className="text-[12px] text-slate-500  uppercase tracking-wide">{agent.role}</p>
                       </div>
                     </div>
                   </div>
                   {(agent.id === 0 || agent.id === 5) && (
-                    <div className="py-2 px-4">
-                      <div className="h-px bg-slate-200 w-full opacity-50"></div>
+                    <div className="py-1 px-4">
+                      <div className="h-px bg-slate-400 w-full opacity-70"></div>
                     </div>
                   )}
                   {agent.id === 6 && (
@@ -84,17 +84,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           {/* Research Aids Button */}
-          <div className="pt-2 px-3 mt-4">
+          <div className="pt-0 px-3 mt-0 pb-2">
             <button
               onClick={onResearchAidsClick}
-              className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all duration-300 group ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-200' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md'}`}
+              className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all duration-300 group cursor-pointer ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-200' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md'}`}
             >
               <div className="flex items-center gap-3">
                 <div className={`p-1.5 rounded-lg transition-all ${showResearchAids ? 'bg-white/20 text-white' : 'bg-slate-50 text-indigo-500 group-hover:bg-indigo-50'}`}>
                   <Zap size={14} />
                 </div>
                 <div className="text-right">
-                  <h3 className="font-bold text-[11px] uppercase tracking-wider">הרחבות וכלים</h3>
+                  <h3 className="font-bold text-[13px] uppercase tracking-wider">הרחבות וכלים</h3>
                 </div>
               </div>
               <ChevronLeft

@@ -31,7 +31,10 @@ import {
   SearchCheck,
   Box,
   Layout,
+  LayoutDashboard,
+  BarChart3,
   ChevronLeft,
+  Gauge,
   Eye,
   GraduationCap,
   Layers,
@@ -398,7 +401,7 @@ const App: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col h-screen bg-slate-100 text-slate-800 font-sans overflow-hidden" dir="rtl">
+    <div className="flex flex-col h-screen bg-slate-100 text-slate-800 overflow-hidden" dir="rtl">
 
       <Header onAboutClick={() => navigateTo('welcome')} />
 
@@ -483,52 +486,33 @@ const App: React.FC = () => {
                         </li>
                       ))}
                     </ul>
-                  </div>
 
-                  {/* Extensions for Step 5 */}
-                  {selectedAgentId === 5 && STEP_DETAILS[5]?.extensions && (
-                    <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <Sparkles size={16} className="text-purple-600" />
-                          <h3 className="font-bold text-purple-800 text-sm">מסלולי העמקה אופציונליים</h3>
+                    {selectedAgentId === 5 && STEP_DETAILS[5]?.extensions && (
+                      <div className="mt-3 pt-3 border-t border-slate-200">
+                        <div className="text-[13.5px] text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-1">
+                          <span className="font-bold text-slate-700">מסלולי העמקה:</span>
+                          {STEP_DETAILS[5].extensions
+                            .filter((ext) => ext.url !== 'q-jester')
+                            .map((ext) => (
+                              <button
+                                key={ext.url}
+                                onClick={() => navigateTo(ext.url)}
+                                title={ext.description}
+                                className="cursor-pointer text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
+                              >
+                                {ext.name}
+                              </button>
+                            ))}
+                          <button
+                            onClick={() => navigateTo('tools')}
+                            className="cursor-pointer text-slate-500 hover:text-slate-700 underline underline-offset-2"
+                          >
+                            כל הכלים
+                          </button>
                         </div>
-                        <button
-                          onClick={() => navigateTo('tools')}
-                          className="flex items-center gap-1.5 px-2 py-1 text-purple-600 hover:text-purple-800 hover:bg-purple-100 rounded-lg transition-all text-[11px] font-semibold"
-                        >
-                          <span>כל הכלים</span>
-                          <ExternalLink size={11} />
-                        </button>
                       </div>
-                      {/* First row - 3 items */}
-                      <div className="grid grid-cols-3 gap-2 mb-2">
-                        {STEP_DETAILS[5].extensions.slice(0, 3).map((ext, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => navigateTo(ext.url)}
-                            className="flex flex-col items-center p-2 bg-white border border-purple-100 rounded-lg hover:border-purple-300 transition-all group text-center"
-                          >
-                            <span className="font-semibold text-purple-800 text-xs">{ext.name}</span>
-                            <span className="text-purple-500/70 text-[10px] leading-tight">{ext.description}</span>
-                          </button>
-                        ))}
-                      </div>
-                      {/* Second row */}
-                      <div className="grid grid-cols-3 gap-2">
-                        {STEP_DETAILS[5].extensions.slice(3).map((ext, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => navigateTo(ext.url)}
-                            className="flex flex-col items-center p-2 bg-white border border-purple-100 rounded-lg hover:border-purple-300 transition-all group text-center"
-                          >
-                            <span className="font-semibold text-purple-800 text-xs">{ext.name}</span>
-                            <span className="text-purple-500/70 text-[10px] leading-tight">{ext.description}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   {/* Prompt Section - Collapsible */}
                   <details className="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden group">
@@ -773,7 +757,7 @@ const App: React.FC = () => {
                       <ResourceLink href="https://chatgpt.com/g/g-69492aebb530819199628bb444d024f3-svkn-lbnyyt-svkn-yqvmvs" icon={<Bot size={16} />} label="בניית סוכן (GPTs)" noBorder colorScheme="emerald" />
                       <ResourceLink
                         href="https://gemini.google.com/gem/1LbC3oHGIS83rP8uWdIEEeaU9_ixfEMh1?usp=sharing"
-                        icon={<Zap size={16} />}
+                        icon={<Sparkles size={16} />}
                         label={
                           <span className="flex items-center gap-2">
                             בניית סוכן (Gemini)
@@ -783,7 +767,7 @@ const App: React.FC = () => {
                                 e.stopPropagation();
                                 window.open("https://gemini.google.com/gem/1No_FbNaQmz5khR51dl7NHFOXAFQ5x5Pu?usp=sharing", "_blank");
                               }}
-                              className="text-[9.5px] text-slate-400 bg-emerald-50 px-1.5 py-0.5 rounded-md hover:bg-emerald-100 transition-colors cursor-pointer border border-emerald-200 shadow-sm"
+                              className="text-[11px] text-slate-500 bg-emerald-50 px-1.5 py-0.5 rounded-md hover:bg-emerald-100 transition-colors cursor-pointer border border-emerald-200 shadow-sm"
                             >
                               דוגמה ליוצר תמונות מתיאור אדריכלי/ארכאולוגי
                             </span>
@@ -794,12 +778,19 @@ const App: React.FC = () => {
                       />
                     </ResourceGroup>
 
-                    <SectionDivider label="השראה ומתודולוגיה" colorClass="text-emerald-500" bgColor="bg-slate-50/30" />
+                    <ResourceGroup title="ייצוג קצת אחרת - לכתיבה וקריאת הערכות">
+                      <ResourceLink href="https://gemini.google.com/share/673fdae83a26" icon={<LayoutDashboard size={16} />} label="דשבורד הערכה תרבותית - דמו" noBorder />
+                      <ResourceLink
+                        href="#inventory"
+                        onClick={(e: React.MouseEvent) => { e.preventDefault(); navigateTo('inventory'); }}
+                        icon={<PieChart size={16} />}
+                        label="דשבורד ניתוח אוסף -דמו"
+                        secondaryLabel="ניתוח אוסף בשילוב notebookLM ואתר.בוט בגמיני"
+                        noBorder
+                      />
+                    </ResourceGroup>
 
-                    <div className="grid grid-cols-1 gap-2.5">
-                      <ResourceLink href="https://gemini.google.com/share/673fdae83a26" icon={<PieChart size={16} />} label="ייצוג קצת אחרת" secondaryLabel="דוגמא לייצוג הערכה תרבותית כארטיפקט דיגיטלי" />
-
-                    </div>
+                    <SectionDivider label="השראה" colorClass="text-emerald-500" bgColor="bg-slate-50/30" />
 
                     <div className="grid grid-cols-1 gap-2.5">
                       <ResourceLink href="https://bit.ly/49huqGS" icon={<BookOpen size={16} />} label="אלכסון: עוד איבר של תודעה" secondaryLabel=" מאמר על חוויית המקום והתודעה בשילוב AI" colorScheme="emerald" highlight />
@@ -814,8 +805,8 @@ const App: React.FC = () => {
 
       <footer className="bg-white border-t border-slate-200 p-2 shrink-0 flex items-center px-8 z-40 shadow-sm overflow-hidden text-slate-400" dir="rtl">
         <div className="flex-1"></div>
-        <div className="text-[10px] font-bold opacity-80 whitespace-nowrap">
-          אתר מידע לצרכי סדנאות אתר.בוט להערכת משמעות - בפיתוח פרופ"ח יעל אלף ויובל שפרירי
+        <div className="text-[13px]  opacity-100 whitespace-nowrap dir-rtl">
+            © אתר מידע מלווה לסדנאות אתר.בוט להערכת משמעות - בפיתוח פרופ"ח יעל אלף ויובל שפרירי
         </div>
       </footer>
 
