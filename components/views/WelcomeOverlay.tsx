@@ -30,14 +30,14 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
             <Cpu size={24} />
           </div>
           <div>
-            <h2 className="font-black text-xl text-slate-900">ברוכים הבאים לאתר הסדנאות של אתר.בוט</h2>
-            <p className="text-xs text-slate-400 font-medium">סוכן AI נסיוני לתמיכה בהערכת משמעות תרבותית של מורשת</p>
+            <h2 className="font-black text-xl text-slate-500"> מרכז המשאבים של סדנאות אתר.בוט</h2>
+            <p className="text-[13px] text-slate-400 font-medium">סוכן AI לתמיכה בהערכת משמעות תרבותית של מורשת</p>
           </div>
         </div>
 
         <div className="text-sm text-slate-600 leading-relaxed mb-6 space-y-3">
           <p>
-            אתר.בוט הוא כלי AI נסיוני להערכת משמעות תרבותית של אתרי מורשת בגישת <span className="text-s">CBSA <br/>(Context Based Significance Assessment)</span>.
+            אתר.בוט הוא כלי AI ניסויי להערכת משמעות תרבותית של אתרי מורשת בגישת <span className="text-s">CBSA <br/>(Context Based Significance Assessment)</span>.
           </p>
           <p>
             המערכת מפותחת לצרכי מחקר על ידי ד"ר יעל אלף ויובל שפרירי, ותשולב במעבדת <b>InSites</b> - מעבדת מחקר חדשה בפקולטה לארכיטקטורה בטכניון.
@@ -54,7 +54,7 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
               <CheckCircle2 size={16} />
             </div>
             <div>
-              <h4 className="font-bold text-sm text-slate-800">מסגרת השלבים</h4>
+              <h4 className="font-bold text-sm text-slate-800">מסגרת שלבי ההערכה</h4>
               <p className="text-[12px] text-slate-500">תהליך ההערכה המובנה שקיים באתר.בוט (בצד ימין) - בלחיצה על כל שלב אפשר לראות את הרציונל ותמצית ההנחיות שלו  </p>
             </div>
           </div>
@@ -75,7 +75,7 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose }) => {
             </div>
             <div>
               <h4 className="font-bold text-sm text-slate-800">משאבים</h4>
-              <p className="text-xs text-slate-500">קישורים לבוט, קוד המקור בגיטהאב, דוגמאות "קצת אחרת" והשראה</p>
+              <p className="text-xs text-slate-500">קישורים לבוט, הפרויקט בגיטהאב, דוגמאות "קצת אחרת" והשראה</p>
             </div>
           </div>
         </div>
