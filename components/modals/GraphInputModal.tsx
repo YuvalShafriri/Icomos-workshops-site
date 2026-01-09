@@ -44,7 +44,7 @@ export const GraphInputModal: React.FC<GraphInputModalProps> = ({
             </button>
           </div>
           <textarea
-            className="w-full h-48 p-4 bg-white rounded-xl border border-slate-200 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none text-sm leading-relaxed text-slate-700 placeholder:text-slate-300 resize-none shadow-inner font-sans"
+            className="w-full h-48 p-4 bg-white rounded-xl border border-slate-200 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none text-sm leading-relaxed text-slate-700 placeholder:text-slate-300 resize-none shadow-inner"
             placeholder="הדבק כאן את הטקסט שברצונך לנתח..."
             value={inputText}
             onChange={(e) => onInputTextChange(e.target.value)}

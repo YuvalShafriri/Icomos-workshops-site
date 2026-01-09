@@ -27,7 +27,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       {/* Mobile Extensions Button */}
       <button
         onClick={onResearchAidsClick}
-        className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-white border-slate-200 text-indigo-600'}`}
+        className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 cursor-pointer ${showResearchAids ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-white border-slate-200 text-indigo-600'}`}
       >
         <Zap size={14} className={showResearchAids ? 'text-white' : 'text-indigo-500'} />
         <span className="text-xs font-bold">כלים נוספים</span>
@@ -42,7 +42,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           <button
             key={agent.id}
             onClick={() => onAgentSelect(agent.id)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 ${mobileTheme.pill}`}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 cursor-pointer ${mobileTheme.pill}`}
           >
             <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${mobileTheme.badge}`}>
               {agent.id}

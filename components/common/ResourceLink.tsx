@@ -70,7 +70,7 @@ export const ResourceLink: React.FC<ResourceLinkProps> = ({
         </div>
         <div>
           <h4 className={`font-bold text-sm text-slate-800 ${currentScheme.labelHover} transition-colors`}>{label}</h4>
-          {secondaryLabel && <p className="text-[10px] text-slate-400 font-medium">{secondaryLabel}</p>}
+          {secondaryLabel && <p className="text-[12px] text-slate-400 font-medium">{secondaryLabel}</p>}
         </div>
       </div>
       <ArrowUpRight size={14} className={`text-slate-300 ${currentScheme.arrowHover} group-hover:translate-x-1 group-hover:-translate-y-1 transition-all`} />

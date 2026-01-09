@@ -21,4 +21,7 @@
 # Enable CORS for Gemini API calls
 <IfModule mod_headers.c>
   Header set Access-Control-Allow-Origin "*"
+
+  # Content Security Policy - Allow Google Analytics and other required scripts
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com https://esm.sh https://esm.run; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://generativelanguage.googleapis.com https://www.google-analytics.com;"
 </IfModule>
