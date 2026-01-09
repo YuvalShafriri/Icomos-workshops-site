@@ -45,6 +45,7 @@ import {
 } from 'lucide-react';
 import MarkdownRenderer from './components/MarkdownRenderer';
 import { Modal, ResourceLink, ResourceGroup, SectionDivider } from './components/common';
+import SwitchTransition from './components/common/SwitchTransition';
 import { Header, Sidebar, MobileNav } from './components/layout';
 import { WelcomeOverlay } from './components/views';
 import { PrinciplesModal, DemoModal, InventoryModal, PromptAdvisorModal, GraphInputModal, ResearchQueryModal, GraphModal } from './components/modals';
@@ -398,6 +399,10 @@ const App: React.FC = () => {
     }
   }, [graphData]);
 
+  const mainViewKey = showWelcome
+    ? 'welcome'
+    : (selectedAgentId !== null && currentAgent) ? `step-${selectedAgentId}` : (showResearchAids ? `tools:${selectedQuery?.route ?? 'root'}` : 'home');
+
 
 
   return (
@@ -433,6 +438,7 @@ const App: React.FC = () => {
           {/* Welcome/About Overlay */}
           {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} />}
 
+          <SwitchTransition transitionKey={mainViewKey} className="flex-1 flex flex-col" duration={250}>
           {selectedAgentId !== null && currentAgent ? (
             <>
               <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
@@ -800,6 +806,7 @@ const App: React.FC = () => {
               </div>
             </div>
           )}
+          </SwitchTransition>
         </main>
       </div>
 
