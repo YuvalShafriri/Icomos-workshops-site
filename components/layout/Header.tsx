@@ -54,9 +54,9 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
             onClick={onAboutClick}
             title="מה יש באתר?"
             aria-label="מה יש באתר?"
-            className="cursor-pointer flex items-center justify-center w-9 h-9 md:w-9 md:h-8 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn md:ring-1 md:ring-white/20 md:shadow-md md:hover:shadow-lg md:hover:ring-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            className="cursor-pointer flex items-center justify-center w-9 h-9 md:w-10 md:h-9 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn md:ring-1 md:ring-white/20 md:shadow-md md:hover:shadow-lg md:hover:ring-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           > 
-            <Info size={18} />
+            <Info className="w-[18px] h-[18px] md:w-5 md:h-5" strokeWidth={2.5} />
           </button>
         </div>
 
@@ -81,6 +81,10 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
       </div>
       <style>{`
         .brand-btn{ background: var(--brand); border: 1px solid rgba(255,255,255,0.06); }
+        @media (min-width: 768px){
+          .brand-btn{ border-color: rgba(255,255,255,0.16); }
+          .brand-btn:hover{ border-color: rgba(255,255,255,0.28); }
+        }
         .brand-btn:hover{ background: var(--brand-hover); }
         .cpu-box{ background: var(--brand); border: 1px solid rgba(255,255,255,0.06); display:inline-flex; align-items:center; justify-content:center }
       `}</style>
