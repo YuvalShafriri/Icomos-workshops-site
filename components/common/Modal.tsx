@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 
 export interface ModalProps {
@@ -25,16 +25,48 @@ export const Modal: React.FC<ModalProps> = ({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  // Keep mounted during exit animation so we can animate out smoothly
+  const [mounted, setMounted] = useState<boolean>(isOpen);
+  const [exiting, setExiting] = useState<boolean>(false);
+  const [entered, setEntered] = useState<boolean>(false);
+
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    if (isOpen) {
+      setMounted(true);
+      setExiting(false);
+      setEntered(false);
+      // trigger enter transition on next tick
+      t = setTimeout(() => setEntered(true), 10);
+      return () => t && clearTimeout(t);
+    }
+
+    if (!isOpen && mounted) {
+      // start exit transition
+      setEntered(false);
+      setExiting(true);
+      t = setTimeout(() => {
+        setMounted(false);
+        setExiting(false);
+      }, 300); // must match the CSS transition duration
+      return () => t && clearTimeout(t);
+    }
+  }, [isOpen, mounted]);
+
+  if (!mounted) return null;
 
   return (
     <div
-      className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-[100] flex items-center justify-center p-2 animate-in fade-in duration-300"
+      className={`fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-[100] flex items-start md:items-center justify-center p-2 transition-opacity duration-300 ${entered ? 'opacity-100' : 'opacity-0'}`}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
+      style={{
+        paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)',
+        paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+      }}
     >
-      <div className={`bg-white w-full ${maxWidth} max-h-[98vh] rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-slate-200 animate-in zoom-in-95 duration-300`}>
+      <div className={`bg-white w-full ${maxWidth} max-h-[calc(100dvh-2rem)] md:max-h-[98vh] rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-slate-200 transition-all duration-300 ease-out ${entered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}>
         <div className="p-3 md:p-4 border-b border-slate-100 flex justify-between items-center shrink-0 bg-slate-50/50">
           <h2 className="text-base md:text-lg font-black text-slate-900 tracking-tight">{title}</h2>
           <button
