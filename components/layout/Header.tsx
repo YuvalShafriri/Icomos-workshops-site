@@ -47,11 +47,12 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
         <h1 className="font-black text-lg tracking-tight leading-none text-indigo-100">
           אתר.בוט - אתר הסדנאות
         </h1>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ">
           <button
             onClick={onAboutClick}
             title="מה יש באתר?"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn"
+            className="flex items-center gap-2 px-2 py-1.2 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn"
+            style={{ height: 32 }}
           >
             <Info size={16} />
             <span className="text-m">מה יש באתר?</span>
