@@ -555,7 +555,7 @@ const App: React.FC = () => {
               </div>
             </>
           ) : showResearchAids ? (
-            <div className="flex-1 flex flex-col bg-white overflow-y-auto custom-scrollbar animate-in fade-in duration-300 pb-20">
+            <div className="flex-1 flex flex-col bg-white overflow-y-auto custom-scrollbar pb-20">
               <div className="p-6 md:p-10 max-w-5xl mx-auto w-full space-y-6">
                 <div className="flex justify-between items-end">
                   <div className="space-y-2">
@@ -724,7 +724,7 @@ const App: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 animate-in fade-in duration-300 custom-scrollbar">
+            <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar">
               <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
                 <div className="text-right pt-2 md:pt-3"><h3 className="text-xl font-black text-slate-500 mb-0.5 leading-tight">משאבים לסדנת איקומוס אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
                 <div className="space-y-4">
