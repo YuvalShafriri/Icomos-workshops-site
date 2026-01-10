@@ -580,17 +580,17 @@ const App: React.FC = () => {
                     <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] bg-slate-100 px-2 py-1 rounded">ארגז כלים ושאילתות למחקר</h3>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     {/* Knowledge Graph Card (FIRST) */}
                     <div
                       onClick={() => navigateTo('graph-create')}
-                      className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
+                      className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Share2 size={18} /></div>
+                        <div className="p-1.5 sm:p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Share2 size={18} /></div>
                         <h4 className="font-bold text-slate-800 text-sm">גרף ידע</h4>
                       </div>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">מיפוי חזותי של ישויות וקשרים סמנטיים מתוך הטקסט.</p>
+                      <p className="text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 flex-1">מיפוי חזותי של ישויות וקשרים סמנטיים מתוך הטקסט.</p>
                       <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
                         <Zap size={12} /> הפעל כלי
                       </div>
@@ -599,13 +599,13 @@ const App: React.FC = () => {
                     {/* Visual Analysis Card (SECOND) */}
                     <div
                       onClick={() => navigateTo('visual')}
-                      className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
+                      className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Eye size={18} /></div>
+                        <div className="p-1.5 sm:p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Eye size={18} /></div>
                         <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
                       </div>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">סוכן (נסיוני) לניתוח תכונות הקשרים ערכים מתוך תמונות.</p>
+                      <p className="text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 flex-1">סוכן (נסיוני) לניתוח תכונות הקשרים ערכים מתוך תמונות.</p>
                       <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
                         <Sparkles size={12} /> דוגמה לניתוח
                       </div>
@@ -614,13 +614,13 @@ const App: React.FC = () => {
                     {/* Inventory Card (THIRD) */}
                     <div
                       onClick={() => navigateTo('inventory')}
-                      className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
+                      className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><PieChart size={18} /></div>
+                        <div className="p-1.5 sm:p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><PieChart size={18} /></div>
                         <h4 className="font-bold text-slate-800 text-sm">ניתוח אוסף</h4>
                       </div>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">פרוטוקול לניתוח רוחבי של אוסף הערכות (למשל מסקר)</p>
+                      <p className="text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 flex-1">פרוטוקול לניתוח רוחבי של אוסף הערכות (למשל מסקר)</p>
                       <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
                         <FileText size={12} /> צפה בהנחיות
                       </div>
@@ -631,16 +631,16 @@ const App: React.FC = () => {
                       <div
                         key={idx}
                         onClick={() => navigateTo(q.route)}
-                        className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:border-indigo-200 transition-all flex flex-col group h-full relative cursor-pointer hover:shadow-md"
+                        className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:border-indigo-200 transition-all flex flex-col group h-full relative cursor-pointer hover:shadow-md"
                       >
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-indigo-50 text-indigo-500 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-all">{q.icon}</div>
+                            <div className="p-1.5 sm:p-2 bg-indigo-50 text-indigo-500 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-all">{q.icon}</div>
                             <h4 className="font-bold text-slate-800 text-sm">{q.title}</h4>
                           </div>
                         </div>
-                        <p className="text-[11px] text-slate-500 leading-relaxed mb-4 flex-1">{q.description}</p>
-                        <div className="py-2 bg-slate-50 text-indigo-400 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all">
+                        <p className="text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 flex-1">{q.description}</p>
+                        <div className="py-2 bg-slate-50 text-indigo-400 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
                           הצג שאילתה
                         </div>
                       </div>
@@ -785,15 +785,31 @@ const App: React.FC = () => {
                     </ResourceGroup>
 
                     <ResourceGroup title="ייצוג קצת אחרת - לכתיבה וקריאת הערכות">
-                      <ResourceLink href="https://gemini.google.com/share/673fdae83a26" icon={<LayoutDashboard size={16} />} label="דשבורד הערכה תרבותית - דמו" noBorder />
-                      <ResourceLink
-                        href="#inventory"
-                        onClick={(e: React.MouseEvent) => { e.preventDefault(); navigateTo('inventory'); }}
-                        icon={<PieChart size={16} />}
-                        label="דשבורד ניתוח אוסף -דמו"
-                        secondaryLabel="ניתוח אוסף בשילוב notebookLM ואתר.בוט בגמיני"
-                        noBorder
-                      />
+                      <div className="sm:hidden">
+                        <ResourceLink
+                          icon={<LayoutDashboard size={16} />}
+                          label="דשבורד הערכה תרבותית - דמו"
+                          secondaryLabel="לא זמין במובייל (פתח במחשב)"
+                          noBorder
+                        />
+                        <ResourceLink
+                          icon={<PieChart size={16} />}
+                          label="דשבורד ניתוח אוסף - דמו"
+                          secondaryLabel="לא זמין במובייל (פתח במחשב)"
+                          noBorder
+                        />
+                      </div>
+
+                      <div className="hidden sm:block">
+                        <ResourceLink href="https://gemini.google.com/share/673fdae83a26" icon={<LayoutDashboard size={16} />} label="דשבורד הערכה תרבותית - דמו" noBorder />
+                        <ResourceLink
+                          onClick={() => navigateTo('inventory')}
+                          icon={<PieChart size={16} />}
+                          label="דשבורד ניתוח אוסף -דמו"
+                          secondaryLabel="ניתוח אוסף בשילוב notebookLM ואתר.בוט בגמיני"
+                          noBorder
+                        />
+                      </div>
                     </ResourceGroup>
 
                     <SectionDivider label="השראה" colorClass="text-emerald-500" bgColor="bg-slate-50/30" />
