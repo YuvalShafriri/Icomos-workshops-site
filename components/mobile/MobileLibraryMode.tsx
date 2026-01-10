@@ -33,6 +33,16 @@ function sanitizeHash(h: string) {
   return "#" + h.replace(/^#/, "").replace(/[^A-Za-z0-9-_.~!$&'()*+,;=:@%/?#\[\]]+/g, "");
 }
 
+function sanitizeHref(href: string) {
+  if (!href) return "#";
+  // Allow only safe schemes (hashes and http/https). Reject other schemes like javascript:
+  const trimmed = href.trim();
+  if (trimmed.startsWith("#")) return sanitizeHash(trimmed);
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
+  // Unknown/unsafe scheme -> fallback to '#'
+  return "#";
+}
+
 async function copyText(text: string) {
   try {
     await navigator.clipboard.writeText(text);
@@ -166,12 +176,16 @@ export default function MobileLibraryMode(props: Props) {
               <summary className="cursor-pointer select-none text-base font-semibold">{section.title}</summary>
 
               <div className="mt-3 space-y-2">
-                {section.items.map((it) => (
-                  <a
-                    key={it.title}
-                    href={it.href}
-                    className="block rounded-lg border border-slate-200 p-3 active:scale-[0.99]"
-                  >
+                {section.items.map((it) => {
+                  const safeHref = sanitizeHref(it.href);
+                  const isExternal = safeHref.startsWith("http://") || safeHref.startsWith("https://");
+                  return (
+                    <a
+                      key={it.title}
+                      href={safeHref}
+                      className="block rounded-lg border border-slate-200 p-3 active:scale-[0.99]"
+                      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    >
                     <div className="text-base font-medium">{it.title}</div>
                     {it.description && <div className="text-sm text-slate-600 mt-1">{it.description}</div>}
 
