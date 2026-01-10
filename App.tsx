@@ -406,7 +406,7 @@ const App: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col h-screen bg-slate-100 text-slate-800 overflow-hidden" dir="rtl">
+    <div className="flex flex-col min-h-screen min-h-dvh bg-slate-100 text-slate-800 overflow-hidden" dir="rtl">
 
       <Header onAboutClick={() => navigateTo('welcome')} />
 
@@ -420,7 +420,7 @@ const App: React.FC = () => {
         getMobileStageTheme={getMobileStageTheme}
       />
 
-      <div className="flex-1 overflow-hidden relative flex flex-col md:flex-row">
+      <div className="flex-1 min-h-0 overflow-hidden relative flex flex-col md:flex-row">
 
         <Sidebar
           width={sidebarWidth}
@@ -434,11 +434,11 @@ const App: React.FC = () => {
           getAgentTheme={getAgentTheme}
         />
 
-        <main className="flex-1 flex flex-col bg-white shadow-inner relative transition-all overflow-hidden">
+        <main className="flex-1 min-h-0 flex flex-col bg-white shadow-inner relative transition-all overflow-hidden">
           {/* Welcome/About Overlay */}
           {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} />}
 
-          <SwitchTransition transitionKey={mainViewKey} className="flex-1 flex flex-col" duration={250}>
+          <SwitchTransition transitionKey={mainViewKey} className="flex-1 min-h-0 flex flex-col" duration={250}>
           {selectedAgentId !== null && currentAgent ? (
             <>
               <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
@@ -555,7 +555,7 @@ const App: React.FC = () => {
               </div>
             </>
           ) : showResearchAids ? (
-            <div className="flex-1 flex flex-col bg-white overflow-y-auto custom-scrollbar animate-in fade-in duration-300 pb-20">
+            <div className="flex-1 flex flex-col bg-white overflow-y-auto custom-scrollbar pb-20">
               <div className="p-6 md:p-10 max-w-5xl mx-auto w-full space-y-6">
                 <div className="flex justify-between items-end">
                   <div className="space-y-2">
@@ -689,7 +689,7 @@ const App: React.FC = () => {
                         const cleanPrompt = promptText.replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim();
 
                         return (
-                          <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                          <div className="space-y-6">
                             <div className="bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800 text-right w-full" dir="rtl">
                               <div className="bg-slate-800/50 p-3 border-b border-white/5 flex items-center justify-between">
                                 <div className="flex gap-1.5 px-2">
@@ -724,7 +724,7 @@ const App: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 animate-in fade-in duration-300 custom-scrollbar">
+            <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar">
               <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
                 <div className="text-right pt-2 md:pt-3"><h3 className="text-xl font-black text-slate-500 mb-0.5 leading-tight">משאבים לסדנת איקומוס אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
                 <div className="space-y-4">
