@@ -23,3 +23,14 @@ export interface SupportAgent {
 }
 
 export type ViewMode = 'run' | 'prompt';
+
+export interface StepDetails {
+  whyImportant: string;
+  cognitiveLink: string;
+  whatHappens: string[];
+  extensions?: {
+    name: string;
+    description: string;
+    url: string;
+  }[];
+}

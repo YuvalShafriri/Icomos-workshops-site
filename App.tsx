@@ -48,7 +48,7 @@ import MarkdownRenderer from './components/MarkdownRenderer';
 import { Modal, ResourceLink, ResourceGroup, SectionDivider } from './components/common';
 import SwitchTransition from './components/common/SwitchTransition';
 import { Header, Sidebar, MobileNav } from './components/layout';
-import { WelcomeOverlay } from './components/views';
+import { WelcomeOverlay, AboutView, StepsList, StepDetailView } from './components/views';
 import { PrinciplesModal, DemoModal, InventoryModal, PromptAdvisorModal, GraphInputModal, ResearchQueryModal, GraphModal } from './components/modals';
 import { CORE_AGENTS, DEMO_DATA, GRAPH_PROMPT, PROMPT_ADVISOR_SYSTEM, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES, STEP_DETAILS, RESEARCH_QUERIES, getNodeColor, ResearchQuerySelection } from './constants';
 import { callGemini } from './services/geminiService';
@@ -151,6 +151,9 @@ const App: React.FC = () => {
   const [isResizingState, setIsResizingState] = useState<boolean>(false);
   const [promptLang, setPromptLang] = useState<'he' | 'en'>('he');
 
+  // Mobile View State
+  const [mobileView, setMobileView] = useState<'HOME' | 'TOOLS' | 'STEPS' | 'ABOUT' | 'STEP_DETAIL'>('HOME');
+
   // Welcome/About overlay state
   const [showWelcome, setShowWelcome] = useState<boolean>(false);
 
@@ -219,8 +222,6 @@ const App: React.FC = () => {
     'prompts': () => setIsPromptModalOpen(true),
     'principles': () => setIsPrinciplesModalOpen(true),
     'inventory': () => setIsInventoryModalOpen(true),
-    'tools': () => openResearchTools(),
-    'welcome': () => setShowWelcome(true),
     'q-narratives': () => openResearchQueryByRoute('q-narratives'),
     'q-sentiment': () => openResearchQueryByRoute('q-sentiment'),
     'q-education': () => openResearchQueryByRoute('q-education'),
@@ -228,14 +229,24 @@ const App: React.FC = () => {
     'q-jester-chorus': () => openResearchQueryByRoute('q-jester-chorus'),
     'q-jester': () => openResearchQueryByRoute('q-jester'),
     'q-chorus': () => openResearchQueryByRoute('q-chorus'),
-    'step-0': () => { setSelectedAgentId(0); setShowResearchAids(false); },
-    'step-1': () => { setSelectedAgentId(1); setShowResearchAids(false); },
-    'step-2': () => { setSelectedAgentId(2); setShowResearchAids(false); },
-    'step-3': () => { setSelectedAgentId(3); setShowResearchAids(false); },
-    'step-4': () => { setSelectedAgentId(4); setShowResearchAids(false); },
-    'step-5': () => { setSelectedAgentId(5); setShowResearchAids(false); },
-    'step-6': () => { setSelectedAgentId(6); setShowResearchAids(false); },
-    'home': () => { setSelectedAgentId(null); setShowResearchAids(false); },
+    'step-0': () => { setSelectedAgentId(0); setShowResearchAids(false); if (window.innerWidth < 768) setMobileView('STEP_DETAIL'); },
+    'step-1': () => { setSelectedAgentId(1); setShowResearchAids(false); if (window.innerWidth < 768) setMobileView('STEP_DETAIL'); },
+    'step-2': () => { setSelectedAgentId(2); setShowResearchAids(false); if (window.innerWidth < 768) setMobileView('STEP_DETAIL'); },
+    'step-3': () => { setSelectedAgentId(3); setShowResearchAids(false); if (window.innerWidth < 768) setMobileView('STEP_DETAIL'); },
+    'step-4': () => { setSelectedAgentId(4); setShowResearchAids(false); if (window.innerWidth < 768) setMobileView('STEP_DETAIL'); },
+    'step-5': () => { setSelectedAgentId(5); setShowResearchAids(false); if (window.innerWidth < 768) setMobileView('STEP_DETAIL'); },
+    'step-6': () => { setSelectedAgentId(6); setShowResearchAids(false); if (window.innerWidth < 768) setMobileView('STEP_DETAIL'); },
+    'home': () => { setSelectedAgentId(null); setShowResearchAids(false); setMobileView('HOME'); },
+    'tools': () => { openResearchTools(); setMobileView('TOOLS'); },
+    'steps': () => { setMobileView('STEPS'); setSelectedAgentId(null); setShowResearchAids(false); },
+    'welcome': () => {
+      if (window.innerWidth < 768) {
+        setMobileView('ABOUT');
+        setShowWelcome(false);
+      } else {
+        setShowWelcome(true);
+      }
+    },
   };
 
   // Navigate to hash route
@@ -403,7 +414,11 @@ const App: React.FC = () => {
 
   const mainViewKey = showWelcome
     ? 'welcome'
-    : (selectedAgentId !== null && currentAgent) ? `step-${selectedAgentId}` : (showResearchAids ? `tools:${selectedQuery?.route ?? 'root'}` : 'home');
+    : (selectedAgentId !== null && currentAgent) ? `step-${selectedAgentId}`
+      : (mobileView === 'STEPS') ? 'steps'
+        : (mobileView === 'ABOUT') ? 'about'
+          : (mobileView === 'STEP_DETAIL' && currentAgent) ? `step-detail-${selectedAgentId}`
+            : (showResearchAids || mobileView === 'TOOLS' ? `tools:${selectedQuery?.route ?? 'root'}` : 'home');
 
 
 
@@ -418,21 +433,18 @@ const App: React.FC = () => {
 
       {/* Mobile Horizontal Navigation (Sticky) */}
       <MobileNav
-        showResearchAids={showResearchAids}
+        currentView={mobileView}
         selectedAgentId={selectedAgentId}
         agents={CORE_AGENTS}
         onHomeClick={() => {
-          setSelectedAgentId(null);
-          setShowResearchAids(false);
-          setSelectedQuery(null);
-          handleCloseWelcome();
-          window.location.hash = '';
+          navigateTo('home');
         }}
         onAboutClick={() => {
           navigateTo('welcome');
         }}
-        onResearchAidsClick={() => { navigateTo('tools'); handleCloseWelcome(); }}
-        onAgentSelect={(agentId) => { navigateTo(`step-${agentId}`); handleCloseWelcome(); }}
+        onResearchAidsClick={() => { navigateTo('tools'); }}
+        onStepsClick={() => { navigateTo('steps'); }}
+        onAgentSelect={(agentId) => { navigateTo(`step-${agentId}`); }}
         getMobileStageTheme={getMobileStageTheme}
         getAgentTheme={getAgentTheme}
       />
@@ -452,185 +464,215 @@ const App: React.FC = () => {
         />
 
         <main className="flex-1 min-h-0 flex flex-col bg-white shadow-inner relative transition-all overflow-hidden">
-          {/* Welcome/About Overlay */}
-          {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} />}
+          {/* Welcome/About Overlay - Desktop Only */}
+          <div className="hidden md:block">
+            {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} />}
+          </div>
 
           <SwitchTransition transitionKey={mainViewKey} className="flex-1 min-h-0 flex flex-col" duration={250}>
-            {selectedAgentId !== null && currentAgent ? (
-              <>
-                <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
-                  <div className="flex items-center gap-4">
-                    <div className={`p-2 rounded-xl ${getAgentChipTheme(currentAgent.color)} shadow-md border border-white`}>{React.cloneElement(currentAgent.icon as React.ReactElement<{ size?: number }>, { size: 20 })}</div>
-                    <div>
-                      <h2 className="font-black text-lg leading-tight text-slate-900 tracking-tight">{currentAgent.name}</h2>
-                      <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{currentAgent.role}</p>
+            {mobileView === 'STEPS' ? (
+              <StepsList
+                agents={CORE_AGENTS}
+                selectedAgentId={selectedAgentId}
+                onAgentSelect={(agentId) => { navigateTo(`step-${agentId}`); }}
+                getAgentTheme={getAgentTheme}
+              />
+            ) : mobileView === 'ABOUT' ? (
+              <div className="flex-1 overflow-y-auto bg-white custom-scrollbar pb-20 sm:pb-0" dir="rtl">
+                <AboutView />
+              </div>
+            ) : (mobileView === 'STEP_DETAIL' || (selectedAgentId !== null && currentAgent)) ? (
+              // Unified Step Detail View logic
+              mobileView === 'STEP_DETAIL' && currentAgent ? (
+                <StepDetailView
+                  agent={currentAgent}
+                  onBack={() => navigateTo('steps')}
+                  consultationInput={consultationInput}
+                  setConsultationInput={setConsultationInput}
+                  consultationResult={consultationResult}
+                  setConsultationResult={setConsultationResult}
+                  isConsulting={isConsulting}
+                  onConsult={handleConsult}
+                  promptLang={promptLang}
+                  setPromptLang={setPromptLang}
+                  rawData={rawData}
+                />
+              ) : selectedAgentId !== null && currentAgent ? (
+                // Desktop Detail View (Existing)
+                <>
+                  <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
+                    <div className="flex items-center gap-4">
+                      <div className={`p-2 rounded-xl ${getAgentChipTheme(currentAgent.color)} shadow-md border border-white`}>{React.cloneElement(currentAgent.icon as React.ReactElement<{ size?: number }>, { size: 20 })}</div>
+                      <div>
+                        <h2 className="font-black text-lg leading-tight text-slate-900 tracking-tight">{currentAgent.name}</h2>
+                        <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{currentAgent.role}</p>
+                      </div>
                     </div>
+                    <button onClick={() => { setSelectedAgentId(null); window.location.hash = ''; }} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-all group flex items-center gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline group-hover:text-slate-600 transition-colors">סגור תצוגה</span>
+                      <X size={20} />
+                    </button>
                   </div>
-                  <button onClick={() => { setSelectedAgentId(null); window.location.hash = ''; }} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-all group flex items-center gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline group-hover:text-slate-600 transition-colors">סגור תצוגה</span>
-                    <X size={20} />
-                  </button>
-                </div>
-                <div className="flex-1 flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar pb-20 sm:pb-0" dir="rtl">
-                  <div className="p-6 md:p-8 max-w-3xl mx-auto w-full space-y-6">
-                    {/* Why Important & Cognitive Link - Side by Side */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Lightbulb size={16} className="text-amber-600" />
-                          <h3 className="font-bold text-amber-800 text-sm">למה שלב זה חשוב?</h3>
-                        </div>
-                        <p className="text-amber-900/80 text-sm leading-relaxed">
-                          {selectedStepDetails?.whyImportant}
-                        </p>
-                      </div>
-                      <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Layers size={16} className="text-indigo-600" />
-                          <h3 className="font-bold text-indigo-800 text-sm">קשר לשלבים קודמים</h3>
-                        </div>
-                        <p className="text-indigo-900/80 text-sm leading-relaxed">
-                          {selectedStepDetails?.cognitiveLink}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* What Happens */}
-                    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                      <div className="flex items-center gap-2 mb-3">
-                        <ListChecks size={16} className="text-emerald-600" />
-                        <h3 className="font-bold text-slate-800 text-sm">מה קורה בשלב זה?</h3>
-                      </div>
-                      <ul className="space-y-2">
-                        {(selectedStepDetails?.whatHappens ?? []).map((item, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                            <span className="text-emerald-500 mt-0.5">•</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      {selectedAgentId === 5 && STEP_DETAILS[5]?.extensions && (
-                        <div className="mt-3 pt-3 border-t border-slate-200">
-                          <div className="text-[13.5px] text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-1">
-                            <span className="font-bold text-slate-700">מסלולי העמקה:</span>
-                            {STEP_DETAILS[5].extensions
-                              .filter((ext) => ext.url !== 'q-jester')
-                              .map((ext) => (
-                                <button
-                                  key={ext.url}
-                                  onClick={() => navigateTo(ext.url)}
-                                  title={ext.description}
-                                  className="cursor-pointer text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
-                                >
-                                  {ext.name}
-                                </button>
-                              ))}
-                            <button
-                              onClick={() => navigateTo('tools')}
-                              className="cursor-pointer text-slate-500 hover:text-slate-700 underline underline-offset-2"
-                            >
-                              כל הכלים
-                            </button>
+                  <div className="flex-1 flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar pb-20 sm:pb-0" dir="rtl">
+                    <div className="p-6 md:p-8 max-w-3xl mx-auto w-full space-y-6">
+                      {/* Why Important & Cognitive Link - Side by Side */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Lightbulb size={16} className="text-amber-600" />
+                            <h3 className="font-bold text-amber-800 text-sm">למה שלב זה חשוב?</h3>
                           </div>
+                          <p className="text-amber-900/80 text-sm leading-relaxed">
+                            {selectedStepDetails?.whyImportant}
+                          </p>
                         </div>
-                      )}
-                    </div>
-
-                    {/* Prompt Section - Collapsible */}
-                    <details className="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden group">
-                      <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-slate-200/50 transition-all">
-                        <div className="flex items-center gap-2">
-                          <Code size={16} className="text-slate-500" />
-                          <h3 className="font-bold text-slate-700 text-sm">ההנחיות לבוט (פרומפט)</h3>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="flex bg-white rounded-lg p-0.5 border border-slate-200" dir="ltr">
-                            <button
-                              onClick={(e) => { e.preventDefault(); setPromptLang('he'); }}
-                              className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'he' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
-                            >עברית</button>
-                            <button
-                              onClick={(e) => { e.preventDefault(); setPromptLang('en'); }}
-                              className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'en' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
-                            >English</button>
+                        <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Layers size={16} className="text-indigo-600" />
+                            <h3 className="font-bold text-indigo-800 text-sm">קשר לשלבים קודמים</h3>
                           </div>
-                          <ChevronLeft size={16} className="text-slate-400 group-open:-rotate-90 transition-transform" />
-                        </div>
-                      </summary>
-                      <div className="p-4 pt-0 border-t border-slate-200 bg-white">
-                        <div className="bg-slate-950 rounded-lg p-4 mt-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
-                          <MarkdownRenderer
-                            text={selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ''}
-                            dir={promptLang === 'he' ? 'rtl' : 'ltr'}
-                            theme="dark"
-                          />
+                          <p className="text-indigo-900/80 text-sm leading-relaxed">
+                            {selectedStepDetails?.cognitiveLink}
+                          </p>
                         </div>
                       </div>
-                      <div className="relative">
-                        <textarea
-                          className="w-full h-32 p-4 bg-white rounded-2xl border border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none shadow-inner"
-                          placeholder=""
-                          value={consultationInput}
-                          onChange={(e) => setConsultationInput(e.target.value)}
-                        ></textarea>
-                        <button
-                          onClick={handleConsult}
-                          disabled={isConsulting || !consultationInput.trim()}
-                          className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white p-2.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 font-black text-[11px]"
-                        >
-                          {isConsulting ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                          <span>בנה פנייה</span>
-                        </button>
-                      </div>
 
-                      {/* Consultation Result Display Area */}
-                      <div className="w-full">
-                        {consultationResult && (() => {
-                          const [promptText, explanationText] = consultationResult.includes('---PROMPT_BOUNDARY---')
-                            ? consultationResult.split('---PROMPT_BOUNDARY---')
-                            : [consultationResult, ''];
-                          const cleanPrompt = promptText.replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim();
+                      {/* What Happens */}
+                      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                        <div className="flex items-center gap-2 mb-3">
+                          <ListChecks size={16} className="text-emerald-600" />
+                          <h3 className="font-bold text-slate-800 text-sm">מה קורה בשלב זה?</h3>
+                        </div>
+                        <ul className="space-y-2">
+                          {(selectedStepDetails?.whatHappens ?? []).map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                              <span className="text-emerald-500 mt-0.5">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
 
-                          return (
-                            <div className="space-y-6">
-                              <div className="bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800 text-right w-full" dir="rtl">
-                                <div className="bg-slate-800/50 p-3 border-b border-white/5 flex items-center justify-between">
-                                  <div className="flex gap-1.5 px-2">
-                                    <div className="w-2 h-2 rounded-full bg-red-400/20"></div>
-                                    <div className="w-2 h-2 rounded-full bg-amber-400/20"></div>
-                                    <div className="w-2 h-2 rounded-full bg-emerald-400/20"></div>
-                                  </div>
-                                  <button onClick={() => navigator.clipboard.writeText(cleanPrompt)} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-3 py-1.5 rounded transition-all flex items-center gap-2 font-bold">
-                                    <Copy size={14} /> העתק פנייה
+                        {selectedAgentId === 5 && STEP_DETAILS[5]?.extensions && (
+                          <div className="mt-3 pt-3 border-t border-slate-200">
+                            <div className="text-[13.5px] text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-1">
+                              <span className="font-bold text-slate-700">מסלולי העמקה:</span>
+                              {STEP_DETAILS[5].extensions
+                                .filter((ext) => ext.url !== 'q-jester')
+                                .map((ext) => (
+                                  <button
+                                    key={ext.url}
+                                    onClick={() => navigateTo(ext.url)}
+                                    title={ext.description}
+                                    className="cursor-pointer text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
+                                  >
+                                    {ext.name}
                                   </button>
-                                </div>
-                                <div className="p-6 overflow-y-auto custom-scrollbar max-h-[500px]">
-                                  <MarkdownRenderer text={cleanPrompt} dir="rtl" theme="dark" />
-                                </div>
-                              </div>
-
-                              {explanationText && (
-                                <div className="bg-white p-5 rounded-xl border-l-4 border-indigo-500 shadow-sm text-sm text-slate-700 leading-relaxed">
-                                  <h4 className="font-bold text-slate-900 text-xs mb-2 flex items-center gap-2"><Sparkles size={14} className="text-indigo-500" /> דבר היועץ</h4>
-                                  {explanationText.trim()}
-                                </div>
-                              )}
-                              <div className="flex justify-end">
-                                <button onClick={() => setConsultationResult(null)} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">נקה תוצאות</button>
-                              </div>
+                                ))}
+                              <button
+                                onClick={() => navigateTo('tools')}
+                                className="cursor-pointer text-slate-500 hover:text-slate-700 underline underline-offset-2"
+                              >
+                                כל הכלים
+                              </button>
                             </div>
-                          );
-                        })()}
+                          </div>
+                        )}
                       </div>
 
+                      {/* Prompt Section - Collapsible */}
+                      <details className="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden group">
+                        <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-slate-200/50 transition-all">
+                          <div className="flex items-center gap-2">
+                            <Code size={16} className="text-slate-500" />
+                            <h3 className="font-bold text-slate-700 text-sm">ההנחיות לבוט (פרומפט)</h3>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="flex bg-white rounded-lg p-0.5 border border-slate-200" dir="ltr">
+                              <button
+                                onClick={(e) => { e.preventDefault(); setPromptLang('he'); }}
+                                className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'he' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                              >עברית</button>
+                              <button
+                                onClick={(e) => { e.preventDefault(); setPromptLang('en'); }}
+                                className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'en' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                              >English</button>
+                            </div>
+                            <ChevronLeft size={16} className="text-slate-400 group-open:-rotate-90 transition-transform" />
+                          </div>
+                        </summary>
+                        <div className="p-4 pt-0 border-t border-slate-200 bg-white">
+                          <div className="bg-slate-950 rounded-lg p-4 mt-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
+                            <MarkdownRenderer
+                              text={selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ''}
+                              dir={promptLang === 'he' ? 'rtl' : 'ltr'}
+                              theme="dark"
+                            />
+                          </div>
+                        </div>
+                        <div className="relative">
+                          <textarea
+                            className="w-full h-32 p-4 bg-white rounded-2xl border border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none shadow-inner"
+                            placeholder=""
+                            value={consultationInput}
+                            onChange={(e) => setConsultationInput(e.target.value)}
+                          ></textarea>
+                          <button
+                            onClick={handleConsult}
+                            disabled={isConsulting || !consultationInput.trim()}
+                            className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white p-2.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 font-black text-[11px]"
+                          >
+                            {isConsulting ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                            <span>בנה פנייה</span>
+                          </button>
+                        </div>
 
-                    </details>
+                        {/* Consultation Result Display Area */}
+                        <div className="w-full">
+                          {consultationResult && (() => {
+                            const [promptText, explanationText] = consultationResult.includes('---PROMPT_BOUNDARY---')
+                              ? consultationResult.split('---PROMPT_BOUNDARY---')
+                              : [consultationResult, ''];
+                            const cleanPrompt = promptText.replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim();
+
+                            return (
+                              <div className="space-y-6">
+                                <div className="bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800 text-right w-full" dir="rtl">
+                                  <div className="bg-slate-800/50 p-3 border-b border-white/5 flex items-center justify-between">
+                                    <div className="flex gap-1.5 px-2">
+                                      <div className="w-2 h-2 rounded-full bg-red-400/20"></div>
+                                      <div className="w-2 h-2 rounded-full bg-amber-400/20"></div>
+                                      <div className="w-2 h-2 rounded-full bg-emerald-400/20"></div>
+                                    </div>
+                                    <button onClick={() => navigator.clipboard.writeText(cleanPrompt)} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-3 py-1.5 rounded transition-all flex items-center gap-2 font-bold">
+                                      <Copy size={14} /> העתק פנייה
+                                    </button>
+                                  </div>
+                                  <div className="p-6 overflow-y-auto custom-scrollbar max-h-[500px]">
+                                    <MarkdownRenderer text={cleanPrompt} dir="rtl" theme="dark" />
+                                  </div>
+                                </div>
+
+                                {explanationText && (
+                                  <div className="bg-white p-5 rounded-xl border-l-4 border-indigo-500 shadow-sm text-sm text-slate-700 leading-relaxed">
+                                    <h4 className="font-bold text-slate-900 text-xs mb-2 flex items-center gap-2"><Sparkles size={14} className="text-indigo-500" /> דבר היועץ</h4>
+                                    {explanationText.trim()}
+                                  </div>
+                                )}
+                                <div className="flex justify-end">
+                                  <button onClick={() => setConsultationResult(null)} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">נקה תוצאות</button>
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </div>
+
+
+                      </details>
+                    </div>
                   </div>
-                </div>
-              </>
-            ) : (
-              showResearchAids ? (
+                </>
+              ) : null) : (
+              showResearchAids || mobileView === 'TOOLS' ? (
                 /* EXTENSIONS TOOLBOX VIEW (The "Tools") */
                 <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 sm:pb-0">
                   <div className="max-w-4xl mx-auto w-full px-6 py-8 space-y-8">
