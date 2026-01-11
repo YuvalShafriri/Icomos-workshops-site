@@ -52,6 +52,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     window.location.hash = MENU_HASH;
   };
 
+
   const closeMenu = () => {
     // If hash is there, go back to remove it. If not, just close (fallback)
     if (window.location.hash.includes(MENU_HASH)) {
@@ -60,6 +61,26 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       setIsOpen(false);
     }
   };
+
+  // Animation states
+  const [mounted, setMounted] = useState(false);
+  const [entered, setEntered] = useState(false);
+
+  React.useEffect(() => {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    if (isOpen) {
+      setMounted(true);
+      // Trigger enter animation next tick
+      t = setTimeout(() => setEntered(true), 10);
+    } else {
+      // Start exit animation
+      setEntered(false);
+      t = setTimeout(() => {
+        setMounted(false);
+      }, 300); // Duration matches CSS
+    }
+    return () => t && clearTimeout(t);
+  }, [isOpen]);
 
   const currentLabel = useMemo(() => {
     if (showResearchAids) return 'כלים נוספים';
@@ -146,16 +167,16 @@ export const MobileNav: React.FC<MobileNavProps> = ({
         <div style={{ height: 'env(safe-area-inset-bottom, 0px)' }} />
       </nav>
 
-      {isOpen && (
-        <div className="md:hidden fixed inset-0 z-50" dir="rtl">
+      {mounted && (
+        <div className={`md:hidden fixed inset-x-0 top-[53px] bottom-[58px] z-50 flex flex-col transition-all duration-300 ${entered ? 'opacity-100' : 'opacity-0'}`} dir="rtl">
           <div
-            className="absolute inset-0 bg-black/40"
+            className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${entered ? 'opacity-100' : 'opacity-0'}`}
             onClick={closeMenu}
             aria-hidden="true"
           />
 
-          <div className="absolute top-0 left-0 right-0 bottom-16 bg-white border-b border-slate-200 shadow-lg overflow-y-auto">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-white sticky top-0 z-10">
+          <div className={`absolute inset-0 bg-white border-b border-t border-slate-200 shadow-lg overflow-y-auto flex flex-col transition-all duration-300 ease-out origin-top ${entered ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-4 opacity-0 scale-95'}`}>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-white sticky top-0 z-10 shrink-0">
               <div className="text-xs font-black uppercase tracking-widest text-slate-400">
                 תהליך הערכה בשלבים (בגישת <span className="text-[12px]">CBSA</span>)
               </div>
@@ -168,7 +189,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               </button>
             </div>
 
-            <div className="p-3 space-y-2">
+            <div className="p-3 space-y-2 flex-1 overflow-y-auto custom-scrollbar">
               {agents.map((agent) => {
                 const isSelected = selectedAgentId === agent.id;
                 const theme = getAgentTheme(agent.id, agent.color, isSelected);

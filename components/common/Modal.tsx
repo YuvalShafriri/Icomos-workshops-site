@@ -57,16 +57,21 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-[100] flex items-start md:items-center justify-center p-2 transition-opacity duration-300 ${entered ? 'opacity-100' : 'opacity-0'}`}
+      className={`fixed z-[100] flex items-start md:items-center justify-center transition-opacity duration-300 ${entered ? 'opacity-100' : 'opacity-0'}
+        inset-x-0 top-[53px] bottom-[58px] md:inset-0 md:top-0 md:bottom-0 md:bg-slate-900/30 md:backdrop-blur-sm md:p-2
+      `}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
       style={{
-        paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)',
-        paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+        // On mobile we rely on top/bottom classes, on desktop we might need safe area if fullscreen, but usually centered
+        // We can keep padding for desktop safe area if needed, but for mobile we are strictly between bars
       }}
     >
-      <div className={`bg-white w-full ${maxWidth} max-h-[calc(100dvh-2rem)] md:max-h-[98vh] rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-slate-200 transition-all duration-300 ease-out ${entered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}>
+      <div
+        className={`bg-white w-full ${maxWidth} h-full md:h-auto md:max-h-[98vh] shadow-2xl overflow-hidden flex flex-col border-t border-b md:border border-slate-200 md:rounded-3xl transition-all duration-300 ease-out 
+        ${entered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}
+      >
         <div className="p-3 md:p-4 border-b border-slate-100 flex justify-between items-center shrink-0 bg-slate-50/50">
           <h2 className="text-base md:text-lg font-black text-slate-900 tracking-tight">{title}</h2>
           <button
