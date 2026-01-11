@@ -628,97 +628,6 @@ const App: React.FC = () => {
                     </details>
                   </div>
                 </div>
-
-
-                {/* Prompt Section - Collapsible */}
-                <details className="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden group">
-                  <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-slate-200/50 transition-all">
-                    <div className="flex items-center gap-2">
-                      <Code size={16} className="text-slate-500" />
-                      <h3 className="font-bold text-slate-700 text-sm">ההנחיות לבוט (פרומפט)</h3>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex bg-white rounded-lg p-0.5 border border-slate-200" dir="ltr">
-                        <button
-                          onClick={(e) => { e.preventDefault(); setPromptLang('he'); }}
-                          className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'he' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
-                        >עברית</button>
-                        <button
-                          onClick={(e) => { e.preventDefault(); setPromptLang('en'); }}
-                          className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'en' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
-                        >English</button>
-                      </div>
-                      <ChevronLeft size={16} className="text-slate-400 group-open:-rotate-90 transition-transform" />
-                    </div>
-                  </summary>
-                  <div className="p-4 pt-0 border-t border-slate-200 bg-white">
-                    <div className="bg-slate-950 rounded-lg p-4 mt-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
-                      <MarkdownRenderer
-                        text={selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ''}
-                        dir={promptLang === 'he' ? 'rtl' : 'ltr'}
-                        theme="dark"
-                      />
-                    </div>
-                  </div>
-                  <div className="relative">
-                    <textarea
-                      className="w-full h-32 p-4 bg-white rounded-2xl border border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none shadow-inner"
-                      placeholder=""
-                      value={consultationInput}
-                      onChange={(e) => setConsultationInput(e.target.value)}
-                    ></textarea>
-                    <button
-                      onClick={handleConsult}
-                      disabled={isConsulting || !consultationInput.trim()}
-                      className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white p-2.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 font-black text-[11px]"
-                    >
-                      {isConsulting ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                      <span>בנה פנייה</span>
-                    </button>
-                  </div>
-
-                  {/* Consultation Result Display Area */}
-                  <div className="w-full">
-                    {consultationResult && (() => {
-                      const [promptText, explanationText] = consultationResult.includes('---PROMPT_BOUNDARY---')
-                        ? consultationResult.split('---PROMPT_BOUNDARY---')
-                        : [consultationResult, ''];
-                      const cleanPrompt = promptText.replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim();
-
-                      return (
-                        <div className="space-y-6">
-                          <div className="bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800 text-right w-full" dir="rtl">
-                            <div className="bg-slate-800/50 p-3 border-b border-white/5 flex items-center justify-between">
-                              <div className="flex gap-1.5 px-2">
-                                <div className="w-2 h-2 rounded-full bg-red-400/20"></div>
-                                <div className="w-2 h-2 rounded-full bg-amber-400/20"></div>
-                                <div className="w-2 h-2 rounded-full bg-emerald-400/20"></div>
-                              </div>
-                              <button onClick={() => navigator.clipboard.writeText(cleanPrompt)} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-3 py-1.5 rounded transition-all flex items-center gap-2 font-bold">
-                                <Copy size={14} /> העתק פנייה
-                              </button>
-                            </div>
-                            <div className="p-6 overflow-y-auto custom-scrollbar max-h-[500px]">
-                              <MarkdownRenderer text={cleanPrompt} dir="rtl" theme="dark" />
-                            </div>
-                          </div>
-
-                          {explanationText && (
-                            <div className="bg-white p-5 rounded-xl border-l-4 border-indigo-500 shadow-sm text-sm text-slate-700 leading-relaxed">
-                              <h4 className="font-bold text-slate-900 text-xs mb-2 flex items-center gap-2"><Sparkles size={14} className="text-indigo-500" /> דבר היועץ</h4>
-                              {explanationText.trim()}
-                            </div>
-                          )}
-                          <div className="flex justify-end">
-                            <button onClick={() => setConsultationResult(null)} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">נקה תוצאות</button>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-
-
-                </details>
               </>
             ) : (
               showResearchAids ? (
@@ -730,41 +639,47 @@ const App: React.FC = () => {
                       <p className="text-slate-500">כלים מתקדמים לניתוח, ויזואליזציה והעמקה במחקר</p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                       {/* Visual Analysis */}
                       <button
                         onClick={() => navigateTo('visual')}
-                        className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group text-center h-full min-h-[160px]"
+                        className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group cursor-pointer"
                       >
-                        <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                          <Box size={24} />
+                        <div className="w-9 h-9 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <Box size={18} />
                         </div>
-                        <h4 className="font-bold text-slate-800 mb-1">ניתוח חזותי</h4>
-                        <p className="text-xs text-slate-500 line-clamp-2">ניתוח תמונות וזיהוי אלמנטים חזותיים</p>
+                        <div className="text-right">
+                          <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
+                          <p className="text-[11px] text-slate-500 line-clamp-1">ניתוח תכונות קשרים וערכים מתמונות</p>
+                        </div>
                       </button>
 
                       {/* Knowledge Graph */}
                       <button
                         onClick={() => navigateTo('graph')}
-                        className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group text-center h-full min-h-[160px]"
+                        className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group cursor-pointer"
                       >
-                        <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                          <Zap size={24} />
+                        <div className="w-9 h-9 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <Zap size={18} />
                         </div>
-                        <h4 className="font-bold text-slate-800 mb-1">גרף ידע</h4>
-                        <p className="text-xs text-slate-500 line-clamp-2">מיפוי קשרים וישויות</p>
+                        <div className="text-right">
+                          <h4 className="font-bold text-slate-800 text-sm">גרף ידע</h4>
+                          <p className="text-[11px] text-slate-500 line-clamp-1">מיפוי חזותי של ישויות וקשרים סמנטיים</p>
+                        </div>
                       </button>
 
                       {/* Collection Analysis */}
                       <button
                         onClick={() => navigateTo('inventory')}
-                        className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-amber-200 hover:bg-amber-50/30 transition-all group text-center h-full min-h-[160px]"
+                        className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-amber-200 hover:bg-amber-50/30 transition-all group cursor-pointer"
                       >
-                        <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                          <Library size={24} />
+                        <div className="w-9 h-9 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <Library size={18} />
                         </div>
-                        <h4 className="font-bold text-slate-800 mb-1">ניתוח אוסף</h4>
-                        <p className="text-xs text-slate-500 line-clamp-2">ניתוח רוחבי של פריטים מרובים</p>
+                        <div className="text-right">
+                          <h4 className="font-bold text-slate-800 text-sm">ניתוח אוסף</h4>
+                          <p className="text-[11px] text-slate-500 line-clamp-1">פרוטוקול לניתוח רוחבי של אוסף הערכות</p>
+                        </div>
                       </button>
 
                       {/* Research Queries Loop */}
@@ -772,15 +687,58 @@ const App: React.FC = () => {
                         <button
                           key={query.route || idx}
                           onClick={() => query.route ? navigateTo(query.route) : null}
-                          className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-200 hover:bg-blue-50/30 transition-all group text-center h-full min-h-[160px]"
+                          className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-200 hover:bg-blue-50/30 transition-all group cursor-pointer"
                         >
-                          <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            {React.isValidElement(query.icon) ? React.cloneElement(query.icon as React.ReactElement, { size: 24 }) : <SearchCheck size={24} />}
+                          <div className="w-9 h-9 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            {React.isValidElement(query.icon) ? React.cloneElement(query.icon as React.ReactElement, { size: 18 }) : <SearchCheck size={18} />}
                           </div>
-                          <h4 className="font-bold text-slate-800 mb-1">{query.title}</h4>
-                          <p className="text-xs text-slate-500 line-clamp-2">{query.description}</p>
+                          <div className="text-right">
+                            <h4 className="font-bold text-slate-800 text-sm">{query.title}</h4>
+                            <p className="text-[11px] text-slate-500 line-clamp-1">{query.description}</p>
+                          </div>
                         </button>
                       ))}
+                    </div>
+
+                    {/* Prompt Advisor Section */}
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-9 h-9 bg-violet-100 text-violet-600 rounded-lg flex items-center justify-center">
+                          <Sparkles size={18} />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-800">יועץ לבניית הנחיות</h4>
+                          <p className="text-xs text-slate-500">שלב הכנה: הגדרת תפקיד ומתודולוגיה</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-600 mb-3">הזן את המטרה המחקרית שלך (למשל: "אני רוצה לנתח את הערכים החברתיים"), והיועץ יבנה עבורך פנייה מקצועית (Prompt) המותאמת.</p>
+                      <div className="relative">
+                        <textarea
+                          className="w-full h-20 p-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-700 placeholder:text-slate-400 resize-none"
+                          placeholder="תאר את המטרה או השאלה שלך..."
+                          value={consultationInput}
+                          onChange={(e) => setConsultationInput(e.target.value)}
+                        />
+                        <button
+                          onClick={handleConsult}
+                          disabled={isConsulting || !consultationInput.trim()}
+                          className="absolute bottom-2 left-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white px-3 py-1.5 rounded-lg shadow transition-all active:scale-95 flex items-center gap-2 font-bold text-xs cursor-pointer disabled:cursor-not-allowed"
+                        >
+                          {isConsulting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                          <span>בנה פנייה</span>
+                        </button>
+                      </div>
+                      {consultationResult && (
+                        <div className="mt-3 bg-slate-900 rounded-xl p-4 max-h-[250px] overflow-y-auto custom-scrollbar">
+                          <MarkdownRenderer text={consultationResult.split('---PROMPT_BOUNDARY---')[0].replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim()} dir="rtl" theme="dark" />
+                          <div className="flex justify-end mt-2 gap-2">
+                            <button onClick={() => navigator.clipboard.writeText(consultationResult.split('---PROMPT_BOUNDARY---')[0].replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim())} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-2 py-1 rounded transition-all flex items-center gap-1 cursor-pointer">
+                              <Copy size={12} /> העתק
+                            </button>
+                            <button onClick={() => setConsultationResult(null)} className="text-xs text-slate-400 hover:text-red-400 transition-colors cursor-pointer">נקה</button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -788,7 +746,7 @@ const App: React.FC = () => {
                 /* DEFAULT HOME VIEW (Resource List) */
                 <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 sm:pb-0">
                   <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
-                    <div className="text-right pt-2 md:pt-3"><h3 className="text-lg sm:text-xl font-black text-slate-500 mb-0.5 leading-tight truncate">כלים משלימים להעמקה</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
+                    <div className="text-right pt-2 md:pt-3"><h3 className="text-lg sm:text-xl font-black text-slate-500 mb-0.5 leading-tight truncate">משאבים לסדנת איקומוס - אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 gap-4">
                         <ResourceGroup title="כלי הערכה: אתר.בוט">
