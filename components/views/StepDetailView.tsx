@@ -3,6 +3,7 @@ import { AgentConfig, StepDetails } from '../../types';
 import { X, Lightbulb, Layers, ListChecks, Code, ChevronLeft, Loader2, Sparkles, Copy } from 'lucide-react';
 import MarkdownRenderer from '../MarkdownRenderer';
 import { STEP_DETAILS, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES, CORE_AGENTS } from '../../constants';
+import { copyToClipboard } from '../../utils';
 
 interface StepDetailViewProps {
     agent: AgentConfig;
@@ -71,7 +72,7 @@ export const StepDetailView: React.FC<StepDetailViewProps> = ({
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4 pb-24">
+            <div className="flex-1 overflow-y-auto custom-scrollbar px-4 pt-5 pb-24 space-y-5">
 
                 {/* Why Important & Cognitive Link */}
                 <div className="space-y-3">
@@ -173,7 +174,7 @@ export const StepDetailView: React.FC<StepDetailViewProps> = ({
                                         <div className="bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-700">
                                             <div className="bg-slate-900/50 p-2 border-b border-white/5 flex items-center justify-between">
                                                 <span className="text-[10px] font-bold text-slate-400 px-2">תוצאה:</span>
-                                                <button onClick={() => navigator.clipboard.writeText(cleanPrompt)} className="text-[10px] bg-white/10 hover:bg-white/20 text-indigo-300 hover:text-white px-2 py-1 rounded transition-colors flex items-center gap-1">
+                                                <button onClick={() => copyToClipboard(cleanPrompt)} className="text-[10px] bg-white/10 hover:bg-white/20 text-indigo-300 hover:text-white px-2 py-1 rounded transition-colors flex items-center gap-1">
                                                     <Copy size={10} /> העתק
                                                 </button>
                                             </div>

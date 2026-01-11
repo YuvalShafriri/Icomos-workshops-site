@@ -28,7 +28,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       style={{ width }}
-      className={`shrink-0 border-l border-slate-200 bg-slate-50/80 backdrop-blur-md transition-all z-20 flex-col relative hidden md:flex ${selectedAgentId !== null || showResearchAids ? 'shadow-2xl' : ''}`}
+      className={`shrink-0 border-l border-slate-200 bg-slate-50/80 backdrop-blur-md transition-shadow duration-300 will-change-transform z-20 flex-col relative hidden md:flex ${selectedAgentId !== null || showResearchAids ? 'shadow-2xl shadow-indigo-200/40' : 'shadow-none'}`}
     >
       {/* Resize handle */}
       <div

@@ -83,7 +83,7 @@ export const Modal: React.FC<ModalProps> = ({
             <X size={18} />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-3 md:p-4 custom-scrollbar">{children}</div>
+        <div className="flex-1 overflow-y-auto p-2 md:p-3 custom-scrollbar">{children}</div>
       </div>
     </div>
   );

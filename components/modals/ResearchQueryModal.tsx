@@ -3,6 +3,7 @@ import { Terminal, Copy, Info } from 'lucide-react';
 import { Modal } from '../common';
 import MarkdownRenderer from '../MarkdownRenderer';
 import { ResearchQuerySelection } from '../../constants';
+import { copyToClipboard } from '../../utils';
 
 export interface ResearchQueryModalProps {
   query: ResearchQuerySelection | null;
@@ -66,7 +67,7 @@ export const ResearchQueryModal: React.FC<ResearchQueryModalProps> = ({
               </div>
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText((query as any).prompt!);
+                  copyToClipboard((query as any).prompt!);
                 }}
                 className="absolute top-4 left-4 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 p-2 rounded-lg shadow-sm transition-all active:scale-95 group/btn flex items-center gap-2 font-bold text-[10px]"
                 title="העתק ללוח"
@@ -112,7 +113,7 @@ export const ResearchQueryModal: React.FC<ResearchQueryModalProps> = ({
                     </div>
                   </div>
                   <button
-                    onClick={() => navigator.clipboard.writeText(sub.prompt)}
+                    onClick={() => copyToClipboard(sub.prompt)}
                     className="absolute top-3 left-3 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 p-1.5 rounded-md shadow-sm transition-all active:scale-95 group/btn flex items-center gap-1.5 font-bold text-[10px]"
                     title="העתק ללוח"
                   >

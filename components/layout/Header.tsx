@@ -68,16 +68,19 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
 
           <h3 className="text-slate-200 font-bold text-lg md:text-[1.5rem] leading-none">InSites Lab</h3>
 
+          {/* About button - Desktop only (>=768px), subtle transparent style */}
           <button
             onClick={onAboutClick}
             title="מה יש באתר?"
             aria-label="מה יש באתר?"
-            className="cursor-pointer hidden sm:flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn md:ring-1 md:ring-white/20 md:shadow-md md:hover:shadow-lg md:hover:ring-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            className="cursor-pointer hidden md:flex items-center justify-center w-12 h-8 
+            rounded-lg border border-white/20 text-white/80 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all
+            active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
           >
-            <Info className="w-4 h-4 sm:w-[18px] sm:h-[18px] md:w-5 md:h-5" strokeWidth={1.8} />
+            <Info className="w-[20px] h-[20px]" strokeWidth={2.5} />
           </button>
 
-          <div className="w-1 h-4 bg-slate-800 rounded-full"></div>
+          <div className="w-1 h-4 bg-slate-800 rounded-full hidden md:block"></div>
         </div>
       </div>
       <style>{`

@@ -52,6 +52,7 @@ import { WelcomeOverlay, AboutView, StepsList, StepDetailView } from './componen
 import { PrinciplesModal, DemoModal, InventoryModal, PromptAdvisorModal, GraphInputModal, ResearchQueryModal, GraphModal } from './components/modals';
 import { CORE_AGENTS, DEMO_DATA, GRAPH_PROMPT, PROMPT_ADVISOR_SYSTEM, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES, STEP_DETAILS, RESEARCH_QUERIES, getNodeColor, ResearchQuerySelection } from './constants';
 import { callGemini } from './services/geminiService';
+import { copyToClipboard } from './utils';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
 
@@ -466,7 +467,7 @@ const App: React.FC = () => {
         <main className="flex-1 min-h-0 flex flex-col bg-white shadow-inner relative transition-all overflow-hidden">
           {/* Welcome/About Overlay - Desktop Only */}
           <div className="hidden md:block">
-            {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} />}
+            {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} onNavigate={navigateTo} />}
           </div>
 
           <SwitchTransition transitionKey={mainViewKey} className="flex-1 min-h-0 flex flex-col" duration={250}>
@@ -478,8 +479,8 @@ const App: React.FC = () => {
                 getAgentTheme={getAgentTheme}
               />
             ) : mobileView === 'ABOUT' ? (
-              <div className="flex-1 overflow-y-auto bg-white custom-scrollbar pb-20 sm:pb-0" dir="rtl">
-                <AboutView />
+              <div className="flex-1 overflow-y-auto bg-white custom-scrollbar pb-20 md:pb-0" dir="rtl">
+                <AboutView onNavigate={navigateTo} />
               </div>
             ) : (mobileView === 'STEP_DETAIL' || (selectedAgentId !== null && currentAgent)) ? (
               // Unified Step Detail View logic
@@ -643,7 +644,7 @@ const App: React.FC = () => {
                                       <div className="w-2 h-2 rounded-full bg-amber-400/20"></div>
                                       <div className="w-2 h-2 rounded-full bg-emerald-400/20"></div>
                                     </div>
-                                    <button onClick={() => navigator.clipboard.writeText(cleanPrompt)} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-3 py-1.5 rounded transition-all flex items-center gap-2 font-bold">
+                                    <button onClick={() => copyToClipboard(cleanPrompt)} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-3 py-1.5 rounded transition-all flex items-center gap-2 font-bold">
                                       <Copy size={14} /> העתק פנייה
                                     </button>
                                   </div>
@@ -674,72 +675,81 @@ const App: React.FC = () => {
               ) : null) : (
               showResearchAids || mobileView === 'TOOLS' ? (
                 /* EXTENSIONS TOOLBOX VIEW (The "Tools") */
-                <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 sm:pb-0">
-                  <div className="max-w-4xl mx-auto w-full px-6 py-8 space-y-8">
+                <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 md:pb-0">
+                  <div className="max-w-4xl mx-auto w-full px-6 py-6 space-y-6">
                     <div>
                       <h3 className="text-2xl font-black text-slate-800 mb-2">ארגז כלים והרחבות</h3>
                       <p className="text-slate-500">כלים מתקדמים לניתוח, ויזואליזציה והעמקה במחקר</p>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                      {/* Visual Analysis */}
-                      <button
-                        onClick={() => navigateTo('visual')}
-                        className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group cursor-pointer"
-                      >
-                        <div className="w-9 h-9 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                          <Box size={18} />
-                        </div>
-                        <div className="text-right">
-                          <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
-                          <p className="text-[11px] text-slate-500 line-clamp-1">ניתוח תכונות קשרים וערכים מתמונות</p>
-                        </div>
-                      </button>
-
-                      {/* Knowledge Graph */}
-                      <button
-                        onClick={() => navigateTo('graph')}
-                        className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group cursor-pointer"
-                      >
-                        <div className="w-9 h-9 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                          <Zap size={18} />
-                        </div>
-                        <div className="text-right">
-                          <h4 className="font-bold text-slate-800 text-sm">גרף ידע</h4>
-                          <p className="text-[11px] text-slate-500 line-clamp-1">מיפוי חזותי של ישויות וקשרים סמנטיים</p>
-                        </div>
-                      </button>
-
-                      {/* Collection Analysis */}
-                      <button
-                        onClick={() => navigateTo('inventory')}
-                        className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-amber-200 hover:bg-amber-50/30 transition-all group cursor-pointer"
-                      >
-                        <div className="w-9 h-9 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                          <Library size={18} />
-                        </div>
-                        <div className="text-right">
-                          <h4 className="font-bold text-slate-800 text-sm">ניתוח אוסף</h4>
-                          <p className="text-[11px] text-slate-500 line-clamp-1">פרוטוקול לניתוח רוחבי של אוסף הערכות</p>
-                        </div>
-                      </button>
-
-                      {/* Research Queries Loop */}
-                      {RESEARCH_QUERIES.map((query, idx) => (
+                    {/* Tools Section */}
+                    <div className="space-y-2">
+                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest">כלי ניתוח</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {/* Visual Analysis */}
                         <button
-                          key={query.route || idx}
-                          onClick={() => query.route ? navigateTo(query.route) : null}
-                          className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-200 hover:bg-blue-50/30 transition-all group cursor-pointer"
+                          onClick={() => navigateTo('visual')}
+                          className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group cursor-pointer"
                         >
-                          <div className="w-9 h-9 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                            {React.isValidElement(query.icon) ? React.cloneElement(query.icon as React.ReactElement, { size: 18 }) : <SearchCheck size={18} />}
+                          <div className="w-9 h-9 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <Box size={18} />
                           </div>
                           <div className="text-right">
-                            <h4 className="font-bold text-slate-800 text-sm">{query.title}</h4>
-                            <p className="text-[11px] text-slate-500 line-clamp-1">{query.description}</p>
+                            <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
+                            <p className="text-[11px] text-slate-500 line-clamp-2">ניתוח תכונות קשרים וערכים מתמונות</p>
                           </div>
                         </button>
-                      ))}
+
+                        {/* Knowledge Graph */}
+                        <button
+                          onClick={() => navigateTo('graph')}
+                          className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group cursor-pointer"
+                        >
+                          <div className="w-9 h-9 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <Zap size={18} />
+                          </div>
+                          <div className="text-right">
+                            <h4 className="font-bold text-slate-800 text-sm">גרף ידע</h4>
+                            <p className="text-[11px] text-slate-500 line-clamp-2">מיפוי חזותי של ישויות וקשרים סמנטיים</p>
+                          </div>
+                        </button>
+
+                        {/* Collection Analysis */}
+                        <button
+                          onClick={() => navigateTo('inventory')}
+                          className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-amber-200 hover:bg-amber-50/30 transition-all group cursor-pointer"
+                        >
+                          <div className="w-9 h-9 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <Library size={18} />
+                          </div>
+                          <div className="text-right">
+                            <h4 className="font-bold text-slate-800 text-sm">ניתוח אוסף</h4>
+                            <p className="text-[11px] text-slate-500 line-clamp-2">פרוטוקול לניתוח רוחבי של אוסף הערכות</p>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Research Queries Section */}
+                    <div className="space-y-3">
+                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest">שאילתות הרחבה</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {RESEARCH_QUERIES.map((query, idx) => (
+                          <button
+                            key={query.route || idx}
+                            onClick={() => query.route ? navigateTo(query.route) : null}
+                            className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-200 hover:bg-blue-50/30 transition-all group cursor-pointer"
+                          >
+                            <div className="w-9 h-9 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                              {React.isValidElement(query.icon) ? React.cloneElement(query.icon as React.ReactElement, { size: 18 }) : <SearchCheck size={18} />}
+                            </div>
+                            <div className="text-right">
+                              <h4 className="font-bold text-slate-800 text-sm">{query.title}</h4>
+                              <p className="text-[11px] text-slate-500 line-clamp-2">{query.description}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Prompt Advisor Section */}
@@ -774,7 +784,7 @@ const App: React.FC = () => {
                         <div className="mt-3 bg-slate-900 rounded-xl p-4 max-h-[250px] overflow-y-auto custom-scrollbar">
                           <MarkdownRenderer text={consultationResult.split('---PROMPT_BOUNDARY---')[0].replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim()} dir="rtl" theme="dark" />
                           <div className="flex justify-end mt-2 gap-2">
-                            <button onClick={() => navigator.clipboard.writeText(consultationResult.split('---PROMPT_BOUNDARY---')[0].replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim())} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-2 py-1 rounded transition-all flex items-center gap-1 cursor-pointer">
+                            <button onClick={() => copyToClipboard(consultationResult.split('---PROMPT_BOUNDARY---')[0].replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim())} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-2 py-1 rounded transition-all flex items-center gap-1 cursor-pointer">
                               <Copy size={12} /> העתק
                             </button>
                             <button onClick={() => setConsultationResult(null)} className="text-xs text-slate-400 hover:text-red-400 transition-colors cursor-pointer">נקה</button>

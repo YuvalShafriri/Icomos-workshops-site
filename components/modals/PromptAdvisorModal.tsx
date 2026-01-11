@@ -3,6 +3,7 @@ import { FileCode, Copy, TerminalSquare, Loader2, Sparkles, Info } from 'lucide-
 import { Modal } from '../common';
 import MarkdownRenderer from '../MarkdownRenderer';
 import { EDUCATIONAL_PROMPT, DIALOGUE_PRINCIPLES } from '../../constants';
+import { copyToClipboard } from '../../utils';
 
 export interface PromptAdvisorModalProps {
   isOpen: boolean;
@@ -45,7 +46,7 @@ export const PromptAdvisorModal: React.FC<PromptAdvisorModalProps> = ({
               <div className="w-2 h-2 rounded-full bg-emerald-400/20"></div>
             </div>
             <button
-              onClick={() => navigator.clipboard.writeText(cleanPrompt)}
+              onClick={() => copyToClipboard(cleanPrompt)}
               className="text-[10px] bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-2 py-1 rounded transition-all flex items-center gap-1.5 font-bold"
             >
               <Copy size={12} /> העתק פנייה
@@ -102,7 +103,7 @@ export const PromptAdvisorModal: React.FC<PromptAdvisorModalProps> = ({
               </div>
               <div className="p-2.5 bg-slate-900/50 flex items-center justify-center gap-3">
                 <button
-                  onClick={() => navigator.clipboard.writeText(EDUCATIONAL_PROMPT)}
+                  onClick={() => copyToClipboard(EDUCATIONAL_PROMPT)}
                   className="flex items-center gap-2 text-[9px] font-black text-slate-400 hover:text-indigo-400 transition-colors uppercase tracking-widest group/copy active:scale-95"
                 >
                   <Copy size={12} /><span>העתק שאילתה להדגמה</span>

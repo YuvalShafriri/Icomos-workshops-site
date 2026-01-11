@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Home, Info, ListOrdered, Menu, Zap } from 'lucide-react';
+import { Home, Info, ListOrdered, Zap } from 'lucide-react';
 import { AgentConfig } from '../../types';
 
 export interface MobileNavProps {
@@ -36,35 +36,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
   return (
     <>
-      {/* Tablet-sized "mobile" top bar (>=sm and <md) */}
-      <div
-        className="hidden sm:flex md:hidden items-center justify-between gap-3 px-3 py-2 bg-slate-50/95 backdrop-blur border-b border-slate-200 shrink-0 sticky top-0 z-40"
-        dir="rtl"
-      >
-        <button
-          onClick={onStepsClick}
-          className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm transition-all ${currentView === 'STEPS' ? 'bg-slate-800 text-white border-slate-700' : 'bg-white border-slate-200 text-slate-700'}`}
-          aria-label="פתח רשימת שלבים"
-        >
-          <Menu size={18} />
-          <span className="text-xs font-bold">שלבים</span>
-        </button>
-
-        <div className="text-xs font-bold text-slate-500 truncate">{currentLabel}</div>
-
-        <button
-          onClick={onResearchAidsClick}
-          className={`flex items-center gap-2 px-3 py-2 rounded-lg border shadow-sm whitespace-nowrap transition-all shrink-0 cursor-pointer ${currentView === 'TOOLS' ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-white border-slate-200 text-indigo-600'}`}
-          aria-label="כלים נוספים"
-        >
-          <Zap size={14} className={currentView === 'TOOLS' ? 'text-white' : 'text-indigo-500'} />
-          <span className="text-xs font-bold">כלים</span>
-        </button>
-      </div>
-
-      {/* Phone-only bottom tabs (<sm) */}
+      {/* Mobile bottom tabs (< md / 768px) */}
       <nav
-        className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t border-slate-200"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t border-slate-200"
         dir="rtl"
         aria-label="ניווט מובייל"
       >

@@ -3,6 +3,7 @@ import { Library, Copy, Sparkles, ExternalLink, Info } from 'lucide-react';
 import { Modal } from '../common';
 import MarkdownRenderer from '../MarkdownRenderer';
 import { MARC_INSTRUCTIONS } from '../../constants';
+import { copyToClipboard } from '../../utils';
 
 export interface InventoryModalProps {
   isOpen: boolean;
@@ -48,7 +49,7 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({ isOpen, onClose,
               </div>
             </div>
             <button
-              onClick={() => navigator.clipboard.writeText(MARC_INSTRUCTIONS[lang].promptContent || '')}
+              onClick={() => copyToClipboard(MARC_INSTRUCTIONS[lang].promptContent || '')}
               className="absolute bottom-4 left-4 bg-white/10 hover:bg-emerald-600 text-white/70 hover:text-white backdrop-blur-sm border border-white/10 p-2 rounded-lg transition-all active:scale-95 group/btn flex items-center gap-2 font-bold text-[10px]"
               title="העתק ללוח"
             >
