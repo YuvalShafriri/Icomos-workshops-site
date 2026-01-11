@@ -41,7 +41,8 @@ import {
   PieChart,
   Workflow,
   TerminalSquare,
-  Share2
+  Share2,
+  Library
 } from 'lucide-react';
 import MarkdownRenderer from './components/MarkdownRenderer';
 import { Modal, ResourceLink, ResourceGroup, SectionDivider } from './components/common';
@@ -234,6 +235,7 @@ const App: React.FC = () => {
     'step-4': () => { setSelectedAgentId(4); setShowResearchAids(false); },
     'step-5': () => { setSelectedAgentId(5); setShowResearchAids(false); },
     'step-6': () => { setSelectedAgentId(6); setShowResearchAids(false); },
+    'home': () => { setSelectedAgentId(null); setShowResearchAids(false); },
   };
 
   // Navigate to hash route
@@ -408,6 +410,10 @@ const App: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen min-h-dvh bg-slate-100 text-slate-800 overflow-hidden" dir="rtl">
 
+      {/* Phone-only bottom tabs overlay: ensure scroll areas don't end under it */}
+
+      {/**/}
+
       <Header onAboutClick={() => navigateTo('welcome')} />
 
       {/* Mobile Horizontal Navigation (Sticky) */}
@@ -415,9 +421,20 @@ const App: React.FC = () => {
         showResearchAids={showResearchAids}
         selectedAgentId={selectedAgentId}
         agents={CORE_AGENTS}
+        onHomeClick={() => {
+          setSelectedAgentId(null);
+          setShowResearchAids(false);
+          setSelectedQuery(null);
+          handleCloseWelcome();
+          window.location.hash = '';
+        }}
+        onAboutClick={() => {
+          navigateTo('welcome');
+        }}
         onResearchAidsClick={() => { navigateTo('tools'); handleCloseWelcome(); }}
         onAgentSelect={(agentId) => { navigateTo(`step-${agentId}`); handleCloseWelcome(); }}
         getMobileStageTheme={getMobileStageTheme}
+        getAgentTheme={getAgentTheme}
       />
 
       <div className="flex-1 min-h-0 overflow-hidden relative flex flex-col md:flex-row">
@@ -439,109 +456,109 @@ const App: React.FC = () => {
           {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} />}
 
           <SwitchTransition transitionKey={mainViewKey} className="flex-1 min-h-0 flex flex-col" duration={250}>
-          {selectedAgentId !== null && currentAgent ? (
-            <>
-              <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
-                <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-xl ${getAgentChipTheme(currentAgent.color)} shadow-md border border-white`}>{React.cloneElement(currentAgent.icon as React.ReactElement<{ size?: number }>, { size: 20 })}</div>
-                  <div>
-                    <h2 className="font-black text-lg leading-tight text-slate-900 tracking-tight">{currentAgent.name}</h2>
-                    <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{currentAgent.role}</p>
+            {selectedAgentId !== null && currentAgent ? (
+              <>
+                <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
+                  <div className="flex items-center gap-4">
+                    <div className={`p-2 rounded-xl ${getAgentChipTheme(currentAgent.color)} shadow-md border border-white`}>{React.cloneElement(currentAgent.icon as React.ReactElement<{ size?: number }>, { size: 20 })}</div>
+                    <div>
+                      <h2 className="font-black text-lg leading-tight text-slate-900 tracking-tight">{currentAgent.name}</h2>
+                      <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{currentAgent.role}</p>
+                    </div>
                   </div>
+                  <button onClick={() => { setSelectedAgentId(null); window.location.hash = ''; }} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-all group flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline group-hover:text-slate-600 transition-colors">סגור תצוגה</span>
+                    <X size={20} />
+                  </button>
                 </div>
-                <button onClick={() => { setSelectedAgentId(null); window.location.hash = ''; }} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-all group flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline group-hover:text-slate-600 transition-colors">סגור תצוגה</span>
-                  <X size={20} />
-                </button>
-              </div>
-              <div className="flex-1 flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar" dir="rtl">
-                <div className="p-6 md:p-8 max-w-3xl mx-auto w-full space-y-6">
-                  {/* Why Important & Cognitive Link - Side by Side */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Lightbulb size={16} className="text-amber-600" />
-                        <h3 className="font-bold text-amber-800 text-sm">למה שלב זה חשוב?</h3>
-                      </div>
-                      <p className="text-amber-900/80 text-sm leading-relaxed">
-                        {selectedStepDetails?.whyImportant}
-                      </p>
-                    </div>
-                    <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Layers size={16} className="text-indigo-600" />
-                        <h3 className="font-bold text-indigo-800 text-sm">קשר לשלבים קודמים</h3>
-                      </div>
-                      <p className="text-indigo-900/80 text-sm leading-relaxed">
-                        {selectedStepDetails?.cognitiveLink}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* What Happens */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                    <div className="flex items-center gap-2 mb-3">
-                      <ListChecks size={16} className="text-emerald-600" />
-                      <h3 className="font-bold text-slate-800 text-sm">מה קורה בשלב זה?</h3>
-                    </div>
-                    <ul className="space-y-2">
-                      {(selectedStepDetails?.whatHappens ?? []).map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                          <span className="text-emerald-500 mt-0.5">•</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {selectedAgentId === 5 && STEP_DETAILS[5]?.extensions && (
-                      <div className="mt-3 pt-3 border-t border-slate-200">
-                        <div className="text-[13.5px] text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-1">
-                          <span className="font-bold text-slate-700">מסלולי העמקה:</span>
-                          {STEP_DETAILS[5].extensions
-                            .filter((ext) => ext.url !== 'q-jester')
-                            .map((ext) => (
-                              <button
-                                key={ext.url}
-                                onClick={() => navigateTo(ext.url)}
-                                title={ext.description}
-                                className="cursor-pointer text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
-                              >
-                                {ext.name}
-                              </button>
-                            ))}
-                          <button
-                            onClick={() => navigateTo('tools')}
-                            className="cursor-pointer text-slate-500 hover:text-slate-700 underline underline-offset-2"
-                          >
-                            כל הכלים
-                          </button>
+                <div className="flex-1 flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar pb-20 sm:pb-0" dir="rtl">
+                  <div className="p-6 md:p-8 max-w-3xl mx-auto w-full space-y-6">
+                    {/* Why Important & Cognitive Link - Side by Side */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Lightbulb size={16} className="text-amber-600" />
+                          <h3 className="font-bold text-amber-800 text-sm">למה שלב זה חשוב?</h3>
                         </div>
+                        <p className="text-amber-900/80 text-sm leading-relaxed">
+                          {selectedStepDetails?.whyImportant}
+                        </p>
                       </div>
-                    )}
-                  </div>
-
-                  {/* Prompt Section - Collapsible */}
-                  <details className="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden group">
-                    <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-slate-200/50 transition-all">
-                      <div className="flex items-center gap-2">
-                        <Code size={16} className="text-slate-500" />
-                        <h3 className="font-bold text-slate-700 text-sm">ההנחיות לבוט (פרומפט)</h3>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex bg-white rounded-lg p-0.5 border border-slate-200" dir="ltr">
-                          <button
-                            onClick={(e) => { e.preventDefault(); setPromptLang('he'); }}
-                            className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'he' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
-                          >עברית</button>
-                          <button
-                            onClick={(e) => { e.preventDefault(); setPromptLang('en'); }}
-                            className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'en' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
-                          >English</button>
+                      <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Layers size={16} className="text-indigo-600" />
+                          <h3 className="font-bold text-indigo-800 text-sm">קשר לשלבים קודמים</h3>
                         </div>
-                        <ChevronLeft size={16} className="text-slate-400 group-open:-rotate-90 transition-transform" />
+                        <p className="text-indigo-900/80 text-sm leading-relaxed">
+                          {selectedStepDetails?.cognitiveLink}
+                        </p>
                       </div>
-                    </summary>
-                    <div className="p-4 pt-0 border-t border-slate-200 bg-white">
+                    </div>
+
+                    {/* What Happens */}
+                    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <ListChecks size={16} className="text-emerald-600" />
+                        <h3 className="font-bold text-slate-800 text-sm">מה קורה בשלב זה?</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {(selectedStepDetails?.whatHappens ?? []).map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                            <span className="text-emerald-500 mt-0.5">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {selectedAgentId === 5 && STEP_DETAILS[5]?.extensions && (
+                        <div className="mt-3 pt-3 border-t border-slate-200">
+                          <div className="text-[13.5px] text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-1">
+                            <span className="font-bold text-slate-700">מסלולי העמקה:</span>
+                            {STEP_DETAILS[5].extensions
+                              .filter((ext) => ext.url !== 'q-jester')
+                              .map((ext) => (
+                                <button
+                                  key={ext.url}
+                                  onClick={() => navigateTo(ext.url)}
+                                  title={ext.description}
+                                  className="cursor-pointer text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
+                                >
+                                  {ext.name}
+                                </button>
+                              ))}
+                            <button
+                              onClick={() => navigateTo('tools')}
+                              className="cursor-pointer text-slate-500 hover:text-slate-700 underline underline-offset-2"
+                            >
+                              כל הכלים
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Prompt Section - Collapsible */}
+                    <details className="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden group">
+                      <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-slate-200/50 transition-all">
+                        <div className="flex items-center gap-2">
+                          <Code size={16} className="text-slate-500" />
+                          <h3 className="font-bold text-slate-700 text-sm">ההנחיות לבוט (פרומפט)</h3>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex bg-white rounded-lg p-0.5 border border-slate-200" dir="ltr">
+                            <button
+                              onClick={(e) => { e.preventDefault(); setPromptLang('he'); }}
+                              className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'he' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                            >עברית</button>
+                            <button
+                              onClick={(e) => { e.preventDefault(); setPromptLang('en'); }}
+                              className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'en' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                            >English</button>
+                          </div>
+                          <ChevronLeft size={16} className="text-slate-400 group-open:-rotate-90 transition-transform" />
+                        </div>
+                      </summary>
+                      <div className="p-4 pt-0 border-t border-slate-200 bg-white">
                         <div className="bg-slate-950 rounded-lg p-4 mt-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
                           <MarkdownRenderer
                             text={selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ''}
@@ -549,293 +566,336 @@ const App: React.FC = () => {
                             theme="dark"
                           />
                         </div>
-                    </div>
-                  </details>
-                </div>
-              </div>
-            </>
-          ) : showResearchAids ? (
-            <div className="flex-1 flex flex-col bg-white overflow-y-auto custom-scrollbar pb-20">
-              <div className="p-6 md:p-10 max-w-5xl mx-auto w-full space-y-6">
-                <div className="flex justify-between items-end">
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none">הרחבות ושאילתות משלימות</h2>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">ארגז כלים משלים להעמקה מחקרית</p>
-                  </div>
-                  <button
-                    onClick={() => { setShowResearchAids(false); window.location.hash = ''; }}
-                    className="px-3 py-2 hover:bg-slate-100 rounded-xl text-slate-600 transition-all border border-slate-200 flex items-center gap-2"
-                    aria-label="חזרה לשלבים"
-                  >
-                    <span className="text-[11px] font-black">חזרה לשלבים</span>
-                    <X size={18} className="text-slate-400" />
-                  </button>
-                </div>
-
-
-
-                {/* Unified Research Toolkit Section */}
-                <section className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] bg-slate-100 px-2 py-1 rounded">ארגז כלים ושאילתות למחקר</h3>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    {/* Knowledge Graph Card (FIRST) */}
-                    <div
-                      onClick={() => navigateTo('graph-create')}
-                      className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
-                    >
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="p-1.5 sm:p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Share2 size={18} /></div>
-                        <h4 className="font-bold text-slate-800 text-sm">גרף ידע</h4>
                       </div>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 flex-1">מיפוי חזותי של ישויות וקשרים סמנטיים מתוך הטקסט.</p>
-                      <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
-                        <Zap size={12} /> הפעל כלי
+                      <div className="relative">
+                        <textarea
+                          className="w-full h-32 p-4 bg-white rounded-2xl border border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none shadow-inner"
+                          placeholder=""
+                          value={consultationInput}
+                          onChange={(e) => setConsultationInput(e.target.value)}
+                        ></textarea>
+                        <button
+                          onClick={handleConsult}
+                          disabled={isConsulting || !consultationInput.trim()}
+                          className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white p-2.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 font-black text-[11px]"
+                        >
+                          {isConsulting ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                          <span>בנה פנייה</span>
+                        </button>
                       </div>
-                    </div>
 
-                    {/* Visual Analysis Card (SECOND) */}
-                    <div
-                      onClick={() => navigateTo('visual')}
-                      className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
-                    >
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="p-1.5 sm:p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><Eye size={18} /></div>
-                        <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
-                      </div>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 flex-1">סוכן (נסיוני) לניתוח תכונות הקשרים ערכים מתוך תמונות.</p>
-                      <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
-                        <Sparkles size={12} /> דוגמה לניתוח
-                      </div>
-                    </div>
+                      {/* Consultation Result Display Area */}
+                      <div className="w-full">
+                        {consultationResult && (() => {
+                          const [promptText, explanationText] = consultationResult.includes('---PROMPT_BOUNDARY---')
+                            ? consultationResult.split('---PROMPT_BOUNDARY---')
+                            : [consultationResult, ''];
+                          const cleanPrompt = promptText.replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim();
 
-                    {/* Inventory Card (THIRD) */}
-                    <div
-                      onClick={() => navigateTo('inventory')}
-                      className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:border-emerald-200 transition-all flex flex-col cursor-pointer group h-full relative hover:shadow-md"
-                    >
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="p-1.5 sm:p-2 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all"><PieChart size={18} /></div>
-                        <h4 className="font-bold text-slate-800 text-sm">ניתוח אוסף</h4>
-                      </div>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 flex-1">פרוטוקול לניתוח רוחבי של אוסף הערכות (למשל מסקר)</p>
-                      <div className="py-2 bg-slate-50 text-emerald-600 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest flex items-center justify-center gap-2 group-hover:bg-emerald-50 transition-colors">
-                        <FileText size={12} /> צפה בהנחיות
-                      </div>
-                    </div>
-
-                    {/* Methodological Queries */}
-                    {RESEARCH_QUERIES.map((q, idx) => (
-                      <div
-                        key={idx}
-                        onClick={() => navigateTo(q.route)}
-                        className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:border-indigo-200 transition-all flex flex-col group h-full relative cursor-pointer hover:shadow-md"
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="p-1.5 sm:p-2 bg-indigo-50 text-indigo-500 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-all">{q.icon}</div>
-                            <h4 className="font-bold text-slate-800 text-sm">{q.title}</h4>
-                          </div>
-                        </div>
-                        <p className="text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 flex-1">{q.description}</p>
-                        <div className="py-2 bg-slate-50 text-indigo-400 rounded-lg font-black text-[9px] text-center border border-slate-100 uppercase tracking-widest opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-                          הצג שאילתה
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-
-                <div className="border-t border-slate-100 my-2"></div>
-
-                {/* Consultation Advisor Section - Top of Overlay */}
-                <section className="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-indigo-600 text-white rounded-lg shadow-md"><TerminalSquare size={20} /></div>
-                    <div>
-                      <h3 className="font-black text-lg text-slate-900">יועץ לבניית הנחיות</h3>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">שלב הכנה: הגדרת תפקיד ומתודולוגיה</p>
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-slate-600 leading-relaxed font-medium mb-6 max-w-3xl">הזן את המטרה המחקרית שלך (למשל: "אני רוצה לנתח את הערכים החברתיים"), והיועץ יבנה עבורך פנייה מקצועית (Prompt) המותאמת למתודולוגיה, אותה תוכל להעתיק לבוט.</p>
-
-                  <div className="flex flex-col gap-8">
-                    <div className="relative">
-                      <textarea
-                        className="w-full h-32 p-4 bg-white rounded-2xl border border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none shadow-inner"
-                        placeholder=""
-                        value={consultationInput}
-                        onChange={(e) => setConsultationInput(e.target.value)}
-                      ></textarea>
-                      <button
-                        onClick={handleConsult}
-                        disabled={isConsulting || !consultationInput.trim()}
-                        className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white p-2.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 font-black text-[11px]"
-                      >
-                        {isConsulting ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                        <span>בנה פנייה</span>
-                      </button>
-                    </div>
-
-                    {/* Consultation Result Display Area */}
-                    <div className="w-full">
-                      {consultationResult && (() => {
-                        const [promptText, explanationText] = consultationResult.includes('---PROMPT_BOUNDARY---')
-                          ? consultationResult.split('---PROMPT_BOUNDARY---')
-                          : [consultationResult, ''];
-                        const cleanPrompt = promptText.replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim();
-
-                        return (
-                          <div className="space-y-6">
-                            <div className="bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800 text-right w-full" dir="rtl">
-                              <div className="bg-slate-800/50 p-3 border-b border-white/5 flex items-center justify-between">
-                                <div className="flex gap-1.5 px-2">
-                                  <div className="w-2 h-2 rounded-full bg-red-400/20"></div>
-                                  <div className="w-2 h-2 rounded-full bg-amber-400/20"></div>
-                                  <div className="w-2 h-2 rounded-full bg-emerald-400/20"></div>
+                          return (
+                            <div className="space-y-6">
+                              <div className="bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800 text-right w-full" dir="rtl">
+                                <div className="bg-slate-800/50 p-3 border-b border-white/5 flex items-center justify-between">
+                                  <div className="flex gap-1.5 px-2">
+                                    <div className="w-2 h-2 rounded-full bg-red-400/20"></div>
+                                    <div className="w-2 h-2 rounded-full bg-amber-400/20"></div>
+                                    <div className="w-2 h-2 rounded-full bg-emerald-400/20"></div>
+                                  </div>
+                                  <button onClick={() => navigator.clipboard.writeText(cleanPrompt)} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-3 py-1.5 rounded transition-all flex items-center gap-2 font-bold">
+                                    <Copy size={14} /> העתק פנייה
+                                  </button>
                                 </div>
-                                <button onClick={() => navigator.clipboard.writeText(cleanPrompt)} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-3 py-1.5 rounded transition-all flex items-center gap-2 font-bold">
-                                  <Copy size={14} /> העתק פנייה
-                                </button>
+                                <div className="p-6 overflow-y-auto custom-scrollbar max-h-[500px]">
+                                  <MarkdownRenderer text={cleanPrompt} dir="rtl" theme="dark" />
+                                </div>
                               </div>
-                              <div className="p-6 overflow-y-auto custom-scrollbar max-h-[500px]">
-                                <MarkdownRenderer text={cleanPrompt} dir="rtl" theme="dark" />
-                              </div>
-                            </div>
 
-                            {explanationText && (
-                              <div className="bg-white p-5 rounded-xl border-l-4 border-indigo-500 shadow-sm text-sm text-slate-700 leading-relaxed">
-                                <h4 className="font-bold text-slate-900 text-xs mb-2 flex items-center gap-2"><Sparkles size={14} className="text-indigo-500" /> דבר היועץ</h4>
-                                {explanationText.trim()}
+                              {explanationText && (
+                                <div className="bg-white p-5 rounded-xl border-l-4 border-indigo-500 shadow-sm text-sm text-slate-700 leading-relaxed">
+                                  <h4 className="font-bold text-slate-900 text-xs mb-2 flex items-center gap-2"><Sparkles size={14} className="text-indigo-500" /> דבר היועץ</h4>
+                                  {explanationText.trim()}
+                                </div>
+                              )}
+                              <div className="flex justify-end">
+                                <button onClick={() => setConsultationResult(null)} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">נקה תוצאות</button>
                               </div>
-                            )}
-                            <div className="flex justify-end">
-                              <button onClick={() => setConsultationResult(null)} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">נקה תוצאות</button>
                             </div>
-                          </div>
-                        );
-                      })()}
+                          );
+                        })()}
+                      </div>
+
+
+                    </details>
+                  </div>
+                </div>
+
+
+                {/* Prompt Section - Collapsible */}
+                <details className="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden group">
+                  <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-slate-200/50 transition-all">
+                    <div className="flex items-center gap-2">
+                      <Code size={16} className="text-slate-500" />
+                      <h3 className="font-bold text-slate-700 text-sm">ההנחיות לבוט (פרומפט)</h3>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex bg-white rounded-lg p-0.5 border border-slate-200" dir="ltr">
+                        <button
+                          onClick={(e) => { e.preventDefault(); setPromptLang('he'); }}
+                          className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'he' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                        >עברית</button>
+                        <button
+                          onClick={(e) => { e.preventDefault(); setPromptLang('en'); }}
+                          className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all ${promptLang === 'en' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                        >English</button>
+                      </div>
+                      <ChevronLeft size={16} className="text-slate-400 group-open:-rotate-90 transition-transform" />
+                    </div>
+                  </summary>
+                  <div className="p-4 pt-0 border-t border-slate-200 bg-white">
+                    <div className="bg-slate-950 rounded-lg p-4 mt-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
+                      <MarkdownRenderer
+                        text={selectedAgentId !== null ? (promptLang === 'he' ? (PROMPT_TRANSLATIONS[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString()) : (PROMPT_PREVIEWS_EN[selectedAgentId] || PROMPT_TEMPLATES[selectedAgentId](rawData).toString())) : ''}
+                        dir={promptLang === 'he' ? 'rtl' : 'ltr'}
+                        theme="dark"
+                      />
                     </div>
                   </div>
-                </section>
-              </div>
-            </div>
-          ) : (
-            <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar">
-              <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
-                <div className="text-right pt-2 md:pt-3"><h3 className="text-xl font-black text-slate-500 mb-0.5 leading-tight">משאבים לסדנת איקומוס אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 gap-4">
-                    <ResourceGroup title="כלי הערכה: אתר.בוט">
-                      <ResourceLink
-                        href="https://chatgpt.com/g/g-695d3567400c8191a402087b38c7b6b7-tr-bvt-h-rkt-mshm-vt-lshymvr"
-                        icon={<Bot size={16} />}
-                        label="אתר.בוט (GPTs)"
-                        highlight={true}
-                        colorScheme="emerald"
-                      />
-                      <ResourceLink
-                        href="https://gemini.google.com/gem/5b822b7e1771?usp=sharing"
-                        icon={<Sparkles size={16} />}
-                        label="אתר.בוט (Gemini)"
-                        highlight={true}
-                        colorScheme="indigo"
-                      />
-                      <ResourceLink href="https://forms.gle/F9ZykAefJQ94n2Vc7"
-                        icon={<ClipboardCheck size={16} />}
-                        label="שאלון משוב" secondaryLabel="משוב לצורכי מחקר ושיפור הכלי"
-                        noBorder
-                        highlight={true}
-                        colorScheme="amber" />
-                      <ResourceLink href="https://github.com/YuvalShafriri/atar.bot-Icomos.Israel/blob/main/Bot-Brain-he.md"
-                        icon={<Github size={16} />}
-                        label="המוח של אתר.בוט"
-                        secondaryLabel="מאגר קוד המקור והנחיות המערכת"
-                        highlight={true}
-                        noBorder
-                        colorScheme="slate" />
-                    </ResourceGroup>
+                  <div className="relative">
+                    <textarea
+                      className="w-full h-32 p-4 bg-white rounded-2xl border border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none shadow-inner"
+                      placeholder=""
+                      value={consultationInput}
+                      onChange={(e) => setConsultationInput(e.target.value)}
+                    ></textarea>
+                    <button
+                      onClick={handleConsult}
+                      disabled={isConsulting || !consultationInput.trim()}
+                      className="absolute bottom-4 left-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white p-2.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center gap-2 font-black text-[11px]"
+                    >
+                      {isConsulting ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                      <span>בנה פנייה</span>
+                    </button>
+                  </div>
 
-                    <ResourceGroup title="מעבר לאתר.בוט - התאמה אישית">
-                      <ResourceLink href="https://chatgpt.com/g/g-69492aebb530819199628bb444d024f3-svkn-lbnyyt-svkn-yqvmvs" icon={<Bot size={16} />} label="בניית סוכן (GPTs)" noBorder colorScheme="emerald" />
-                      <ResourceLink
-                        href="https://gemini.google.com/gem/1LbC3oHGIS83rP8uWdIEEeaU9_ixfEMh1?usp=sharing"
-                        icon={<Sparkles size={16} />}
-                        label={
-                          <span className="flex items-center gap-2">
-                            בניית סוכן (Gemini)
-                            <span
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                window.open("https://gemini.google.com/gem/1No_FbNaQmz5khR51dl7NHFOXAFQ5x5Pu?usp=sharing", "_blank");
-                              }}
-                              className="text-[11px] text-slate-500 bg-emerald-50 px-1.5 py-0.5 rounded-md hover:bg-emerald-100 transition-colors cursor-pointer border border-emerald-200 shadow-sm"
-                            >
-                              דוגמה ליוצר תמונות מתיאור אדריכלי/ארכאולוגי
-                            </span>
-                          </span>
-                        }
-                        noBorder
-                        colorScheme="emerald"
-                      />
-                    </ResourceGroup>
+                  {/* Consultation Result Display Area */}
+                  <div className="w-full">
+                    {consultationResult && (() => {
+                      const [promptText, explanationText] = consultationResult.includes('---PROMPT_BOUNDARY---')
+                        ? consultationResult.split('---PROMPT_BOUNDARY---')
+                        : [consultationResult, ''];
+                      const cleanPrompt = promptText.replace(/^```(markdown|json)?/g, '').replace(/```$/g, '').trim();
 
-                    <ResourceGroup title="ייצוג קצת אחרת - לכתיבה וקריאת הערכות">
-                      <div className="sm:hidden">
-                        <ResourceLink
-                          icon={<LayoutDashboard size={16} />}
-                          label="דשבורד הערכה תרבותית - דמו"
-                          secondaryLabel="לא זמין במובייל (פתח במחשב)"
-                          noBorder
-                        />
-                        <ResourceLink
-                          icon={<PieChart size={16} />}
-                          label="דשבורד ניתוח אוסף - דמו"
-                          secondaryLabel="לא זמין במובייל (פתח במחשב)"
-                          noBorder
-                        />
-                      </div>
+                      return (
+                        <div className="space-y-6">
+                          <div className="bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-800 text-right w-full" dir="rtl">
+                            <div className="bg-slate-800/50 p-3 border-b border-white/5 flex items-center justify-between">
+                              <div className="flex gap-1.5 px-2">
+                                <div className="w-2 h-2 rounded-full bg-red-400/20"></div>
+                                <div className="w-2 h-2 rounded-full bg-amber-400/20"></div>
+                                <div className="w-2 h-2 rounded-full bg-emerald-400/20"></div>
+                              </div>
+                              <button onClick={() => navigator.clipboard.writeText(cleanPrompt)} className="text-xs bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white px-3 py-1.5 rounded transition-all flex items-center gap-2 font-bold">
+                                <Copy size={14} /> העתק פנייה
+                              </button>
+                            </div>
+                            <div className="p-6 overflow-y-auto custom-scrollbar max-h-[500px]">
+                              <MarkdownRenderer text={cleanPrompt} dir="rtl" theme="dark" />
+                            </div>
+                          </div>
 
-                      <div className="hidden sm:block">
-                        <ResourceLink href="https://gemini.google.com/share/673fdae83a26" icon={<LayoutDashboard size={16} />} label="דשבורד הערכה תרבותית - דמו" noBorder />
-                        <ResourceLink
-                          onClick={() => navigateTo('inventory')}
-                          icon={<PieChart size={16} />}
-                          label="דשבורד ניתוח אוסף -דמו"
-                          secondaryLabel="ניתוח אוסף בשילוב notebookLM ואתר.בוט בגמיני"
-                          noBorder
-                        />
-                      </div>
-                    </ResourceGroup>
+                          {explanationText && (
+                            <div className="bg-white p-5 rounded-xl border-l-4 border-indigo-500 shadow-sm text-sm text-slate-700 leading-relaxed">
+                              <h4 className="font-bold text-slate-900 text-xs mb-2 flex items-center gap-2"><Sparkles size={14} className="text-indigo-500" /> דבר היועץ</h4>
+                              {explanationText.trim()}
+                            </div>
+                          )}
+                          <div className="flex justify-end">
+                            <button onClick={() => setConsultationResult(null)} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">נקה תוצאות</button>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
 
-                    <SectionDivider label="השראה" colorClass="text-emerald-500" bgColor="bg-slate-50/30" />
 
-                    <div className="grid grid-cols-1 gap-2.5">
-                      <ResourceLink href="https://bit.ly/49huqGS" icon={<BookOpen size={16} />} label="אלכסון: עוד איבר של תודעה" secondaryLabel=" מאמר על חוויית המקום והתודעה בשילוב AI" colorScheme="emerald" highlight />
+                </details>
+              </>
+            ) : (
+              showResearchAids ? (
+                /* EXTENSIONS TOOLBOX VIEW (The "Tools") */
+                <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 sm:pb-0">
+                  <div className="max-w-4xl mx-auto w-full px-6 py-8 space-y-8">
+                    <div>
+                      <h3 className="text-2xl font-black text-slate-800 mb-2">ארגז כלים והרחבות</h3>
+                      <p className="text-slate-500">כלים מתקדמים לניתוח, ויזואליזציה והעמקה במחקר</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {/* Visual Analysis */}
+                      <button
+                        onClick={() => navigateTo('visual')}
+                        className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group text-center h-full min-h-[160px]"
+                      >
+                        <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                          <Box size={24} />
+                        </div>
+                        <h4 className="font-bold text-slate-800 mb-1">ניתוח חזותי</h4>
+                        <p className="text-xs text-slate-500 line-clamp-2">ניתוח תמונות וזיהוי אלמנטים חזותיים</p>
+                      </button>
+
+                      {/* Knowledge Graph */}
+                      <button
+                        onClick={() => navigateTo('graph')}
+                        className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group text-center h-full min-h-[160px]"
+                      >
+                        <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                          <Zap size={24} />
+                        </div>
+                        <h4 className="font-bold text-slate-800 mb-1">גרף ידע</h4>
+                        <p className="text-xs text-slate-500 line-clamp-2">מיפוי קשרים וישויות</p>
+                      </button>
+
+                      {/* Collection Analysis */}
+                      <button
+                        onClick={() => navigateTo('inventory')}
+                        className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-amber-200 hover:bg-amber-50/30 transition-all group text-center h-full min-h-[160px]"
+                      >
+                        <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                          <Library size={24} />
+                        </div>
+                        <h4 className="font-bold text-slate-800 mb-1">ניתוח אוסף</h4>
+                        <p className="text-xs text-slate-500 line-clamp-2">ניתוח רוחבי של פריטים מרובים</p>
+                      </button>
+
+                      {/* Research Queries Loop */}
+                      {RESEARCH_QUERIES.map((query, idx) => (
+                        <button
+                          key={query.route || idx}
+                          onClick={() => query.route ? navigateTo(query.route) : null}
+                          className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-200 hover:bg-blue-50/30 transition-all group text-center h-full min-h-[160px]"
+                        >
+                          <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            {React.isValidElement(query.icon) ? React.cloneElement(query.icon as React.ReactElement, { size: 24 }) : <SearchCheck size={24} />}
+                          </div>
+                          <h4 className="font-bold text-slate-800 mb-1">{query.title}</h4>
+                          <p className="text-xs text-slate-500 line-clamp-2">{query.description}</p>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
+              ) : (
+                /* DEFAULT HOME VIEW (Resource List) */
+                <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 sm:pb-0">
+                  <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
+                    <div className="text-right pt-2 md:pt-3"><h3 className="text-lg sm:text-xl font-black text-slate-500 mb-0.5 leading-tight truncate">כלים משלימים להעמקה</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 gap-4">
+                        <ResourceGroup title="כלי הערכה: אתר.בוט">
+                          <ResourceLink
+                            href="https://chatgpt.com/g/g-695d3567400c8191a402087b38c7b6b7-tr-bvt-h-rkt-mshm-vt-lshymvr"
+                            icon={<Bot size={16} />}
+                            label="אתר.בוט (GPTs)"
+                            highlight={true}
+                            colorScheme="emerald"
+                          />
+                          <ResourceLink
+                            href="https://gemini.google.com/gem/5b822b7e1771?usp=sharing"
+                            icon={<Sparkles size={16} />}
+                            label="אתר.בוט (Gemini)"
+                            highlight={true}
+                            colorScheme="indigo"
+                          />
+                          <ResourceLink href="https://forms.gle/F9ZykAefJQ94n2Vc7"
+                            icon={<ClipboardCheck size={16} />}
+                            label="שאלון משוב" secondaryLabel="משוב לצורכי מחקר ושיפור הכלי"
+                            noBorder
+                            highlight={true}
+                            colorScheme="amber" />
+                          <ResourceLink href="https://github.com/YuvalShafriri/atar.bot-Icomos.Israel/blob/main/Bot-Brain-he.md"
+                            icon={<Github size={16} />}
+                            label="המוח של אתר.בוט"
+                            secondaryLabel="מאגר קוד המקור והנחיות המערכת"
+                            highlight={true}
+                            noBorder
+                            colorScheme="slate" />
+                        </ResourceGroup>
+
+                        <ResourceGroup title="מעבר לאתר.בוט - התאמה אישית">
+                          <ResourceLink href="https://chatgpt.com/g/g-69492aebb530819199628bb444d024f3-svkn-lbnyyt-svkn-yqvmvs" icon={<Bot size={16} />} label="בניית סוכן (GPTs)" noBorder colorScheme="emerald" />
+                          <ResourceLink
+                            href="https://gemini.google.com/gem/1LbC3oHGIS83rP8uWdIEEeaU9_ixfEMh1?usp=sharing"
+                            icon={<Sparkles size={16} />}
+                            label={
+                              <span className="flex items-center gap-2">
+                                בניית סוכן (Gemini)
+                                <span
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    window.open("https://gemini.google.com/gem/1No_FbNaQmz5khR51dl7NHFOXAFQ5x5Pu?usp=sharing", "_blank");
+                                  }}
+                                  className="text-[11px] text-slate-500 bg-emerald-50 px-1.5 py-0.5 rounded-md hover:bg-emerald-100 transition-colors cursor-pointer border border-emerald-200 shadow-sm"
+                                >
+                                  דוגמה ליוצר תמונות מתיאור אדריכלי/ארכאולוגי
+                                </span>
+                              </span>
+                            }
+                            noBorder
+                            colorScheme="emerald"
+                          />
+                        </ResourceGroup>
+
+                        <ResourceGroup title="ייצוג קצת אחרת - לכתיבה וקריאת הערכות">
+                          <div className="sm:hidden">
+                            <ResourceLink
+                              icon={<LayoutDashboard size={16} />}
+                              label="דשבורד הערכה תרבותית - דמו"
+                              secondaryLabel="לא זמין במובייל (פתח במחשב)"
+                              noBorder
+                            />
+                            <ResourceLink
+                              icon={<PieChart size={16} />}
+                              label="דשבורד ניתוח אוסף - דמו"
+                              secondaryLabel="לא זמין במובייל (פתח במחשב)"
+                              noBorder
+                            />
+                          </div>
+
+                          <div className="hidden sm:block">
+                            <ResourceLink href="https://gemini.google.com/share/673fdae83a26" icon={<LayoutDashboard size={16} />} label="דשבורד הערכה תרבותית - דמו" noBorder />
+                            <ResourceLink
+                              onClick={() => navigateTo('inventory')}
+                              icon={<PieChart size={16} />}
+                              label="דשבורד ניתוח אוסף -דמו"
+                              secondaryLabel="ניתוח אוסף בשילוב notebookLM ואתר.בוט בגמיני"
+                              noBorder
+                            />
+                          </div>
+                        </ResourceGroup>
+
+                        <SectionDivider label="השראה" colorClass="text-emerald-500" bgColor="bg-slate-50/30" />
+
+                        <div className="grid grid-cols-1 gap-2.5">
+                          <ResourceLink href="https://bit.ly/49huqGS" icon={<BookOpen size={16} />} label="אלכסון: עוד איבר של תודעה" secondaryLabel=" מאמר על חוויית המקום והתודעה בשילוב AI" colorScheme="emerald" highlight />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            )}
           </SwitchTransition>
+
+          <footer className="bg-white border-t border-slate-200 p-2 shrink-0 flex items-center px-8 z-40 shadow-sm overflow-hidden text-slate-400" dir="rtl">
+            <div className="flex-1"></div>
+            <div className="text-[13px]  opacity-100 whitespace-nowrap dir-rtl">
+              © אתר מידע מלווה לסדנאות אתר.בוט להערכת משמעות - בפיתוח פרופ"ח יעל אלף ויובל שפרירי
+            </div>
+          </footer>
         </main>
-      </div>
+      </div >
 
-      <footer className="bg-white border-t border-slate-200 p-2 shrink-0 flex items-center px-8 z-40 shadow-sm overflow-hidden text-slate-400" dir="rtl">
-        <div className="flex-1"></div>
-        <div className="text-[13px]  opacity-100 whitespace-nowrap dir-rtl">
-            © אתר מידע מלווה לסדנאות אתר.בוט להערכת משמעות - בפיתוח פרופ"ח יעל אלף ויובל שפרירי
-        </div>
-      </footer>
-
-
-
-      {/* [MA-RC] Inventory Instructions Modal */}
       <InventoryModal
         isOpen={isInventoryModalOpen}
         onClose={() => { setIsInventoryModalOpen(false); window.location.hash = ''; }}

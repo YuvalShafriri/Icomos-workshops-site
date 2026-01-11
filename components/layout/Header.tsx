@@ -35,15 +35,15 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
   return (
     <header
       style={headerStyle}
-      className="bg-[#020617] text-white shadow-xl z-50 shrink-0 border-b border-slate-800 px-3 py-2 md:px-6"
+      className="bg-[#020617] text-white shadow-xl z-50 shrink-0 border-b border-slate-800 px-3 py-1.5 md:py-2 md:px-6"
     >
       <div className="w-full flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <div
-            className="p-1.5 md:p-2 rounded-lg shadow-inner cpu-box"
+            className="p-1 md:p-1.5 rounded-lg shadow-inner cpu-box"
             style={{ boxShadow: 'inset 0 0 6px rgba(0,0,0,0.25)' }}
           >
-            <Cpu size={22} />
+            <Cpu size={20} />
           </div>
 
           <h1 className="min-w-0 flex-1 font-black tracking-tight leading-none text-indigo-100 text-base md:text-lg truncate">
@@ -72,9 +72,9 @@ export const Header: React.FC<HeaderProps> = ({ onAboutClick }) => {
             onClick={onAboutClick}
             title="מה יש באתר?"
             aria-label="מה יש באתר?"
-            className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn md:ring-1 md:ring-white/20 md:shadow-md md:hover:shadow-lg md:hover:ring-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            className="cursor-pointer hidden sm:flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg border transition-all text-white shadow-sm hover:shadow-md active:scale-[0.99] brand-btn md:ring-1 md:ring-white/20 md:shadow-md md:hover:shadow-lg md:hover:ring-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
-            <Info className="w-[18px] h-[18px] md:w-6 md:h-6" strokeWidth={1.8} />
+            <Info className="w-4 h-4 sm:w-[18px] sm:h-[18px] md:w-5 md:h-5" strokeWidth={1.8} />
           </button>
 
           <div className="w-1 h-4 bg-slate-800 rounded-full"></div>
