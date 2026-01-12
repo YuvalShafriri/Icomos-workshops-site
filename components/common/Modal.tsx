@@ -73,7 +73,7 @@ export const Modal: React.FC<ModalProps> = ({
         ${entered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}
       >
         <div className="p-3 md:p-4 border-b border-slate-100 flex justify-between items-center shrink-0 bg-slate-50/50">
-          <h2 className="text-base md:text-lg font-black text-slate-900 tracking-tight">{title}</h2>
+          <h2 className="text-base md:text-lg font-black text-slate-600 tracking-tight">{title}</h2>
           <button
             onClick={onClose}
             className="px-2.5 py-2 hover:bg-slate-100 rounded-xl text-slate-500 transition-all flex items-center gap-2 border border-transparent hover:border-slate-200"

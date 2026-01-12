@@ -39,7 +39,7 @@ export const GraphModal: React.FC<GraphModalProps> = ({
         <div className="p-3 md:p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
           <div className="flex items-center gap-3">
             <Zap size={20} className="text-emerald-600" />
-            <h2 className="text-lg font-black text-slate-900 leading-tight">גרף ידע אינטראקטיבי</h2>
+            <h2 className="text-lg font-black text-slate-500 leading-tight">גרף ידע אינטראקטיבי</h2>
           </div>
           <button
             onClick={onClose}
