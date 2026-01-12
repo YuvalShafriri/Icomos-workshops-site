@@ -48,7 +48,7 @@ export const Modal: React.FC<ModalProps> = ({
       t = setTimeout(() => {
         setMounted(false);
         setExiting(false);
-      }, 300); // must match the CSS transition duration
+      }, 400); // must match the CSS transition duration
       return () => t && clearTimeout(t);
     }
   }, [isOpen, mounted]);
@@ -57,7 +57,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className={`fixed z-[100] flex items-start md:items-center justify-center transition-opacity duration-300 ${entered ? 'opacity-100' : 'opacity-0'}
+      className={`fixed z-[100] flex items-start md:items-center justify-center transition-opacity duration-400 ${entered ? 'opacity-100' : 'opacity-0'}
         inset-x-0 top-[53px] bottom-[58px] md:inset-0 md:top-0 md:bottom-0 md:bg-slate-900/30 md:backdrop-blur-sm md:p-2
       `}
       onMouseDown={(e) => {
@@ -69,7 +69,7 @@ export const Modal: React.FC<ModalProps> = ({
       }}
     >
       <div
-        className={`bg-white w-full ${maxWidth} h-full md:h-auto md:max-h-[98vh] shadow-2xl overflow-hidden flex flex-col border-t border-b md:border border-slate-200 md:rounded-3xl transition-all duration-300 ease-out 
+        className={`bg-white w-full ${maxWidth} h-full md:h-auto md:max-h-[98vh] shadow-2xl overflow-hidden flex flex-col border-t border-b md:border border-slate-200 md:rounded-3xl transition-all duration-400 ease-out 
         ${entered ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}
       >
         <div className="p-3 md:p-4 border-b border-slate-100 flex justify-between items-center shrink-0 bg-slate-50/50">

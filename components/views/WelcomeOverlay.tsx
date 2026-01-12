@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from '../common';
 import { AboutView } from './AboutView';
 import { Cpu } from 'lucide-react';
 
 export interface WelcomeOverlayProps {
+  isOpen: boolean;
   onClose: () => void;
   onNavigate?: (route: string) => void;
 }
 
-export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose, onNavigate }) => {
+export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ isOpen, onClose, onNavigate }) => {
   const handleNavigate = (route: string) => {
     onClose(); // Close the modal first
     if (onNavigate) {
@@ -18,7 +19,7 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose, onNavig
 
   return (
     <Modal
-      isOpen
+      isOpen={isOpen}
       onClose={onClose}
       maxWidth="max-w-2xl"
       title={
@@ -28,7 +29,7 @@ export const WelcomeOverlay: React.FC<WelcomeOverlayProps> = ({ onClose, onNavig
           </div>
           <div>
             <h2 className="font-black text-base text-slate-600 leading-tight">
- מרכז המשאבים - סדנת אתר.בוט - הערכת משמעות תרבותית בשילוב AI            </h2>
+              מרכז המשאבים - סדנת אתר.בוט - הערכת משמעות תרבותית בשילוב AI            </h2>
             <p className="text-sm text-slate-500 font-medium">
               InSites Lab • הפקולטה לארכיטקטורה בטכניון
             </p>

@@ -217,8 +217,8 @@ const App: React.FC = () => {
 
   // Deep linking - hash routes mapping
   const hashRoutes: Record<string, () => void> = {
-    'graph': () => setIsGraphModalOpen(true),
-    'graph-create': () => setIsGraphInputModalOpen(true),
+    'graph': () => setIsGraphInputModalOpen(true),
+    'graph-view': () => setIsGraphModalOpen(true),
     'visual': () => setIsDemoModalOpen(true),
     'prompts': () => setIsPromptModalOpen(true),
     'principles': () => setIsPrinciplesModalOpen(true),
@@ -345,7 +345,7 @@ const App: React.FC = () => {
   };
 
   const generateKnowledgeGraph = async () => {
-    window.location.hash = 'graph';
+    window.location.hash = 'graph-view';
     setIsGraphModalOpen(true);
     setIsGraphLoading(true);
     setSelectedNodeDetails(null);
@@ -413,13 +413,12 @@ const App: React.FC = () => {
     }
   }, [graphData]);
 
-  const mainViewKey = showWelcome
-    ? 'welcome'
-    : (selectedAgentId !== null && currentAgent) ? `step-${selectedAgentId}`
-      : (mobileView === 'STEPS') ? 'steps'
-        : (mobileView === 'ABOUT') ? 'about'
-          : (mobileView === 'STEP_DETAIL' && currentAgent) ? `step-detail-${selectedAgentId}`
-            : (showResearchAids || mobileView === 'TOOLS' ? `tools:${selectedQuery?.route ?? 'root'}` : 'home');
+  // mainViewKey determines which view is shown - modals are separate overlays, not part of this
+  const mainViewKey = (selectedAgentId !== null && currentAgent) ? `step-${selectedAgentId}`
+    : (mobileView === 'STEPS') ? 'steps'
+      : (mobileView === 'ABOUT') ? 'about'
+        : (mobileView === 'STEP_DETAIL' && currentAgent) ? `step-detail-${selectedAgentId}`
+          : (showResearchAids || mobileView === 'TOOLS' ? 'tools' : 'home');
 
 
 
@@ -467,7 +466,7 @@ const App: React.FC = () => {
         <main className="flex-1 min-h-0 flex flex-col bg-white shadow-inner relative transition-all overflow-hidden">
           {/* Welcome/About Overlay - Desktop Only */}
           <div className="hidden md:block">
-            {showWelcome && <WelcomeOverlay onClose={handleCloseWelcomeAndClearHash} onNavigate={navigateTo} />}
+            <WelcomeOverlay isOpen={showWelcome} onClose={handleCloseWelcomeAndClearHash} onNavigate={navigateTo} />
           </div>
 
           <SwitchTransition transitionKey={mainViewKey} className="flex-1 min-h-0 flex flex-col" duration={250}>
@@ -679,26 +678,13 @@ const App: React.FC = () => {
                   <div className="max-w-4xl mx-auto w-full px-6 py-6 space-y-6">
                     <div>
                       <h3 className="text-2xl font-black text-slate-800 mb-2">ארגז כלים והרחבות</h3>
-                      <p className="text-slate-500">כלים מתקדמים לניתוח, ויזואליזציה והעמקה במחקר</p>
+                      <p className="text-slate-500">כלים מתקדמים לניתוח, ויזואליזציה והעמקה </p>
                     </div>
 
                     {/* Tools Section */}
                     <div className="space-y-2">
-                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest">כלי ניתוח</h4>
+                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest">כלים נוספים המשולבים באתר.בוט</h4>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {/* Visual Analysis */}
-                        <button
-                          onClick={() => navigateTo('visual')}
-                          className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group cursor-pointer"
-                        >
-                          <div className="w-9 h-9 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                            <Box size={18} />
-                          </div>
-                          <div className="text-right">
-                            <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
-                            <p className="text-[11px] text-slate-500 line-clamp-2">ניתוח תכונות קשרים וערכים מתמונות</p>
-                          </div>
-                        </button>
 
                         {/* Knowledge Graph */}
                         <button
@@ -711,6 +697,20 @@ const App: React.FC = () => {
                           <div className="text-right">
                             <h4 className="font-bold text-slate-800 text-sm">גרף ידע</h4>
                             <p className="text-[11px] text-slate-500 line-clamp-2">מיפוי חזותי של ישויות וקשרים סמנטיים</p>
+                          </div>
+                        </button>
+
+                        {/* Visual Analysis */}
+                        <button
+                          onClick={() => navigateTo('visual')}
+                          className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group cursor-pointer"
+                        >
+                          <div className="w-9 h-9 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <Box size={18} />
+                          </div>
+                          <div className="text-right">
+                            <h4 className="font-bold text-slate-800 text-sm">פענוח חזותי</h4>
+                            <p className="text-[11px] text-slate-500 line-clamp-2">ניתוח תכונות קשרים וערכים מתמונות</p>
                           </div>
                         </button>
 
@@ -763,7 +763,7 @@ const App: React.FC = () => {
                           <p className="text-xs text-slate-500">שלב הכנה: הגדרת תפקיד ומתודולוגיה</p>
                         </div>
                       </div>
-                      <p className="text-sm text-slate-600 mb-3">הזן את המטרה המחקרית שלך (למשל: "אני רוצה לנתח את הערכים החברתיים"), והיועץ יבנה עבורך פנייה מקצועית (Prompt) המותאמת.</p>
+                      <p className="text-sm text-slate-600 mb-3">הזן את המטרה שלך (למשל: "אני רוצה לנתח את הערכים החברתיים"), והיועץ יבנה עבורך הנחייה מותאמת למודל השפה (Prompt) המותאמת.</p>
                       <div className="relative">
                         <textarea
                           className="w-full h-20 p-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-700 placeholder:text-slate-400 resize-none"
@@ -798,7 +798,7 @@ const App: React.FC = () => {
                 /* DEFAULT HOME VIEW (Resource List) */
                 <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 sm:pb-0">
                   <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
-                    <div className="text-right pt-2 md:pt-3"><h3 className="text-lg sm:text-xl font-black text-slate-500 mb-0.5 leading-tight truncate">משאבים לסדנת איקומוס - אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
+                    <div className="text-right pt-2 md:pt-3"><h3 className="text-lg sm:text-l font-black text-slate-500 mb-0.5 leading-tight truncate">משאבים לסדנת איקומוס - אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 gap-4">
                         <ResourceGroup title="כלי הערכה: אתר.בוט">

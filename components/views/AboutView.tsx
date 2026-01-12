@@ -36,9 +36,11 @@ export const AboutView: React.FC<AboutViewProps> = ({ onNavigate, hideHeader = f
                 <div className="text-right">
                     <div className="text-sm text-slate-600 leading-relaxed mb-6 space-y-4">
                         <p>
-                            אתר.בוט הוא כלי AI ניסויי להערכת משמעות תרבותית של אתרי מורשת בגישת{' '}
+                            אתר.בוט הוא כלי AI ניסויי לתמיכה בהערכת משמעות תרבותית של נכסי מורשת בגישת 
                             <span className="font-bold text-indigo-700">
-                                CBSA (Context Based Significance Assessment)
+                          &nbsp; CBSA
+                         </span> <br/> <span className="font-bold text-indigo-700">
+                          (Context Based Significance Assessment) 
                             </span>.
                         </p>
                         <p>
