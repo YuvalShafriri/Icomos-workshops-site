@@ -677,7 +677,7 @@ const App: React.FC = () => {
                 <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 md:pb-0">
                   <div className="max-w-4xl mx-auto w-full px-6 py-6 space-y-6">
                     <div>
-                      <h3 className="text-2xl font-black text-slate-500 mb-2">ארגז כלים והרחבות</h3>
+                      <h3 className="text-2xl font-black text-slate-400 mb-2">ארגז כלים והרחבות</h3>
                       <p className="text-slate-500">כלים מתקדמים לניתוח, ויזואליזציה והעמקה </p>
                     </div>
 
