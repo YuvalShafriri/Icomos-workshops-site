@@ -1,7 +1,8 @@
 import React from 'react';
-import { FileText, BookOpen, Zap } from 'lucide-react';
+import { FileText, BookOpen, Zap, Landmark } from 'lucide-react';
 import { Modal } from '../common';
 import { DEMO_DATA, ZAIRA_TEXT } from '../../constants';
+import { AYELET_WT_TEXT } from '../../sampleTexts';
 
 export interface GraphInputModalProps {
   isOpen: boolean;
@@ -29,18 +30,26 @@ export const GraphInputModal: React.FC<GraphInputModalProps> = ({
 
         <div className="space-y-3">
           <label className="text-sm font-bold text-slate-700">טקסט לניתוח:</label>
-          <div className="flex gap-2 mb-2">
+          <div className="flex flex-wrap gap-2 mb-2">
+            {/* Hidden for now - keeping the data in constants.tsx
             <button
               onClick={() => onInputTextChange(DEMO_DATA)}
-              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2"
+              className="flex-1 min-w-[120px] py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2"
             >
-              <FileText size={14} /> טען: תחנת הקמח
+              <FileText size={14} /> תחנת הקמח
             </button>
+            */}
             <button
               onClick={() => onInputTextChange(ZAIRA_TEXT)}
-              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2"
+              className="flex-1 min-w-[120px] py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2"
             >
-              <BookOpen size={14} /> טען: העיר זאירה
+              <BookOpen size={14} /> העיר זאירה
+            </button>
+            <button
+              onClick={() => onInputTextChange(AYELET_WT_TEXT)}
+              className="flex-1 min-w-[120px] py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2"
+            >
+              <Landmark size={14} /> מגדל המים אילת השחר
             </button>
           </div>
           <textarea

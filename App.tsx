@@ -50,7 +50,7 @@ import SwitchTransition from './components/common/SwitchTransition';
 import { Header, Sidebar, MobileNav } from './components/layout';
 import { WelcomeOverlay, AboutView, StepsList, StepDetailView } from './components/views';
 import { PrinciplesModal, DemoModal, InventoryModal, PromptAdvisorModal, GraphInputModal, ResearchQueryModal, GraphModal } from './components/modals';
-import { CORE_AGENTS, DEMO_DATA, GRAPH_PROMPT, PROMPT_ADVISOR_SYSTEM, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES, STEP_DETAILS, RESEARCH_QUERIES, getNodeColor, ResearchQuerySelection } from './constants';
+import { CORE_AGENTS, DEMO_DATA, ZAIRA_TEXT, GRAPH_PROMPT, PROMPT_ADVISOR_SYSTEM, PROMPT_TRANSLATIONS, PROMPT_PREVIEWS_EN, PROMPT_TEMPLATES, STEP_DETAILS, RESEARCH_QUERIES, getNodeColor, ResearchQuerySelection } from './constants';
 import { callGemini } from './services/geminiService';
 import { copyToClipboard } from './utils';
 import { Network } from 'vis-network';
@@ -173,7 +173,7 @@ const App: React.FC = () => {
   const [isConsulting, setIsConsulting] = useState<boolean>(false);
 
   // Custom KG input
-  const [kgInputText, setKgInputText] = useState<string>(DEMO_DATA);
+  const [kgInputText, setKgInputText] = useState<string>(ZAIRA_TEXT);
 
   // Modals states
   const [isGraphModalOpen, setIsGraphModalOpen] = useState(false);
@@ -677,7 +677,7 @@ const App: React.FC = () => {
                 <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 md:pb-0">
                   <div className="max-w-4xl mx-auto w-full px-6 py-6 space-y-6">
                     <div>
-                      <h3 className="text-2xl font-black text-slate-800 mb-2">ארגז כלים והרחבות</h3>
+                      <h3 className="text-2xl font-black text-slate-500 mb-2">ארגז כלים והרחבות</h3>
                       <p className="text-slate-500">כלים מתקדמים לניתוח, ויזואליזציה והעמקה </p>
                     </div>
 
