@@ -479,6 +479,20 @@ const App: React.FC = () => {
               />
             ) : mobileView === 'ABOUT' ? (
               <div className="flex-1 overflow-y-auto bg-white custom-scrollbar pb-20 md:pb-0" dir="rtl">
+                <div className="px-6 pt-4">
+                  {/* Breadcrumb Navigation */}
+                  <div className="flex items-center gap-2 text-sm mb-4">
+                    <button 
+                      onClick={() => navigateTo('home')}
+                      className="text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1 transition-colors font-medium"
+                    >
+                      <BookOpen size={16} />
+                      <span>בית</span>
+                    </button>
+                    <ChevronLeft size={16} className="text-slate-400" />
+                    <span className="text-slate-600 font-medium">אודות</span>
+                  </div>
+                </div>
                 <AboutView onNavigate={navigateTo} />
               </div>
             ) : (mobileView === 'STEP_DETAIL' || (selectedAgentId !== null && currentAgent)) ? (
@@ -500,21 +514,20 @@ const App: React.FC = () => {
               ) : selectedAgentId !== null && currentAgent ? (
                 // Desktop Detail View (Existing)
                 <>
-                  <div className="p-2.5 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm z-30 px-6 shrink-0 min-h-[56px]">
-                    <div className="flex items-center gap-4">
-                      <div className={`p-2 rounded-xl ${getAgentChipTheme(currentAgent.color)} shadow-md border border-white`}>{React.cloneElement(currentAgent.icon as React.ReactElement<{ size?: number }>, { size: 20 })}</div>
-                      <div>
-                        <h2 className="font-black text-lg leading-tight text-slate-600 tracking-tight">{currentAgent.name}</h2>
-                        <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{currentAgent.role}</p>
-                      </div>
-                    </div>
-                    <button onClick={() => { setSelectedAgentId(null); window.location.hash = ''; }} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-all group flex items-center gap-2">
-                      <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline group-hover:text-slate-600 transition-colors">סגור תצוגה</span>
-                      <X size={20} />
-                    </button>
-                  </div>
                   <div className="flex-1 flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar pb-20 sm:pb-0" dir="rtl">
                     <div className="p-6 md:p-8 max-w-3xl mx-auto w-full space-y-6">
+                      {/* Breadcrumb Navigation */}
+                      <div className="flex items-center gap-2 text-sm">
+                        <button 
+                          onClick={() => navigateTo('home')}
+                          className="text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1 transition-colors font-medium"
+                        >
+                          <BookOpen size={16} />
+                          <span>בית</span>
+                        </button>
+                        <ChevronLeft size={16} className="text-slate-400" />
+                        <span className="text-slate-600 font-medium">{currentAgent.name}</span>
+                      </div>
                       {/* Why Important & Cognitive Link - Side by Side */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
