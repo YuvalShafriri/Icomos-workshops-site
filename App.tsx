@@ -1299,6 +1299,14 @@ const App: React.FC = () => {
 
                       <div className="grid grid-cols-1 gap-2.5">
                         <ResourceLink
+                          href="https://drive.google.com/drive/folders/1AOu_r9towgJwqgQfrLEI8JcbOltprpJH?usp=sharing"
+                          icon={<LayoutDashboard size={16} />}
+                          label="מצגות הסדנה"
+                          secondaryLabel="מצגת מחזור 3 ומפגש ההמשך"
+                          colorScheme="indigo"
+                          highlight
+                        />
+                        <ResourceLink
                           href="https://bit.ly/49huqGS"
                           icon={<BookOpen size={16} />}
                           label="אלכסון: עוד איבר של תודעה"
