@@ -44,7 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="space-y-1 relative">
             <div className="py-2 mb-0">
               <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 text-center">
-                תהליך הערכה  בשלבים (בגישת <span className="text-[12px]">CBSA</span>)
+             הסבר תהליך ההערכה (בגישת <span className="text-[12px]">CBSA</span>)
               </h3>
             </div>
 

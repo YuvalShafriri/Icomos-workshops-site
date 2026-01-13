@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({
       className="bg-[#020617] text-white shadow-xl z-50 shrink-0 border-b border-slate-800 px-3 py-1.5 md:py-2 md:px-6"
     >
       <div className="w-full flex items-center justify-between gap-2">
-         <div className="flex items-center gap-3 min-w-0">
+         <div className="flex items-center gap-3 min-w-2">
           <div
             className="p-1 md:p-1.5 rounded-lg shadow-inner cpu-box"
             style={{ boxShadow: "inset 0 0 6px rgba(0,0,0,0.25)" }}
@@ -54,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({
   onClick={onHomeClick}
   title="חזרה לדף הבית"
   aria-label="חזרה לדף הבית"
-  className="group min-w-20 flex-1 text-right cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded px-2 py-1.5 flex items-center"
+  className="group min-w-0 flex-1 text-right cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded px-0 py-1.5 flex items-center"
 >
   <h1 className="font-black tracking-tight leading-none text-indigo-100 group-hover:text-white text-base md:text-lg truncate relative inline-block transition-colors duration-300">
     סדנת אתר.בוט
@@ -68,10 +68,10 @@ export const Header: React.FC<HeaderProps> = ({
             title="מה יש באתר?"
             aria-label="מה יש באתר?"
             className="cursor-pointer hidden md:flex items-center justify-center w-12 h-8 
-            rounded-lg border border-white/20 text-white/80 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all
+            rounded-lg border border-white/20 text-white/100 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all
             active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
           >
-            <Info className="w-[20px] h-[20px]" strokeWidth={2.5} />
+            <Info className="w-[24px] h-[21px]" strokeWidth={2.5} />
           </button>
         </div>
         <div

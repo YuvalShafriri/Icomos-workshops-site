@@ -32,7 +32,7 @@ export const StepsList: React.FC<StepsListProps> = ({
                         <span className="text-slate-600 font-medium">שלבים</span>
                     </div>
                     <div className="text-xs font-black uppercase tracking-widest text-slate-400">
-                        תהליך הערכה בשלבים (בגישת <span className="text-[12px]">CBSA</span>)
+                        הסבר תהליך הערכה (בגישת <span className="text-[12px]">CBSA</span>)
                     </div>
                 </div>
 
