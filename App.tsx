@@ -429,7 +429,7 @@ const App: React.FC = () => {
 
       {/**/}
 
-      <Header onAboutClick={() => navigateTo('welcome')} />
+      <Header onAboutClick={() => navigateTo('welcome')} onHomeClick={() => navigateTo('home')} />
 
       {/* Mobile Horizontal Navigation (Sticky) */}
       <MobileNav
@@ -676,6 +676,19 @@ const App: React.FC = () => {
                 /* EXTENSIONS TOOLBOX VIEW (The "Tools") */
                 <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 md:pb-0">
                   <div className="max-w-4xl mx-auto w-full px-6 py-6 space-y-6">
+                    {/* Breadcrumb Navigation */}
+                    <div className="flex items-center gap-2 text-sm">
+                      <button 
+                        onClick={() => navigateTo('home')}
+                        className="text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1 transition-colors font-medium"
+                      >
+                        <BookOpen size={16} />
+                        <span>בית</span>
+                      </button>
+                      <ChevronLeft size={16} className="text-slate-400" />
+                      <span className="text-slate-600 font-medium">הרחבות וכלים</span>
+                    </div>
+
                     <div>
                       <h3 className="text-2xl font-black text-slate-500 mb-2">ארגז כלים והרחבות</h3>
                       <p className="text-slate-500">כלים מתקדמים לניתוח, ויזואליזציה והעמקה </p>
@@ -798,7 +811,8 @@ const App: React.FC = () => {
                 /* DEFAULT HOME VIEW (Resource List) */
                 <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 sm:pb-0">
                   <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
-                    <div className="text-right pt-2 md:pt-3"><h3 className="text-lg sm:text-l font-black text-slate-500 mb-0.5 leading-tight truncate">משאבים לסדנת איקומוס - אתר.בוט</h3><div className="w-12 h-1 bg-indigo-500 rounded-full mb-4"></div></div>
+                    <div className="text-right pt-2 md:pt-3"><h3 className="text-lg sm:text-l font-black text-slate-500 mb-0.5 leading-tight truncate">משאבים לסדנת איקומוס - אתר.בוט</h3>
+                    </div>
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 gap-4">
                         <ResourceGroup title="כלי הערכה: אתר.בוט">
@@ -845,7 +859,7 @@ const App: React.FC = () => {
                                     e.stopPropagation();
                                     window.open("https://gemini.google.com/gem/1No_FbNaQmz5khR51dl7NHFOXAFQ5x5Pu?usp=sharing", "_blank");
                                   }}
-                                  className="text-[11px] text-slate-500 bg-emerald-50 px-1.5 py-0.5 rounded-md hover:bg-emerald-100 transition-colors cursor-pointer border border-emerald-200 shadow-sm"
+                                  className="text-[11px] text-slate-500 bg-emerald-20 px-1.5 py-0.5 rounded-md hover:bg-emerald-100 transition-colors cursor-pointer border border-emerald-200 shadow-sm"
                                 >
                                   דוגמה ליוצר תמונות מתיאור אדריכלי/ארכאולוגי
                                 </span>

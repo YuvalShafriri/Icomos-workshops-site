@@ -46,7 +46,7 @@ export const ResearchQueryModal: React.FC<ResearchQueryModalProps> = ({
                 </h4>
                 <div className="flex items-center gap-2">
                   <span className="text-[9px] text-slate-400 font-bold bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
-                    CBSA Methodology
+                    {/* CBSA Methodology */}
                   </span>
                 </div>
               </div>
@@ -89,15 +89,7 @@ export const ResearchQueryModal: React.FC<ResearchQueryModalProps> = ({
                       <h4 className="font-bold text-slate-900 text-sm">{sub.title}</h4>
                       <p className="text-[11px] text-slate-500">{sub.description}</p>
                     </div>
-                    {sub.route && (
-                      <button
-                        onClick={() => onNavigate(sub.route)}
-                        className="ml-auto text-[10px] font-bold text-indigo-600 hover:text-indigo-800 bg-white border border-indigo-100 hover:border-indigo-200 px-2 py-1 rounded-lg transition-all"
-                        title="קישור ישיר"
-                      >
-                        קישור
-                      </button>
-                    )}
+                    
                   </div>
 
                   <div className="relative group/code">

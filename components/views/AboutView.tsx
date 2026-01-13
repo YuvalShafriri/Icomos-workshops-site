@@ -54,7 +54,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onNavigate, hideHeader = f
                         <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">מה יש באתר?</h3>
 
                         <button
-                            onClick={() => handleNavigate('steps')}
+                            onClick={() => handleNavigate('step-0')}
                             className="w-full flex items-start gap-4 p-4 bg-slate-50 hover:bg-emerald-50 rounded-2xl border border-slate-100 hover:border-emerald-200 transition-all group cursor-pointer text-right"
                         >
                             <div className="p-2 bg-emerald-100 text-emerald-600 rounded-xl shrink-0 group-hover:scale-110 transition-transform">
@@ -81,10 +81,8 @@ export const AboutView: React.FC<AboutViewProps> = ({ onNavigate, hideHeader = f
                             </div>
                         </button>
 
-                        <a
-                            href="https://atar.bot"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <button
+                            onClick={() => handleNavigate('home')}
                             className="w-full flex items-start gap-4 p-4 bg-slate-50 hover:bg-amber-50 rounded-2xl border border-slate-100 hover:border-amber-200 transition-all group cursor-pointer text-right"
                         >
                             <div className="p-2 bg-amber-100 text-amber-600 rounded-xl shrink-0 group-hover:scale-110 transition-transform">
@@ -93,11 +91,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ onNavigate, hideHeader = f
                             <div>
                                 <h4 className="font-bold text-base text-slate-800 mb-1 flex items-center gap-2">
                                     משאבים
-                                    <ExternalLink size={14} className="text-slate-400" />
                                 </h4>
                                 <p className="text-sm text-slate-500 leading-snug">קישורים לבוט, הפרויקט בגיטהאב, דוגמאות "קצת אחרת" והשראה.</p>
                             </div>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
