@@ -42,6 +42,7 @@ import {
   TerminalSquare,
   Share2,
   Library,
+  Mail,
 } from "lucide-react";
 import MarkdownRenderer from "./components/MarkdownRenderer";
 import {
@@ -664,7 +665,7 @@ const App: React.FC = () => {
               />
             ) : mobileView === "ABOUT" ? (
               <div
-                className="flex-1 overflow-y-auto bg-white custom-scrollbar pb-20 md:pb-0"
+                className="flex-1 overflow-y-auto bg-white custom-scrollbar pb-[140px] sm:pb-[90px] md:pb-16"
                 dir="rtl"
               >
                 <div className="px-6 pt-4">
@@ -704,7 +705,7 @@ const App: React.FC = () => {
                 // Desktop Detail View (Existing)
                 <>
                   <div
-                    className="flex-1 flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar pb-20 sm:pb-0"
+                    className="flex-1 flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar pb-[140px] sm:pb-[90px] md:pb-16"
                     dir="rtl"
                   >
                     <div className="p-6 md:p-8 max-w-3xl mx-auto w-full space-y-6">
@@ -973,7 +974,7 @@ const App: React.FC = () => {
               ) : null
             ) : showResearchAids || mobileView === "TOOLS" ? (
               /* EXTENSIONS TOOLBOX VIEW (The "Tools") */
-              <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 md:pb-0">
+              <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-[140px] sm:pb-[90px] md:pb-16">
                 <div className="max-w-4xl mx-auto w-full px-6 py-6 space-y-6">
                   {/* Breadcrumb Navigation */}
                   <div className="flex items-center gap-2 text-sm">
@@ -1178,7 +1179,7 @@ const App: React.FC = () => {
               </div>
             ) : (
               /* DEFAULT HOME VIEW (Resource List) */
-              <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-20 sm:pb-0">
+              <div className="flex-1 flex flex-col overflow-y-auto bg-slate-50/30 custom-scrollbar pb-[140px] sm:pb-[90px] md:pb-16">
                 <div className="max-w-xl mx-auto w-full px-6 py-2 md:py-3 space-y-6">
                   <div className="text-right pt-2 md:pt-3">
                     <h3 className="text-lg sm:text-l font-black text-slate-500 mb-0.5 leading-tight truncate">
@@ -1302,7 +1303,7 @@ const App: React.FC = () => {
                           href="https://drive.google.com/drive/folders/1AOu_r9towgJwqgQfrLEI8JcbOltprpJH?usp=sharing"
                           icon={<LayoutDashboard size={16} />}
                           label="מצגות הסדנה"
-                          secondaryLabel="מצגת מחזור 3 ומפגש ההמשך"
+                          secondaryLabel="מצגות הסדנאות ומפגש ההמשך"
                           colorScheme="indigo"
                           highlight
                         />
@@ -1323,13 +1324,26 @@ const App: React.FC = () => {
           </SwitchTransition>
 
           <footer
-            className="bg-white border-t border-slate-200 p-2 shrink-0 flex items-center px-8 z-40 shadow-sm overflow-hidden text-slate-400"
+            className="flex-row-reverse fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-slate-200 p-2 shadow-lg md:bottom-0"
+            style={{ zIndex: 45, bottom: window.innerWidth < 768 ? '70px' : '0' }}
             dir="rtl"
           >
-            <div className="flex-1"></div>
-            <div className="text-[13px]  opacity-100 whitespace-nowrap dir-rtl">
-              © אתר מידע מלווה לסדנאות אתר.בוט להערכת משמעות - בפיתוח פרופ"ח יעל
-              אלף ויובל שפרירי
+            <div className=" mx-auto flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
+              {/* כפתור צור קשר - בצד ימין ב-RTL */}
+              <a
+                href="mailto:yuval.shafriri@gmail.com?subject=פנייה%20מאתר%20אתר.בוט%20-%20סדנת%20איקומוס&body=שלום,%0D%0A%0D%0A"
+                className="flex items-center gap-2 bg-indigo-100 hover:bg-indigo-300 text-black px-2 py-2 sm:px-1.5 sm:py-1 rounded-lg shadow-md hover:shadow-lg transition-all active:scale-95 text-xs sm:text-sm font-bold shrink-0"
+                dir="rtl"
+                aria-label="שלח אימייל ליוצרי האתר"
+              >
+                <Mail size={14} />
+                <span className="hidden xs:inline">צור קשר</span>
+              </a>
+
+              {/* פרטי המפתחים */}
+              <div className=" text-xs sm:text-[13px] text-slate-400 opacity-100 truncate flex-1 text-center sm:text-right">
+                 אתר מידע מלווה לסדנאות אתר.בוט להערכת משמעות © בפיתוח פרופ"ח יעל אלף ויובל שפרירי
+              </div>
             </div>
           </footer>
         </main>

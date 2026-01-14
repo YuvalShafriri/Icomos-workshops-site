@@ -36,3 +36,7 @@ config/*
 .env.local
 .env.*.local
 !.env.example
+
+# Temp files
+tmpclaude-*-cwd
+nul
