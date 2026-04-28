@@ -11,7 +11,6 @@ import {
   MessageSquare,
   ExternalLink,
   Github,
-  ClipboardCheck,
   Bot,
   Globe,
   Trash2,
@@ -49,7 +48,6 @@ import {
   Modal,
   ResourceLink,
   ResourceGroup,
-  SectionDivider,
 } from "./components/common";
 import SwitchTransition from "./components/common/SwitchTransition";
 import { Header, Sidebar, MobileNav } from "./components/layout";
@@ -1192,70 +1190,105 @@ const App: React.FC = () => {
   <p className="text-xs text-slate-500 px-4 -mt-2">מומלץ: חשבון בתשלום ומצב חשיבה</p>
                          {" "}
                         <ResourceLink
-                          href="https://chatgpt.com/g/g-695d3567400c8191a402087b38c7b6b7-tr-bvt-h-rkt-mshm-vt-lshymvr"
-                          icon={<Bot size={16} />}
-                          label="אתר.בוט (GPTs)"
-                          highlight={true}
-                          colorScheme="emerald"
-                        />
-                        <ResourceLink
-                          href="https://gemini.google.com/gem/5b822b7e1771?usp=sharing"
+                          href="https://gemini.google.com/gem/13ihJkJu2pMdQkimfmCqqnNXfa14sB5F6?usp=sharing"
                           icon={<Sparkles size={16} />}
-                          label="אתר.בוט (Gemini)"
+                          label="Gemini - Gem"
                           highlight={true}
                           colorScheme="indigo"
                         />
                         <ResourceLink
-                          href="https://forms.gle/F9ZykAefJQ94n2Vc7"
-                          icon={<ClipboardCheck size={16} />}
-                          label="שאלון משוב"
-                          secondaryLabel="משוב לצורכי מחקר ושיפור הכלי"
-                          noBorder
+                          href="https://chatgpt.com/g/g-69f022c5f0448191bb26415c1cfe7ebf-btsll-insites-tr-bvt"
+                          icon={<Bot size={16} />}
+                          label="ChatGPT - GPTs"
+                          highlight={true}
+                          colorScheme="emerald"
+                        />
+                        {/* Hidden: previous DIY-explanation expandable for Claude.
+                            Kept here in case the GitHub README is moved and we need to restore the inline walkthrough.
+
+                            <details className="group border-b border-slate-100 last:border-0">
+                              <summary className="flex items-center justify-between p-3.5 hover:bg-slate-50 transition-all cursor-pointer w-full text-right select-none">
+                                <div className="flex items-center gap-4 text-right">
+                                  <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-amber-600 text-white shadow-amber-200 shadow-lg transition-all">
+                                    <Sparkles size={16} />
+                                  </div>
+                                  <div>
+                                    <h4 className="font-bold text-sm text-slate-800 group-hover:text-amber-600 transition-colors">
+                                      אתר.בוט (Claude)
+                                    </h4>
+                                    <p className="text-[12px] text-slate-400 font-medium">
+                                      איך להגדיר פרויקט Claude ייעודי
+                                    </p>
+                                  </div>
+                                </div>
+                                <ChevronLeft
+                                  size={14}
+                                  className="text-slate-300 group-hover:text-amber-400 group-open:-rotate-90 transition-all"
+                                />
+                              </summary>
+                              <div className="px-5 pr-[60px] pb-3.5 pt-1 text-[13px] text-slate-600 leading-relaxed space-y-2">
+                                <p>
+                                  שלא כמו GPTs ו-Gemini, ב-Claude אין סוכן מוכן מראש. כדי להשתמש באתר.בוט עליכם לבנות פרויקט ייעודי בעצמכם:
+                                </p>
+                                <ol className="list-decimal list-inside space-y-1.5">
+                                  <li>
+                                    פתחו את{" "}
+                                    <a
+                                      href="TODO_CLAUDE_MD_URL"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-1.5 py-0.5 rounded-md underline decoration-amber-400 decoration-2 underline-offset-2 transition-colors"
+                                    >
+                                      קובץ ההנחיות (InSItes-CAA-Claude.md)
+                                    </a>{" "}
+                                    והעתיקו את כל תוכנו
+                                  </li>
+                                  <li>
+                                    היכנסו ל-
+                                    <a
+                                      href="https://claude.ai"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-amber-600 hover:underline font-medium"
+                                    >
+                                      claude.ai
+                                    </a>
+                                    {" "}ובחרו <strong>Projects → Create Project</strong>
+                                  </li>
+                                  <li>
+                                    תנו לפרויקט את השם <strong>"אתר.בוט"</strong>
+                                  </li>
+                                  <li>
+                                    גשו לשדה <strong>Project Instructions</strong> והדביקו את הקוד שהעתקתם
+                                  </li>
+                                  <li>
+                                    בצ'אט החדש בתוך הפרויקט: העלו את המסמך שברצונכם להעריך והקלידו <strong>"התחל"</strong>
+                                  </li>
+                                </ol>
+                                <p className="text-[12px] text-slate-400 pt-1">
+                                  מומלץ: חשבון Pro של Claude, מודל Opus עם Extended Thinking
+                                </p>
+                              </div>
+                            </details>
+                        */}
+                        <ResourceLink
+                          href="https://github.com/InSites-Lab/Insites-CAA2026/tree/betsalel-1.1.0/InSites-Brain/Claude"
+                          icon={<Sparkles size={16} />}
+                          label="Claude"
                           highlight={true}
                           colorScheme="amber"
                         />
+                      </ResourceGroup>
+
+                      <ResourceGroup title="מאגר קוד המקור">
                         <ResourceLink
-                          href="https://github.com/YuvalShafriri/atar.bot-Icomos.Israel/blob/main/Bot-Brain-he.md"
+                          href="https://github.com/InSites-Lab/Insites-CAA2026/tree/betsalel-1.1.0/InSites-Brain/"
                           icon={<Github size={16} />}
                           label="המוח של אתר.בוט"
                           secondaryLabel="מאגר קוד המקור והנחיות המערכת"
                           highlight={true}
                           noBorder
                           colorScheme="slate"
-                        />
-                      </ResourceGroup>
-
-                      <ResourceGroup title="מעבר לאתר.בוט - התאמה אישית">
-                        <ResourceLink
-                          href="https://chatgpt.com/g/g-69492aebb530819199628bb444d024f3-svkn-lbnyyt-svkn-yqvmvs"
-                          icon={<Bot size={16} />}
-                          label="בניית סוכן (GPTs)"
-                          noBorder
-                          colorScheme="emerald"
-                        />
-                        <ResourceLink
-                          href="https://gemini.google.com/gem/1LbC3oHGIS83rP8uWdIEEeaU9_ixfEMh1?usp=sharing"
-                          icon={<Sparkles size={16} />}
-                          label={
-                            <span className="flex items-center gap-2">
-                              בניית סוכן (Gemini)
-                              <span
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  window.open(
-                                    "https://gemini.google.com/gem/1No_FbNaQmz5khR51dl7NHFOXAFQ5x5Pu?usp=sharing",
-                                    "_blank"
-                                  );
-                                }}
-                                className="text-[11px] text-slate-500 bg-emerald-20 px-1.5 py-0.5 rounded-md hover:bg-emerald-100 transition-colors cursor-pointer border border-emerald-200 shadow-sm"
-                              >
-                                דוגמה ליוצר תמונות מתיאור אדריכלי/ארכאולוגי
-                              </span>
-                            </span>
-                          }
-                          noBorder
-                          colorScheme="emerald"
                         />
                       </ResourceGroup>
 
@@ -1292,30 +1325,6 @@ const App: React.FC = () => {
                         </div>
                       </ResourceGroup>
 
-                      <SectionDivider
-                        label="השראה"
-                        colorClass="text-emerald-500"
-                        bgColor="bg-slate-50/30"
-                      />
-
-                      <div className="grid grid-cols-1 gap-2.5">
-                        <ResourceLink
-                          href="https://drive.google.com/drive/folders/1AOu_r9towgJwqgQfrLEI8JcbOltprpJH?usp=sharing"
-                          icon={<LayoutDashboard size={16} />}
-                          label="מצגות הסדנה"
-                          secondaryLabel="מצגות הסדנאות ומפגש ההמשך"
-                          colorScheme="indigo"
-                          highlight
-                        />
-                        <ResourceLink
-                          href="https://bit.ly/49huqGS"
-                          icon={<BookOpen size={16} />}
-                          label="אלכסון: עוד איבר של תודעה"
-                          secondaryLabel=" מאמר על חוויית המקום והתודעה בשילוב AI"
-                          colorScheme="emerald"
-                          highlight
-                        />
-                      </div>
                     </div>
                   </div>
                 </div>
