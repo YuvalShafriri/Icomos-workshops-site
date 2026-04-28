@@ -9,7 +9,7 @@ export interface ResourceLinkProps {
   secondaryLabel?: string;
   highlight?: boolean;
   noBorder?: boolean;
-  colorScheme?: 'indigo' | 'emerald' | 'amber' | 'slate';
+  colorScheme?: 'indigo' | 'emerald' | 'amber' | 'slate' | 'blue';
 }
 
 export const ResourceLink: React.FC<ResourceLinkProps> = ({
@@ -49,6 +49,13 @@ export const ResourceLink: React.FC<ResourceLinkProps> = ({
       iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-slate-50 group-hover:text-slate-600',
       labelHover: 'group-hover:text-slate-700',
       arrowHover: 'group-hover:text-slate-500',
+    },
+    // Soft accent: pastel-tinted icon, less weight than the bold filled bot schemes.
+    blue: {
+      iconHighlight: 'bg-blue-50 text-blue-600 border border-blue-200 shadow-sm',
+      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500',
+      labelHover: 'group-hover:text-blue-600',
+      arrowHover: 'group-hover:text-blue-400',
     },
   } as const;
   const currentScheme = schemeClasses[colorScheme];

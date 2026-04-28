@@ -32,6 +32,7 @@ import {
   LayoutDashboard,
   BarChart3,
   ChevronLeft,
+  ArrowLeftRight,
   Gauge,
   Eye,
   GraduationCap,
@@ -1278,12 +1279,18 @@ const App: React.FC = () => {
                           highlight={true}
                           colorScheme="amber"
                         />
+                      </ResourceGroup>
+
+                      <ResourceGroup>
                         <ResourceLink
                           href="./rtl-toggle.html"
-                          icon={<Type size={16} />}
-                          label="סימניות כיוון RTL/LTR"
+                          icon={<ArrowLeftRight size={14} />}
+                          label={<span className="font-medium">סימניות כיוון RTL/LTR</span>}
                           secondaryLabel="כלי לסרגל הדפדפן - לעבודה בעברית"
-                          colorScheme="slate"
+                          highlight={true}
+                          noBorder
+                          font-normal
+                          colorScheme="blue"
                         />
                       </ResourceGroup>
 
