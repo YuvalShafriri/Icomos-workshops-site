@@ -1,49 +1,59 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# InSites — אתר.בוט
 
-# Run and deploy your AI Studio app
+Hebrew-first React/Vite SPA for the **InSites** cultural-significance-assessment workshops (CBSA methodology) run with ICOMOS Israel. Participants use the site to walk through the seven-stage assessment process, generate prompts for the אתר.בוט AI assistant, and explore knowledge-graph and visual analyses of heritage sites.
 
-This contains everything you need to run your app locally.
+This is the `main` branch — the **long-running production state** of the home view (full resource list: bot links, dashboard demos, inspiration links, source-prompt link). Workshop-specific variants live on side branches (see below).
 
-View your app in AI Studio: https://ai.studio/apps/drive/1qWNJlUxkGv2ncFt4JzQd_LHt7OoziArg
+- **Deploys to** `/icomos/workshop` on the host (same path across branches).
+- **Authors:** Yuval Shafriri (development) · Dr. Yael Alef (heritage methodology).
 
-## Run Locally
+## Branches
 
-**Prerequisites:**  Node.js
+- `main` — this branch. The pre-workshop / general-audience home view. Stable; used for the standing deploy.
+- [`betsalel-workshop`](https://github.com/YuvalShafriri/Icomos-workshops-site/tree/betsalel-workshop) — Bezalel workshop variant: simplified home view (three AI-bot rows including a Claude Project link, hidden survey / agent-builder / "השראה" sections, larger typography). Branched off `main` at `1497f4d`. Workshop-bound; **not** to be merged back here.
 
+When a new workshop runs, branch off `main` (don't fork from a previous workshop branch). After the workshop, redeploy `main` to restore the standing home view.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## External references
 
-## Deep links (Hash routes)
+The "אתר.בוט" system prompt ("המוח של אתר.בוט") is hosted in a separate repo — linked out from the home view, not bundled here:
 
-The app supports direct links using URL hashes (everything after `#`).
+- File: [YuvalShafriri/atar.bot-Icomos.Israel · Bot-Brain-he.md](https://github.com/YuvalShafriri/atar.bot-Icomos.Israel/blob/main/Bot-Brain-he.md)
 
-Examples:
+If the prompt moves, update the `href` in `App.tsx`.
 
-- `http://localhost:5173/#visual`
-- `http://localhost:5173/#graph-create`
-- `http://localhost:5173/#step-2`
+## Stack
 
-Supported hashes:
+React 19 · Vite 6 · TypeScript · Tailwind 4 · `@google/genai` (Gemini API) · `lucide-react` · `vis-network` (knowledge graph).
 
-- `#welcome` – About / welcome overlay
-- `#tools` – "הרחבות וכלים" screen
-- `#q-narratives` – Query: נרטיבים חלופיים
-- `#q-sentiment` – Query: סנטימנט קהילתי / ערכי קהילה
-- `#q-education` – Query: המסרה וחינוך
-- `#q-semiotics` – Query: ניתוח סמיוטי
-- `#q-jester` – Query: ליצן החצר
-- `#q-chorus` – Query: מקהלה יוונית
-- `#q-jester-chorus` – Query group: ליצן החצר / מקהלה יוונית
-- `#graph-create` – Knowledge Graph input
-- `#graph` – Knowledge Graph results modal (after generation)
-- `#visual` – Visual analysis modal
-- `#inventory` – [MA-RC] inventory instructions modal
-- `#prompts` – Prompts workshop modal
-- `#principles` – Principles modal
-- `#step-0` … `#step-6` – CBSA stages
+## Run locally
+
+```bash
+npm install
+cp .env.example .env.local   # then set GEMINI_API_KEY
+npm run dev                  # default port 3000
+```
+
+If another vite project on your machine already holds port 3000, vite may bind silently while the browser loads the wrong app. Run on a free port instead: `npm run dev -- --port 3001`.
+
+```bash
+npm run build      # outputs dist/
+npm run preview    # serves dist/ for a local sanity-check
+```
+
+## Hash routes (deep links)
+
+The app routes via URL hash — examples:
+
+- `/#step-0` … `/#step-6` — the seven CBSA stages
+- `/#welcome` · `/#tools` · `/#prompts` · `/#principles` — overlays / modals
+- `/#graph-create` · `/#graph` — knowledge-graph input + results
+- `/#visual` — visual-analysis modal
+- `/#inventory` — MA-RC inventory instructions
+- `/#q-narratives` · `/#q-sentiment` · `/#q-education` · `/#q-semiotics` · `/#q-jester` · `/#q-chorus` · `/#q-jester-chorus` — research-query modals
+
+## House rules for code edits (humans and AI agents)
+
+- **Preserve existing inline comments.** They encode author intent across multiple workshop iterations — don't strip them on refactor.
+- **Hide, don't delete.** When removing UI sections that may resurface later, comment them out (`{/* … */}`) with a one-line marker rather than deleting.
+- **Verify UI changes in a browser** before declaring done — the build can pass while the layout is broken.
