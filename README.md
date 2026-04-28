@@ -14,8 +14,8 @@ Hebrew-first React/Vite SPA for the **InSites** cultural-significance-assessment
 
 The "אתר.בוט" system prompts ("המוח של אתר.בוט") live in a separate repo — linked out from the home view, not bundled here:
 
-- Repo: [InSites-Lab/Insites-CAA2026](https://github.com/InSites-Lab/Insites-CAA2026)
-- Branch: `betsalel-1.1.0`, folder: `InSites-Brain/` (sub-folder `Claude/` holds the Claude-Project README)
+- Branch: [InSites-Lab/Insites-CAA2026 @ betsalel-1.1.0](https://github.com/InSites-Lab/Insites-CAA2026/tree/betsalel-1.1.0)
+- Folder: [InSites-Brain/](https://github.com/InSites-Lab/Insites-CAA2026/tree/betsalel-1.1.0/InSites-Brain) — sub-folder [Claude/](https://github.com/InSites-Lab/Insites-CAA2026/tree/betsalel-1.1.0/InSites-Brain/Claude) holds the Claude-Project README
 
 If those prompts move, update the two `href`s in `App.tsx`.
 
