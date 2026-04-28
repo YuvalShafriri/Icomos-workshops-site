@@ -16,11 +16,12 @@ When a new workshop runs, branch off `main` (don't fork from a previous workshop
 
 ## External references
 
-The "אתר.בוט" system prompt ("המוח של אתר.בוט") is hosted in a separate repo — linked out from the home view, not bundled here:
+The "אתר.בוט" system prompts ("המוח של אתר.בוט") live in separate GitHub repos — linked out from the home view, not bundled here.
 
-- File: [YuvalShafriri/atar.bot-Icomos.Israel · Bot-Brain-he.md](https://github.com/YuvalShafriri/atar.bot-Icomos.Israel/blob/main/Bot-Brain-he.md)
+- **Current / canonical** (the brain running in the Bezalel-workshop Gemini and Claude bots): [InSites-Lab/Insites-CAA2026 @ betsalel-1.1.0](https://github.com/InSites-Lab/Insites-CAA2026/tree/betsalel-1.1.0) — folder [InSites-Brain/](https://github.com/InSites-Lab/Insites-CAA2026/tree/betsalel-1.1.0/InSites-Brain).
+- **Original Hebrew version** (what `main`'s home view currently links to): [atar.bot-Icomos.Israel · Bot-Brain-he.md](https://github.com/YuvalShafriri/atar.bot-Icomos.Israel/blob/main/Bot-Brain-he.md).
 
-If the prompt moves, update the `href` in `App.tsx`.
+If the prompts move, update the `href` in `App.tsx`.
 
 ## Stack
 
