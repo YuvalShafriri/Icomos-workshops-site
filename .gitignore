@@ -47,3 +47,6 @@ nul
 # Ad-hoc screenshots produced during browser testing
 home-*.png
 preview-*.png
+
+# Local-only Claude Code project notes (not for the public repo)
+CLAUDE.md
