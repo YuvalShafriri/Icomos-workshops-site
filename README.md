@@ -52,9 +52,3 @@ The app routes via URL hash — examples:
 - `/#visual` — visual-analysis modal
 - `/#inventory` — MA-RC inventory instructions
 - `/#q-narratives` · `/#q-sentiment` · `/#q-education` · `/#q-semiotics` · `/#q-jester` · `/#q-chorus` · `/#q-jester-chorus` — research-query modals
-
-## House rules for code edits (humans and AI agents)
-
-- **Preserve existing inline comments.** They encode author intent across multiple workshop iterations — don't strip them on refactor.
-- **Hide, don't delete.** When removing UI sections that may resurface later, comment them out (`{/* … */}`) with a one-line marker rather than deleting.
-- **Verify UI changes in a browser** before declaring done — the build can pass while the layout is broken.
