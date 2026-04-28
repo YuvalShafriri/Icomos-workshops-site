@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סימניות כיוון RTL / LTR</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Assistant", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: #fafaf7;
+    color: #1a1a1a;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 20px 40px;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  p.sub {
+    color: #666;
+    margin: 0 0 20px;
+    font-size: 14px;
+  }
+  .buttons {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .bm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .arrow {
+    width: 60px;
+    height: 90px;
+    color: #2c5f8d;
+    animation: bounce 1.4s ease-in-out infinite;
+  }
+  .bm:nth-child(2) .arrow { color: #5a5a5a; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  .bm-link {
+    display: inline-block;
+    padding: 14px 32px;
+    background: #2c5f8d;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 17px;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .bm-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(44, 95, 141, 0.3);
+  }
+  .bm-link:active { cursor: grabbing; }
+  .bm-link.ltr { background: #5a5a5a; }
+</style>
+</head>
+<body>
+
+<h1>סימניות כיוון RTL / LTR</h1>
+<p class="sub">גררו את הכפתורים לסרגל הסימניות של הדפדפן</p>
+
+<div class="buttons">
+  <div class="bm">
+    <svg class="arrow" viewBox="0 0 60 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 5 L10 30 L22 30 L22 85 L38 85 L38 30 L50 30 Z" fill="currentColor"/>
+    </svg>
+    <a class="bm-link" href="javascript:(function()%7Bdocument.getElementsByTagName('body')%5B0%5D.style.direction%3D'rtl'%3Bdocument.getElementsByTagName('body')%5B0%5D.style.textAlign%3D'right'%7D)()%3B">RTL</a>
+  </div>
+  <div class="bm">
+    <svg class="arrow" viewBox="0 0 60 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 5 L10 30 L22 30 L22 85 L38 85 L38 30 L50 30 Z" fill="currentColor"/>
+    </svg>
+    <a class="bm-link ltr" href="javascript:(function()%7Bdocument.getElementsByTagName('body')%5B0%5D.style.direction%3D'ltr'%3Bdocument.getElementsByTagName('body')%5B0%5D.style.textAlign%3D'left'%7D)()%3B">LTR</a>
+  </div>
+</div>
+
+</body>
+</html>

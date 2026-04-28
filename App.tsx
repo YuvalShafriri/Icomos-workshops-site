@@ -1278,6 +1278,13 @@ const App: React.FC = () => {
                           highlight={true}
                           colorScheme="amber"
                         />
+                        <ResourceLink
+                          href="./rtl-toggle.html"
+                          icon={<Type size={16} />}
+                          label="סימניות כיוון RTL/LTR"
+                          secondaryLabel="כלי לסרגל הדפדפן - לעבודה בעברית"
+                          colorScheme="slate"
+                        />
                       </ResourceGroup>
 
                       <ResourceGroup title="מאגר קוד המקור">
