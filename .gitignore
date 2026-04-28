@@ -40,3 +40,10 @@ config/*
 # Temp files
 tmpclaude-*-cwd
 nul
+
+# Playwright MCP test artifacts
+.playwright-mcp/
+
+# Ad-hoc screenshots produced during browser testing
+home-*.png
+preview-*.png
