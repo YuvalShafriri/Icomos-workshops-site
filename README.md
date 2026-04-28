@@ -1,49 +1,56 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# InSites — אתר.בוט
 
-# Run and deploy your AI Studio app
+Hebrew-first React/Vite SPA for the **InSites** cultural-significance-assessment workshops (CBSA methodology) run with ICOMOS Israel. Participants use the site to walk through the seven-stage assessment process, generate prompts for the אתר.בוט AI assistant, and explore knowledge-graph and visual analyses of heritage sites.
 
-This contains everything you need to run your app locally.
+- **Deploys to** `/icomos/workshop` on the host (same path across branches).
+- **Authors:** Yuval Shafriri (development) · Dr. Yael Alef (heritage methodology).
 
-View your app in AI Studio: https://ai.studio/apps/drive/1qWNJlUxkGv2ncFt4JzQd_LHt7OoziArg
+## Branches
 
-## Run Locally
+- `main` — pre-workshop home view; the long-running production state.
+- `betsalel-workshop` — Bezalel workshop variant: simplified home view (three AI-bot links, hidden survey / agent-builder / "השראה" sections, larger typography). Branched off `main` at `1497f4d`. Workshop-bound; **not** to be merged back.
 
-**Prerequisites:**  Node.js
+## External references
 
+The "אתר.בוט" system prompts ("המוח של אתר.בוט") live in a separate repo — linked out from the home view, not bundled here:
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- Repo: [InSites-Lab/Insites-CAA2026](https://github.com/InSites-Lab/Insites-CAA2026)
+- Branch: `betsalel-1.1.0`, folder: `InSites-Brain/` (sub-folder `Claude/` holds the Claude-Project README)
 
-## Deep links (Hash routes)
+If those prompts move, update the two `href`s in `App.tsx`.
 
-The app supports direct links using URL hashes (everything after `#`).
+## Stack
 
-Examples:
+React 19 · Vite 6 · TypeScript · Tailwind 4 · `@google/genai` (Gemini API) · `lucide-react` · `vis-network` (knowledge graph).
 
-- `http://localhost:5173/#visual`
-- `http://localhost:5173/#graph-create`
-- `http://localhost:5173/#step-2`
+## Run locally
 
-Supported hashes:
+```bash
+npm install
+cp .env.example .env.local   # then set GEMINI_API_KEY
+npm run dev                  # default port 3000
+```
 
-- `#welcome` – About / welcome overlay
-- `#tools` – "הרחבות וכלים" screen
-- `#q-narratives` – Query: נרטיבים חלופיים
-- `#q-sentiment` – Query: סנטימנט קהילתי / ערכי קהילה
-- `#q-education` – Query: המסרה וחינוך
-- `#q-semiotics` – Query: ניתוח סמיוטי
-- `#q-jester` – Query: ליצן החצר
-- `#q-chorus` – Query: מקהלה יוונית
-- `#q-jester-chorus` – Query group: ליצן החצר / מקהלה יוונית
-- `#graph-create` – Knowledge Graph input
-- `#graph` – Knowledge Graph results modal (after generation)
-- `#visual` – Visual analysis modal
-- `#inventory` – [MA-RC] inventory instructions modal
-- `#prompts` – Prompts workshop modal
-- `#principles` – Principles modal
-- `#step-0` … `#step-6` – CBSA stages
+If another vite project on your machine already holds port 3000, vite may bind silently while the browser loads the wrong app. Run on a free port instead: `npm run dev -- --port 3001`.
+
+```bash
+npm run build      # outputs dist/
+npm run preview    # serves dist/ for a local sanity-check
+```
+
+## Hash routes (deep links)
+
+The app routes via URL hash — examples:
+
+- `/#step-0` … `/#step-6` — the seven CBSA stages
+- `/#welcome` · `/#tools` · `/#prompts` · `/#principles` — overlays / modals
+- `/#graph-create` · `/#graph` — knowledge-graph input + results
+- `/#visual` — visual-analysis modal
+- `/#inventory` — MA-RC inventory instructions
+- `/#q-narratives` · `/#q-sentiment` · `/#q-education` · `/#q-semiotics` · `/#q-jester` · `/#q-chorus` · `/#q-jester-chorus` — research-query modals
+
+## House rules for code edits (humans and AI agents)
+
+- **Preserve existing inline comments.** They encode author intent across multiple workshop iterations — don't strip them on refactor.
+- **Hide, don't delete.** When removing UI sections that may resurface later, comment them out (`{/* … */}`) with a one-line marker rather than deleting.
+- **Verify UI changes in a browser** before declaring done — the build can pass while the layout is broken.
