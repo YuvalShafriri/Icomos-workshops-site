@@ -1289,7 +1289,6 @@ const App: React.FC = () => {
                           secondaryLabel="כלי לסרגל הדפדפן - לעבודה בעברית"
                           highlight={true}
                           noBorder
-                          font-normal
                           colorScheme="blue"
                         />
                       </ResourceGroup>

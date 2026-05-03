@@ -12,6 +12,42 @@ export interface ResourceLinkProps {
   colorScheme?: 'indigo' | 'emerald' | 'amber' | 'slate' | 'blue';
 }
 
+// Tailwind can't reliably pick up dynamic class names like `bg-${color}-600`.
+// Use explicit class maps so production builds include the right styles.
+const schemeClasses = {
+  indigo: {
+    iconHighlight: 'bg-indigo-600 text-white shadow-indigo-200 shadow-lg',
+    iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-500',
+    labelHover: 'group-hover:text-indigo-600',
+    arrowHover: 'group-hover:text-indigo-400',
+  },
+  emerald: {
+    iconHighlight: 'bg-emerald-600 text-white shadow-emerald-200 shadow-lg',
+    iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-500',
+    labelHover: 'group-hover:text-emerald-600',
+    arrowHover: 'group-hover:text-emerald-400',
+  },
+  amber: {
+    iconHighlight: 'bg-amber-600 text-white shadow-amber-200 shadow-lg',
+    iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-amber-50 group-hover:text-amber-500',
+    labelHover: 'group-hover:text-amber-600',
+    arrowHover: 'group-hover:text-amber-400',
+  },
+  slate: {
+    iconHighlight: 'bg-white text-slate-900 border-2 border-slate-900 shadow-sm',
+    iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-slate-50 group-hover:text-slate-600',
+    labelHover: 'group-hover:text-slate-700',
+    arrowHover: 'group-hover:text-slate-500',
+  },
+  // Soft accent: pastel-tinted icon, less weight than the bold filled bot schemes.
+  blue: {
+    iconHighlight: 'bg-blue-50 text-blue-600 border border-blue-200 shadow-sm',
+    iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500',
+    labelHover: 'group-hover:text-blue-600',
+    arrowHover: 'group-hover:text-blue-400',
+  },
+} as const;
+
 export const ResourceLink: React.FC<ResourceLinkProps> = ({
   href,
   onClick,
@@ -23,41 +59,6 @@ export const ResourceLink: React.FC<ResourceLinkProps> = ({
   colorScheme = 'indigo'
 }) => {
   const Component = href ? 'a' : 'button';
-  // Tailwind can't reliably pick up dynamic class names like `bg-${color}-600`.
-  // Use explicit class maps so production builds include the right styles.
-  const schemeClasses = {
-    indigo: {
-      iconHighlight: 'bg-indigo-600 text-white shadow-indigo-200 shadow-lg',
-      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-500',
-      labelHover: 'group-hover:text-indigo-600',
-      arrowHover: 'group-hover:text-indigo-400',
-    },
-    emerald: {
-      iconHighlight: 'bg-emerald-600 text-white shadow-emerald-200 shadow-lg',
-      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-500',
-      labelHover: 'group-hover:text-emerald-600',
-      arrowHover: 'group-hover:text-emerald-400',
-    },
-    amber: {
-      iconHighlight: 'bg-amber-600 text-white shadow-amber-200 shadow-lg',
-      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-amber-50 group-hover:text-amber-500',
-      labelHover: 'group-hover:text-amber-600',
-      arrowHover: 'group-hover:text-amber-400',
-    },
-    slate: {
-      iconHighlight: 'bg-white text-slate-900 border-2 border-slate-900 shadow-sm',
-      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-slate-50 group-hover:text-slate-600',
-      labelHover: 'group-hover:text-slate-700',
-      arrowHover: 'group-hover:text-slate-500',
-    },
-    // Soft accent: pastel-tinted icon, less weight than the bold filled bot schemes.
-    blue: {
-      iconHighlight: 'bg-blue-50 text-blue-600 border border-blue-200 shadow-sm',
-      iconNormal: 'bg-slate-100 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500',
-      labelHover: 'group-hover:text-blue-600',
-      arrowHover: 'group-hover:text-blue-400',
-    },
-  } as const;
   const currentScheme = schemeClasses[colorScheme];
 
   return (
