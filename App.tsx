@@ -1078,7 +1078,7 @@ const App: React.FC = () => {
                           <div className="w-9 h-9 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                             {React.isValidElement(query.icon) ? (
                               React.cloneElement(
-                                query.icon as React.ReactElement,
+                                query.icon as React.ReactElement<{ size?: number }>,
                                 { size: 18 }
                               )
                             ) : (
